@@ -1,8 +1,7 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 버전 요구사항
 
-## Getting Started
-
-First, run the development server:
+nextjs 15.4.5
+tailwindcss v4
 
 ```bash
 npm run dev
