@@ -265,10 +265,10 @@ export default function HomePage() {
   };
 
   const handleCityClick = (cityId: string) =>
-    (window.location.href = `/city/${cityId}`);
+    (window.location.href = `/monthlog-proto/city/${cityId}`);
   const handleContributeClick = (e: React.MouseEvent, cityId: string) => {
     e.stopPropagation();
-    window.location.href = `/contribute/${cityId}`;
+    window.location.href = `/monthlog-proto/contribute/${cityId}`;
   };
 
   return (
