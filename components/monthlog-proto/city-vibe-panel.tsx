@@ -2,8 +2,8 @@
 
 import type React from "react"
 import { useState, useCallback, useMemo, memo, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
 import { Camera, Upload, Star, Filter, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 

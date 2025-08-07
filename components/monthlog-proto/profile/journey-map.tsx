@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useMemo } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { Plus, Minus } from "lucide-react"
 
 interface Journey {

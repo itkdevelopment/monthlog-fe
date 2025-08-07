@@ -2,10 +2,10 @@
 
 import type React from "react"
 import { useState, useCallback } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { Camera, Star } from "lucide-react"
-import { ExpGainAnimation } from "@/components/domain/city-detail/exp-gain-animation"
+import { ExpGainAnimation } from "@/components/monthlog-proto/domain/city-detail/exp-gain-animation"
 import CityVibePanel, { type CityVibePhoto } from "./city-vibe-panel"
 
 interface CityVibeCardProps {

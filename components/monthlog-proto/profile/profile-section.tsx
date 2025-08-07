@@ -1,7 +1,7 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
+import { Progress } from "@/components/monthlog-proto/ui/progress"
 
 interface UserProfile {
   id: string

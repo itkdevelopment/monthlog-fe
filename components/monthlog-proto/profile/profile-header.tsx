@@ -3,10 +3,10 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/monthlog-proto/ui/card"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Progress } from "@/components/monthlog-proto/ui/progress"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
 import { Edit, Camera } from "lucide-react"
 
 interface ProfileHeaderProps {

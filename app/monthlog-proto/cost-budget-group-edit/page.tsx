@@ -15,18 +15,18 @@ import {
   ShoppingCart,
   Calculator,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import PriceSatisfactionInput from "@/components/cost-inputs/price-satisfaction-input"
-import RentInput from "@/components/cost-inputs/rent-input"
-import InitialCostInput from "@/components/cost-inputs/initial-cost-input"
-import UtilitiesInput from "@/components/cost-inputs/utilities-input"
-import TransportInput from "@/components/cost-inputs/transport-input"
-import CommunicationInput from "@/components/cost-inputs/communication-input"
-import FoodInput from "@/components/cost-inputs/food-input"
-import ActivityInput from "@/components/cost-inputs/activity-input"
-import LocalPriceInput from "@/components/cost-inputs/local-price-input"
-import TotalCostInput from "@/components/cost-inputs/total-cost-input"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/monthlog-proto/ui/card"
+import PriceSatisfactionInput from "@/components/monthlog-proto/cost-inputs/price-satisfaction-input"
+import RentInput from "@/components/monthlog-proto/cost-inputs/rent-input"
+import InitialCostInput from "@/components/monthlog-proto/cost-inputs/initial-cost-input"
+import UtilitiesInput from "@/components/monthlog-proto/cost-inputs/utilities-input"
+import TransportInput from "@/components/monthlog-proto/cost-inputs/transport-input"
+import CommunicationInput from "@/components/monthlog-proto/cost-inputs/communication-input"
+import FoodInput from "@/components/monthlog-proto/cost-inputs/food-input"
+import ActivityInput from "@/components/monthlog-proto/cost-inputs/activity-input"
+import LocalPriceInput from "@/components/monthlog-proto/cost-inputs/local-price-input"
+import TotalCostInput from "@/components/monthlog-proto/cost-inputs/total-cost-input"
 
 export default function CostBudgetGroupEditPage() {
   const router = useRouter()

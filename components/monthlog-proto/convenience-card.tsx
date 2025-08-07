@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
 import {
   Edit,
   ShoppingCart,
@@ -13,7 +13,7 @@ import {
   Clock,
   Lightbulb,
 } from "lucide-react"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
 
 interface ConvenienceCardProps {
   cardData?: {

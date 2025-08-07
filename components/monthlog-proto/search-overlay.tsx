@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { Search, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 

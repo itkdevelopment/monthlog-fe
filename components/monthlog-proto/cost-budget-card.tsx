@@ -1,23 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
 import { Edit, Info, DollarSign, Star, Home, Car, Wifi, Utensils, MapPin, ShoppingCart, Calculator } from "lucide-react"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
 import { useRouter } from "next/navigation"
-import { BudgetCalculator } from "@/components/budget-calculator"
+import { BudgetCalculator } from "@/components/monthlog-proto/budget-calculator"
 
 // 독립 컴포넌트 import
-import PriceSatisfactionPanel from "@/components/cost-panels/price-satisfaction-panel"
-import RentPanel from "@/components/cost-panels/rent-panel"
-import UtilitiesPanel from "@/components/cost-panels/utilities-panel"
-import InitialCostPanel from "@/components/cost-panels/initial-cost-panel"
-import TransportPanel from "@/components/cost-panels/transport-panel"
-import CommunicationPanel from "@/components/cost-panels/communication-panel"
-import FoodPanel from "@/components/cost-panels/food-panel"
-import ActivityPanel from "@/components/cost-panels/activity-panel"
-import LocalPricePanel from "@/components/cost-panels/local-price-panel"
-import TotalCostPanel from "@/components/cost-panels/total-cost-panel"
+import PriceSatisfactionPanel from "@/components/monthlog-proto/cost-panels/price-satisfaction-panel"
+import RentPanel from "@/components/monthlog-proto/cost-panels/rent-panel"
+import UtilitiesPanel from "@/components/monthlog-proto/cost-panels/utilities-panel"
+import InitialCostPanel from "@/components/monthlog-proto/cost-panels/initial-cost-panel"
+import TransportPanel from "@/components/monthlog-proto/cost-panels/transport-panel"
+import CommunicationPanel from "@/components/monthlog-proto/cost-panels/communication-panel"
+import FoodPanel from "@/components/monthlog-proto/cost-panels/food-panel"
+import ActivityPanel from "@/components/monthlog-proto/cost-panels/activity-panel"
+import LocalPricePanel from "@/components/monthlog-proto/cost-panels/local-price-panel"
+import TotalCostPanel from "@/components/monthlog-proto/cost-panels/total-cost-panel"
 
 // AnimatedNumber 컴포넌트
 const AnimatedNumber = ({ value, duration = 1000 }: { value: string; duration?: number }) => {
@@ -136,7 +136,7 @@ export function CostBudgetCard({ cardData, onExpGain, onGroupEdit, onOpenModal }
 
   // 그룹 편집 페이지로 이동
   const handleGroupEdit = () => {
-    router.push("/cost-budget-group-edit")
+    router.push("/monthlog-proto/cost-budget-group-edit")
   }
 
   return (

@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Textarea } from "@/components/monthlog-proto/ui/textarea"
+import { Label } from "@/components/monthlog-proto/ui/label"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
 import { ArrowLeft, Upload, Star, MapPin, DollarSign, Wifi, Home, Car, Shield, Heart } from "lucide-react"
 
 interface ContributionData {
@@ -102,7 +102,7 @@ export default function ContributePage() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     alert("기여해주셔서 감사합니다! 검토 후 반영됩니다.")
-    router.push(`/city/${cityId}`)
+    router.push(`/monthlog-proto/city/${cityId}`)
   }
 
   const selectedCategoryData = categories.find((cat) => cat.id === selectedCategory)

@@ -2,14 +2,14 @@
 
 import type React from "react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
 import { Edit, Plane, MapPin, Bus, Smartphone, Navigation, Ticket, X } from "lucide-react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Label } from "@/components/monthlog-proto/ui/label"
+import { Textarea } from "@/components/monthlog-proto/ui/textarea"
 
 export default function TransportCard() {
   const [activePopup, setActivePopup] = useState<string | null>(null)

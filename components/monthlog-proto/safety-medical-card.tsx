@@ -1,17 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
 import { Edit, Shield, AlertTriangle, Heart, Phone, Droplets, Building2 } from "lucide-react"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
 
 // 패널 컴포넌트들 import
-import SafetyLevelPanel from "@/components/safety-panels/safety-level-panel"
-import MedicalLevelPanel from "@/components/safety-panels/medical-level-panel"
-import WaterSafetyPanel from "@/components/safety-panels/water-safety-panel"
-import CrimeTypesPanel from "@/components/safety-panels/crime-types-panel"
-import EmergencyContactsPanel from "@/components/safety-panels/emergency-contacts-panel"
-import EmbassyContactsPanel from "@/components/safety-panels/embassy-contacts-panel"
+import SafetyLevelPanel from "@/components/monthlog-proto/safety-panels/safety-level-panel"
+import MedicalLevelPanel from "@/components/monthlog-proto/safety-panels/medical-level-panel"
+import WaterSafetyPanel from "@/components/monthlog-proto/safety-panels/water-safety-panel"
+import CrimeTypesPanel from "@/components/monthlog-proto/safety-panels/crime-types-panel"
+import EmergencyContactsPanel from "@/components/monthlog-proto/safety-panels/emergency-contacts-panel"
+import EmbassyContactsPanel from "@/components/monthlog-proto/safety-panels/embassy-contacts-panel"
 
 interface SafetyMedicalCardProps {
   cardData?: {

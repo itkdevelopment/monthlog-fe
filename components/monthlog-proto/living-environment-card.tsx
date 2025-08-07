@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/monthlog-proto/ui/dialog"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Label } from "@/components/monthlog-proto/ui/label"
+import { Textarea } from "@/components/monthlog-proto/ui/textarea"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
 import { Edit, X, Plus, Home, Volume2, Wind, Droplets, Info } from "lucide-react"
 import { ExpGainAnimation } from "./domain/city-detail/exp-gain-animation"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
 
 interface LivingEnvironmentCardData {
   title: string

@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/monthlog-proto/ui/dialog"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Label } from "@/components/monthlog-proto/ui/label"
 import { Edit, Globe, CreditCard, Clock, Zap, Users, MapPin } from "lucide-react"
 
 interface BasicInfoData {

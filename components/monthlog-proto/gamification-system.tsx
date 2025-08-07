@@ -3,9 +3,9 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
+import { Card, CardContent } from "@/components/monthlog-proto/ui/card"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Progress } from "@/components/monthlog-proto/ui/progress"
 import { Trophy, Star, Target, Zap, Gift, Award } from "lucide-react"
 
 interface Achievement {

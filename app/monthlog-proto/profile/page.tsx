@@ -1,15 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
 import { ArrowLeft, Trophy, MapPin, TrendingUp, Zap, Target, BarChart3, Edit, Share2 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
-import { JourneyMap } from "@/components/profile/journey-map"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
+import { Progress } from "@/components/monthlog-proto/ui/progress"
+import { JourneyMap } from "@/components/monthlog-proto/profile/journey-map"
 
 interface UserProfile {
   id: string
@@ -406,7 +406,7 @@ export default function ProfilePage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/">
+            <Link href="/monthlog-proto">
               <Button variant="ghost" className="text-gray-600 hover:text-gray-800 hover:bg-gray-100/50">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 홈으로

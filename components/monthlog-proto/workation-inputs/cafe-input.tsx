@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Plus, Trash2, ExternalLink } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
 
 interface Cafe {
   name: string

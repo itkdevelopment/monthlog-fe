@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Check, Filter, ChevronDown, ChevronUp } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Textarea } from "@/components/monthlog-proto/ui/textarea"
 
 interface RecommendedMonthsPanelProps {
   isOpen: boolean

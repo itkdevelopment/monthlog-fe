@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Plus } from "lucide-react"
-import { ExpGainAnimation } from "@/components/domain/city-detail/exp-gain-animation"
+import { ExpGainAnimation } from "@/components/monthlog-proto/domain/city-detail/exp-gain-animation"
 
 interface RentPanelProps {
   isOpen: boolean

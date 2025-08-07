@@ -1,10 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { RadarChart } from "@/components/charts/radar-chart"
+import { RadarChart } from "@/components/monthlog-proto/charts/radar-chart"
 import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react"
 
 interface CityCompatibilityCardProps {

@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Button } from "@/components/monthlog-proto/ui/button"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Input } from "@/components/monthlog-proto/ui/input"
+import { Textarea } from "@/components/monthlog-proto/ui/textarea"
+import { Label } from "@/components/monthlog-proto/ui/label"
 import { Plus, MapPin, Calendar, Star, Camera, ExternalLink, Edit, Trash2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 

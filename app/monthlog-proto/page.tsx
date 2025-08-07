@@ -5,8 +5,8 @@ import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/monthlog-proto/ui/button";
+import { Progress } from "@/components/monthlog-proto/ui/progress";
 import {
   Plus,
   Trophy,
@@ -18,9 +18,9 @@ import {
   DollarSign,
   Users,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/monthlog-proto/ui/card";
+import { Badge } from "@/components/monthlog-proto/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar";
 
 /* ---------- (mock data – unchanged) ---------- */
 interface City {
@@ -335,7 +335,7 @@ export default function HomePage() {
         {/* 헤더 (로고/레벨) */}
         <div className="text-center py-24">
           {/* 메인 로고 텍스트 – 요청 1️⃣ */}
-          <Link href="/">
+          <Link href="/monthlog-proto">
             <h1 className="text-5xl font-bold text-gray-900 mb-4">
               도시별 먼슬로그
             </h1>
@@ -347,7 +347,7 @@ export default function HomePage() {
           </p>
 
           {/* 레벨 디스플레이 */}
-          <Link href="/profile">
+          <Link href="/monthlog-proto/profile">
             {/* 요청 2️⃣: mb-3 → mb-1 로 더 가까이 */}
             <div className="inline-block cursor-pointer hover:opacity-80 transition-opacity mb-1">
               <div className="bg-white rounded-2xl px-8 py-4 shadow-sm border border-gray-100">

@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
 import { Trophy, Medal, Award, Star, TrendingUp, Users } from "lucide-react"
 
 interface LeaderboardUser {

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { X, Plus, Filter, Calendar, Users, Heart, ChevronDown } from "lucide-react"
 
 interface CityProfilePanelProps {

@@ -2,16 +2,16 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
 import { Edit, TrendingUp, Wifi, Zap, Building, Coffee, CreditCard } from "lucide-react"
-import { AnimatedGauge } from "@/components/charts/animated-gauge"
-import SatisfactionPanel from "@/components/workation-panels/satisfaction-panel"
-import InternetSpeedPanel from "@/components/workation-panels/internet-speed-panel"
-import PowerStabilityPanel from "@/components/workation-panels/power-stability-panel"
-import WifiAccessPanel from "@/components/workation-panels/wifi-access-panel"
-import CoworkingSpacePanel from "@/components/workation-panels/coworking-space-panel"
-import CafePanel from "@/components/workation-panels/cafe-panel"
-import MembershipPanel from "@/components/workation-panels/membership-panel"
+import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
+import SatisfactionPanel from "@/components/monthlog-proto/workation-panels/satisfaction-panel"
+import InternetSpeedPanel from "@/components/monthlog-proto/workation-panels/internet-speed-panel"
+import PowerStabilityPanel from "@/components/monthlog-proto/workation-panels/power-stability-panel"
+import WifiAccessPanel from "@/components/monthlog-proto/workation-panels/wifi-access-panel"
+import CoworkingSpacePanel from "@/components/monthlog-proto/workation-panels/coworking-space-panel"
+import CafePanel from "@/components/monthlog-proto/workation-panels/cafe-panel"
+import MembershipPanel from "@/components/monthlog-proto/workation-panels/membership-panel"
 
 interface WorkationCardProps {
   cardData: {
@@ -60,7 +60,7 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
 
   // 그룹 수정 페이지로 이동
   const handleGroupEdit = () => {
-    router.push("/workation-group-edit")
+    router.push("/monthlog-proto/workation-group-edit")
   }
 
   return (

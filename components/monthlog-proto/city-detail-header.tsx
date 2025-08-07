@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/monthlog-proto/ui/button"
 import { ArrowLeft, Bookmark, Share2, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { NavigationDropdown } from "./navigation-dropdown"
@@ -52,7 +52,7 @@ export function CityDetailHeader({
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 relative">
-          <Link href="/">
+          <Link href="/monthlog-proto">
             <Button variant="ghost" className="text-gray-600 hover:text-gray-800">
               <ArrowLeft className="h-4 w-4 mr-2" />
               홈으로

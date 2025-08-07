@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/monthlog-proto/ui/badge"
 import {
   Heart,
   Edit,
@@ -26,19 +26,19 @@ import {
 } from "lucide-react"
 import { useParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { WorkationCard } from "@/components/workation-card"
-import { CostBudgetCard } from "@/components/cost-budget-card"
-import LivingEnvironmentCard from "@/components/living-environment-card"
-import ConvenienceCard from "@/components/convenience-card"
-import TransportCard from "@/components/transport-card"
-import SafetyMedicalCard from "@/components/safety-medical-card"
-import { LocalExperienceCard } from "@/components/local-experience-card"
-import BasicInfoCard from "@/components/basicInfo-card"
-import CityProfileCard from "@/components/city-profile-card"
-import RecommendedMonthsCard from "@/components/recommended-months-card"
-import CityVibeCard from "@/components/city-vibe-card"
-import { CityDetailHeader } from "@/components/city-detail-header"
-import CityCompatibilityCard from "@/components/city-compatibility-card"
+import { WorkationCard } from "@/components/monthlog-proto/workation-card"
+import { CostBudgetCard } from "@/components/monthlog-proto/cost-budget-card"
+import LivingEnvironmentCard from "@/components/monthlog-proto/living-environment-card"
+import ConvenienceCard from "@/components/monthlog-proto/convenience-card"
+import TransportCard from "@/components/monthlog-proto/transport-card"
+import SafetyMedicalCard from "@/components/monthlog-proto/safety-medical-card"
+import { LocalExperienceCard } from "@/components/monthlog-proto/local-experience-card"
+import BasicInfoCard from "@/components/monthlog-proto/basicInfo-card"
+import CityProfileCard from "@/components/monthlog-proto/city-profile-card"
+import RecommendedMonthsCard from "@/components/monthlog-proto/recommended-months-card"
+import CityVibeCard from "@/components/monthlog-proto/city-vibe-card"
+import { CityDetailHeader } from "@/components/monthlog-proto/city-detail-header"
+import CityCompatibilityCard from "@/components/monthlog-proto/city-compatibility-card"
 
 // AnimatedNumber 컴포넌트 추가 (파일 상단에)
 const AnimatedNumber = ({ value, duration = 1000 }: { value: string; duration?: number }) => {
