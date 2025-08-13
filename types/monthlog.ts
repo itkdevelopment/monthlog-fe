@@ -10,7 +10,8 @@ export interface City {
   culture?: number;
   likes?: number;
   // New fields for data collection state
-  contributors: any[]
+  contributors: any[];
+  slug: string;
 }
 
 export interface Recommendation {

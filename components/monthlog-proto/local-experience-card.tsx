@@ -1,31 +1,45 @@
-"use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
-import { Edit, TrendingUp, Users, Globe, BookOpen, Heart, Baby, Palette } from "lucide-react"
-import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
+'use client';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/monthlog-proto/ui/card';
+import {
+  Edit,
+  TrendingUp,
+  Users,
+  Globe,
+  BookOpen,
+  Heart,
+  Baby,
+  Palette,
+} from 'lucide-react';
+import { AnimatedGauge } from '@/components/monthlog-proto/charts/animated-gauge';
 
 interface LocalExperienceCardProps {
   cardData: {
-    title: string
-    contributorCount: number
+    title: string;
+    contributorCount: number;
     friendliness: {
-      value: number
-      maxValue: number
-    }
+      value: number;
+      maxValue: number;
+    };
     englishCommunication: {
-      status: string
-    }
+      status: string;
+    };
     neighborhoodVibe: {
-      description: string
-    }
+      description: string;
+    };
     learningOpportunities: {
-      count: string
-    }
+      count: string;
+    };
     detailItems: Array<{
-      icon: any
-      label: string
-      value: string
-    }>
-  }
+      icon: any;
+      label: string;
+      value: string;
+    }>;
+  };
 }
 
 export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
@@ -36,7 +50,9 @@ export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
           <div className="flex items-center space-x-3">
             <div>
               <span className="text-2xl">{cardData.title}</span>
-              <p className="text-sm text-gray-500 font-normal mt-1">{cardData.contributorCount}명이 기여한 정보</p>
+              <p className="text-sm text-gray-500 font-normal mt-1">
+                {cardData.contributorCount}명이 기여한 정보
+              </p>
             </div>
           </div>
           <button className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors">
@@ -54,7 +70,7 @@ export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
               maxValue={cardData.friendliness.maxValue}
               label="여행자 친화도"
               color="#141414"
-              size={160}
+              size={50}
             />
           </div>
 
@@ -62,19 +78,25 @@ export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
           <div className="col-span-3 grid grid-cols-3 gap-4 items-center pr-16">
             {/* 보조 지표 1 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.englishCommunication.status}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.englishCommunication.status}
+              </div>
               <div className="text-sm text-gray-600">영어소통 원활도</div>
             </div>
 
             {/* 보조 지표 2 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.neighborhoodVibe.description}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.neighborhoodVibe.description}
+              </div>
               <div className="text-sm text-gray-600">동네 분위기</div>
             </div>
 
             {/* 보조 지표 3 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.learningOpportunities.count}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.learningOpportunities.count}
+              </div>
               <div className="text-sm text-gray-600">배움/클래스</div>
             </div>
           </div>
@@ -107,7 +129,9 @@ export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
                 <span className="text-gray-700">{item.label}</span>
               </div>
               <div className="flex items-center space-x-3">
-                <span className="font-semibold text-gray-900">{item.value}</span>
+                <span className="font-semibold text-gray-900">
+                  {item.value}
+                </span>
                 <button className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors">
                   <Edit className="h-4 w-4 text-gray-600" />
                 </button>
@@ -117,58 +141,58 @@ export function LocalExperienceCard({ cardData }: LocalExperienceCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // 기본 props 제공
 LocalExperienceCard.defaultProps = {
   cardData: {
-    title: "💬 로컬 경험&커뮤니티",
+    title: '💬 로컬 경험&커뮤니티',
     contributorCount: 47,
     friendliness: {
       value: 8.5,
       maxValue: 10,
     },
     englishCommunication: {
-      status: "원활함",
+      status: '원활함',
     },
     neighborhoodVibe: {
-      description: "정이많아요",
+      description: '정이많아요',
     },
     learningOpportunities: {
-      count: "3곳+",
+      count: '3곳+',
     },
     detailItems: [
       {
         icon: Heart,
-        label: "동네 인심&분위기",
-        value: "매우 따뜻함",
+        label: '동네 인심&분위기',
+        value: '매우 따뜻함',
       },
       {
         icon: Globe,
-        label: "영어 소통 원활도",
-        value: "대부분 가능",
+        label: '영어 소통 원활도',
+        value: '대부분 가능',
       },
       {
         icon: Users,
-        label: "커뮤니티/소셜",
-        value: "활발함",
+        label: '커뮤니티/소셜',
+        value: '활발함',
       },
       {
         icon: BookOpen,
-        label: "배움/클래스 정보",
-        value: "요가, 쿠킹클래스",
+        label: '배움/클래스 정보',
+        value: '요가, 쿠킹클래스',
       },
       {
         icon: Palette,
-        label: "로컬 문화체험 기회",
-        value: "전통공예, 축제",
+        label: '로컬 문화체험 기회',
+        value: '전통공예, 축제',
       },
       {
         icon: Baby,
-        label: "어린이 체험/교육",
-        value: "키즈카페, 놀이터",
+        label: '어린이 체험/교육',
+        value: '키즈카페, 놀이터',
       },
     ],
   },
-}
+};

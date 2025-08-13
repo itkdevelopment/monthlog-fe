@@ -1,121 +1,130 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
-import { Badge } from "@/components/monthlog-proto/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
-import { Trophy, Medal, Award, Star, TrendingUp, Users } from "lucide-react"
+import { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/monthlog-proto/ui/card';
+import { Badge } from '@/components/monthlog-proto/ui/badge';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/monthlog-proto/ui/avatar';
+import { Trophy, Medal, Award, Star, TrendingUp, Users } from 'lucide-react';
 
 interface LeaderboardUser {
-  id: string
-  username: string
-  avatar: string
-  level: number
-  totalExp: number
-  totalContributions: number
-  citiesContributed: number
-  rank: number
-  title: string
-  monthlyContributions: number
-  streak: number
+  id: string;
+  username: string;
+  avatar: string;
+  level: number;
+  totalExp: number;
+  totalContributions: number;
+  citiesContributed: number;
+  rank: number;
+  title: string;
+  monthlyContributions: number;
+  streak: number;
 }
 
 const mockLeaderboardData: LeaderboardUser[] = [
   {
-    id: "1",
-    username: "여행마니아김",
-    avatar: "/images/new-profile-avatar.jpg",
+    id: '1',
+    username: '여행마니아김',
+    avatar: 'https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg',
     level: 15,
     totalExp: 12500,
     totalContributions: 89,
     citiesContributed: 12,
     rank: 1,
-    title: "글로벌 노마드",
+    title: '글로벌 노마드',
     monthlyContributions: 23,
     streak: 15,
   },
   {
-    id: "2",
-    username: "디지털노마드박",
-    avatar: "/images/new-profile-avatar.jpg",
+    id: '2',
+    username: '디지털노마드박',
+    avatar: 'https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg',
     level: 13,
     totalExp: 10800,
     totalContributions: 76,
     citiesContributed: 10,
     rank: 2,
-    title: "도시 탐험가",
+    title: '도시 탐험가',
     monthlyContributions: 19,
     streak: 12,
   },
   {
-    id: "3",
-    username: "한달살기이",
-    avatar: "/images/new-profile-avatar.jpg",
+    id: '3',
+    username: '한달살기이',
+    avatar: 'https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg',
     level: 12,
     totalExp: 9200,
     totalContributions: 64,
     citiesContributed: 8,
     rank: 3,
-    title: "여행 전문가",
+    title: '여행 전문가',
     monthlyContributions: 16,
     streak: 8,
   },
   {
-    id: "4",
-    username: "워케이션최",
-    avatar: "/images/new-profile-avatar.jpg",
+    id: '4',
+    username: '워케이션최',
+    avatar: 'https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg',
     level: 11,
     totalExp: 8500,
     totalContributions: 58,
     citiesContributed: 7,
     rank: 4,
-    title: "리모트 워커",
+    title: '리모트 워커',
     monthlyContributions: 14,
     streak: 6,
   },
   {
-    id: "5",
-    username: "백패커정",
-    avatar: "/images/new-profile-avatar.jpg",
+    id: '5',
+    username: '백패커정',
+    avatar: 'https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg',
     level: 10,
     totalExp: 7800,
     totalContributions: 52,
     citiesContributed: 6,
     rank: 5,
-    title: "모험가",
+    title: '모험가',
     monthlyContributions: 12,
     streak: 5,
   },
-]
+];
 
 export default function LeaderboardPage() {
-  const [activeTab, setActiveTab] = useState<"total" | "monthly">("total")
+  const [activeTab, setActiveTab] = useState<'total' | 'monthly'>('total');
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Trophy className="h-6 w-6 text-yellow-500" />
+        return <Trophy className="h-6 w-6 text-yellow-500" />;
       case 2:
-        return <Medal className="h-6 w-6 text-gray-400" />
+        return <Medal className="h-6 w-6 text-gray-400" />;
       case 3:
-        return <Award className="h-6 w-6 text-amber-600" />
+        return <Award className="h-6 w-6 text-amber-600" />;
       default:
-        return <span className="text-lg font-bold text-gray-500">#{rank}</span>
+        return <span className="text-lg font-bold text-gray-500">#{rank}</span>;
     }
-  }
+  };
 
   const getRankBadgeColor = (rank: number) => {
     switch (rank) {
       case 1:
-        return "bg-gradient-to-r from-yellow-400 to-yellow-600"
+        return 'bg-gradient-to-r from-yellow-400 to-yellow-600';
       case 2:
-        return "bg-gradient-to-r from-gray-300 to-gray-500"
+        return 'bg-gradient-to-r from-gray-300 to-gray-500';
       case 3:
-        return "bg-gradient-to-r from-amber-400 to-amber-600"
+        return 'bg-gradient-to-r from-amber-400 to-amber-600';
       default:
-        return "bg-gradient-to-r from-blue-500 to-blue-600"
+        return 'bg-gradient-to-r from-blue-500 to-blue-600';
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -130,17 +139,21 @@ export default function LeaderboardPage() {
         <div className="flex justify-center mb-8">
           <div className="bg-white rounded-lg p-1 shadow-sm border">
             <button
-              onClick={() => setActiveTab("total")}
+              onClick={() => setActiveTab('total')}
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                activeTab === "total" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-gray-900"
+                activeTab === 'total'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               전체 랭킹
             </button>
             <button
-              onClick={() => setActiveTab("monthly")}
+              onClick={() => setActiveTab('monthly')}
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                activeTab === "monthly" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-gray-900"
+                activeTab === 'monthly'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               이달의 랭킹
@@ -178,7 +191,7 @@ export default function LeaderboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Trophy className="h-5 w-5 text-yellow-500" />
-              <span>{activeTab === "total" ? "전체 랭킹" : "이달의 랭킹"}</span>
+              <span>{activeTab === 'total' ? '전체 랭킹' : '이달의 랭킹'}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
@@ -187,24 +200,36 @@ export default function LeaderboardPage() {
                 <div
                   key={user.id}
                   className={`flex items-center justify-between p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
-                    index < 3 ? "bg-gradient-to-r from-blue-50 to-transparent" : ""
+                    index < 3
+                      ? 'bg-gradient-to-r from-blue-50 to-transparent'
+                      : ''
                   }`}
                 >
                   <div className="flex items-center space-x-4">
                     {/* Rank */}
-                    <div className="flex items-center justify-center w-12">{getRankIcon(user.rank)}</div>
+                    <div className="flex items-center justify-center w-12">
+                      {getRankIcon(user.rank)}
+                    </div>
 
                     {/* Avatar */}
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={user.avatar || "/placeholder.svg"} />
-                      <AvatarFallback className="bg-blue-100 text-blue-600">{user.username[0]}</AvatarFallback>
+                      <AvatarImage src={user.avatar || '/placeholder.svg'} />
+                      <AvatarFallback className="bg-blue-100 text-blue-600">
+                        {user.username[0]}
+                      </AvatarFallback>
                     </Avatar>
 
                     {/* User Info */}
                     <div>
                       <div className="flex items-center space-x-2">
-                        <h3 className="font-semibold text-gray-900">{user.username}</h3>
-                        <Badge className={`${getRankBadgeColor(user.rank)} text-white border-0 px-2 py-1`}>
+                        <h3 className="font-semibold text-gray-900">
+                          {user.username}
+                        </h3>
+                        <Badge
+                          className={`${getRankBadgeColor(
+                            user.rank,
+                          )} text-white border-0 px-2 py-1`}
+                        >
                           Lv. {user.level}
                         </Badge>
                       </div>
@@ -216,20 +241,28 @@ export default function LeaderboardPage() {
                   <div className="flex items-center space-x-8 text-sm">
                     <div className="text-center">
                       <div className="font-semibold text-gray-900">
-                        {activeTab === "total" ? user.totalContributions : user.monthlyContributions}
+                        {activeTab === 'total'
+                          ? user.totalContributions
+                          : user.monthlyContributions}
                       </div>
                       <div className="text-gray-600">기여</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-gray-900">{user.citiesContributed}</div>
+                      <div className="font-semibold text-gray-900">
+                        {user.citiesContributed}
+                      </div>
                       <div className="text-gray-600">도시</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-gray-900">{user.streak}</div>
+                      <div className="font-semibold text-gray-900">
+                        {user.streak}
+                      </div>
                       <div className="text-gray-600">연속</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-blue-600">{user.totalExp.toLocaleString()}</div>
+                      <div className="font-semibold text-blue-600">
+                        {user.totalExp.toLocaleString()}
+                      </div>
                       <div className="text-gray-600">EXP</div>
                     </div>
                   </div>
@@ -257,7 +290,9 @@ export default function LeaderboardPage() {
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
                 <Star className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <h3 className="font-semibold text-gray-900">신규 도시 개척자</h3>
+                <h3 className="font-semibold text-gray-900">
+                  신규 도시 개척자
+                </h3>
                 <p className="text-green-600 font-medium">디지털노마드박</p>
                 <p className="text-sm text-gray-600">3개 신규 도시</p>
               </div>
@@ -266,5 +301,5 @@ export default function LeaderboardPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
