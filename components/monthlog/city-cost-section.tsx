@@ -1,4 +1,3 @@
-// components/monthlog/city-cost-section.tsx
 'use client';
 
 import {
@@ -19,7 +18,7 @@ import { CostData } from '@/types/monthlog/city-detail';
 import { useState } from 'react';
 
 interface CityCostSectionProps {
-  data: CostData;
+  data?: CostData;
 }
 
 export default function CityCostSection({ data }: CityCostSectionProps) {
@@ -36,32 +35,32 @@ export default function CityCostSection({ data }: CityCostSectionProps) {
     }));
   };
 
+  if (!data) {
+    return null; 
+  }
+
   return (
     <SectionCard title="한달살기 비용" subtitle="23명이 기여한 정보" emoji="💰">
       {/* Top Stats Grid */}
       <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 lg:gap-8 pt-0 pb-6">
         <div className="lg:col-span-2 flex justify-center">
           <CircularProgress
-            value={data.satisfaction}
+            value={data?.costSatisfactionScore ?? 0}
             max={10}
             label="물가 만족도"
-            size={120} // Smaller on mobile
+            size={120}
           />
         </div>
         <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4 lg:pr-16">
           <div className="text-center">
             <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-              <span className="transition-all duration-300">
-                {data.totalBudget}
-              </span>
+              {data?.totalEstimatedCost ?? '-'}
             </div>
             <div className="text-xs sm:text-sm text-gray-600">총 예상 비용</div>
           </div>
           <div className="text-center">
             <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-              <span className="transition-all duration-300">
-                {data.monthlyRent}
-              </span>
+              {data?.monthlyRent ?? '-'}
             </div>
             <div className="text-xs sm:text-sm text-gray-600">
               월세 (원룸 기준)
@@ -69,9 +68,7 @@ export default function CityCostSection({ data }: CityCostSectionProps) {
           </div>
           <div className="text-center">
             <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-              <span className="transition-all duration-300">
-                {data.livingCost}
-              </span>
+              {data?.livingExpenses ?? '-'}
             </div>
             <div className="text-xs sm:text-sm text-gray-600">
               필수 생활비 (월)
@@ -87,61 +84,61 @@ export default function CityCostSection({ data }: CityCostSectionProps) {
         <StatItem
           icon={<Star className="h-4 w-4 text-gray-600" />}
           label="물가 만족도"
-          value={`${data.satisfaction}/10점`}
+          value={`${data?.costSatisfactionScore ?? 0}/10점`}
         />
 
         <StatItem
           icon={<House className="h-4 w-4 text-gray-600" />}
           label="숙소 월세"
-          value={data.breakdown.rent}
+          value={data?.monthlyRent ?? '-'}
         />
 
         <StatItem
           icon={<House className="h-4 w-4 text-gray-600" />}
           label="초기 정착 비용"
-          value="90만원, 보증금 20만원"
+          value={data?.housingDeposit ?? '-'}
         />
 
         <StatItem
           icon={<DollarSign className="h-4 w-4 text-gray-600" />}
           label="공과금 (월평균)"
-          value={data.breakdown.utilities}
+          value={data?.utilitiesCost ?? '-'}
         />
 
         <StatItem
           icon={<Car className="h-4 w-4 text-gray-600" />}
           label="교통비 (월평균)"
-          value={data.breakdown.transport}
+          value={`${data?.transportationCost ?? '-'}, ${data?.transportationPreference ?? '-'}`}
         />
 
         <StatItem
           icon={<Wifi className="h-4 w-4 text-gray-600" />}
           label="통신비 (월평균)"
-          value={data.breakdown.communication}
+          value={`${data?.communicationCost ?? '-'}, ${data?.communicationPreference ?? '-'}`}
         />
 
         <StatItem
           icon={<Utensils className="h-4 w-4 text-gray-600" />}
           label="식비 (월평균)"
-          value={data.breakdown.food}
+          value={`${data?.foodCost ?? '-'}, ${data?.avgMealCost ?? '-'}`}
         />
 
         <StatItem
           icon={<MapPin className="h-4 w-4 text-gray-600" />}
           label="여가/액티비티"
-          value={data.breakdown.activities}
+          value={`${data?.entertainmentCost ?? '-'}, ${data?.popularActivities ?? '-'}`}
         />
 
         <StatItem
           icon={<ShoppingCart className="h-4 w-4 text-gray-600" />}
           label="현지물가 수준"
-          value={data.breakdown.localPrices}
+          value={`${data?.referencePriceItem ?? '-'}, ${data?.referencePrice ?? '-'}`}
         />
 
         <StatItem
           icon={<Calculator className="h-4 w-4 text-gray-600" />}
           label="총 예상 비용 (월)"
-          value="150~200만원"
+           value={`${data?.monthlyCostRangeMin ?? '-'}, ${data?.monthlyCostRangeMax ?? '-'}`}
         />
       </div>
 

@@ -1,185 +1,254 @@
 // types/monthlog/city-detail.ts
 
 export interface CityDetailData {
-  id: string;
-  slug: string;
-  name: string;
-  country: string;
-  description: string;
-  heroImage: string;
-  tags: string[];
-  suitabilityScore: number;
-  totalContributors: number;
-  totalContributions: number;
-  reliabilityScore: number;
-  lastUpdated: string;
-  compatibilityData: CompatibilityData;
-  popularTags: PopularTag[];
-  popularComments: string[];
-  costData: CostData;
-  digitalData: DigitalData;
-  safetyData: SafetyData;
-  housingData: HousingData;
-  convenienceData: ConvenienceData;
-  transportData: TransportData;
-  communityData: CommunityData;
-  basicInfo: BasicInfo;
-  seasonData: SeasonData;
-  atmospherePhotos: AtmospherePhoto[];
-  totalPhotos: number;
-}
-
-export interface CompatibilityData {
-  soloHealing: number;
-  digitalNomad: number;
-  withKids: number;
-  budgetTravel: number;
-  specialExperience: number;
-}
-
-export interface PopularTag {
-  name: string;
-  count: number;
-}
-
-export interface CostData {
-  satisfaction: number;
-  totalBudget: string;
-  monthlyRent: string;
-  livingCost: string;
-  breakdown: {
-    rent: string;
-    utilities: string;
-    transport: string;
-    communication: string;
-    food: string;
-    activities: string;
-    localPrices: string;
-  };
-}
-
-export interface DigitalData {
-  satisfaction: number;
-  avgInternetSpeed: string;
-  coworkingSpaces: number;
-  powerStability: string;
-  breakdown: {
-    internetSpeed: string;
-    powerStability: string;
-    wifiAccess: string;
-    coworkingSpaces: string;
-    laptopFriendlyCafes: string;
-    shortTermMembership: string;
-  };
-}
-
-export interface SafetyData {
-  safetyLevel: number;
-  medicalLevel: number;
-  waterSafety: string;
-  breakdown: {
-    crimeTypes: string;
-    emergencyContacts: string;
-    embassyContact: string;
-  };
-}
-
-export interface HousingData {
-  satisfaction: number;
-  noiseLevel: string;
-  airQuality: string;
-  laundryFacilities: string;
-  breakdown: {
-    noiseLevel: string;
-    laundryInfo: string;
-    airQuality: string;
-    localLifeInfo: string;
-  };
-}
-
-export interface ConvenienceData {
-  satisfaction: number;
-  martAccess: string;
-  deliveryRestaurants: number;
-  facilities24h: number;
-  breakdown: {
-    deliveryConvenience: string;
-    deliveryRecommendations: string;
-    martAccess: string;
-    bankingInfo: string;
-    pharmacyAccess: string;
-    simCardInfo: string;
-    wasteDisposal: string;
-    facilities24h: string;
-    lifeTips: string;
-  };
-}
-
-export interface TransportData {
-  publicTransportScore: number;
-  airportToCity: string;
-  touristAccess: string;
-  mainTransport: string;
-  breakdown: {
-    airportTransport: string;
-    mainTransportMethods: string;
-    recommendedApps: string;
-    touristSiteAccess: string;
-    flightCosts: string;
-  };
-}
-
-export interface CommunityData {
-  travelerFriendliness: number;
-  englishCommunication: string;
-  localAtmosphere: string;
-  learningClasses: string;
-  breakdown: {
-    neighborhoodVibe: string;
-    englishFluency: string;
-    communityActivity: string;
-    learningOpportunities: string;
-    culturalExperiences: string;
-    kidsActivities: string;
-  };
+  basic: BasicInfo;
+  contribution: ContributionInfo;
+  detail: DetailInfo;
+  cost: CostData;
+  digital: DigitalData;
+  safety: SafetyData;
+  residential: HousingData;
+  convenience: ConvenienceData;
+  transportation: TransportData;
+  community: CommunityData;
+  seasonData: MonthlySeasonData[];
+  seasonComments: SeasonComment[];
+  recentFeeds: RecentFeed[];
+  userProfiles: UserProfile[];
+  sectionContributions: SectionContributions;
+  reliability: number;
+  suitability: number;
 }
 
 export interface BasicInfo {
-  language: string;
-  visa: string;
+  id: number;
+  cityName: string;
+  cityDesc: string;
+  cityCode: string;
+  countryCode: string;
+  cityProfileUrl: string;
+  status: number;
+  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContributionInfo {
+  totalContributors: number;
+  totalContributions: number;
+}
+
+export interface DetailInfo {
+  id: number;
+  primaryLanguage: string;
+  visaRequirement: string;
   currency: string;
   timezone: string;
-  plugType: string;
-  religion: string;
+  electricalVoltage: string;
+  electricalPlugType: string;
+  mainReligions: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface SeasonData {
-  monthlyData: MonthlyData[];
-  recommendations: SeasonRecommendation[];
-  warnings: SeasonWarning[];
+export interface CostData {
+  id: number;
+  userId: number;
+  costSatisfactionScore: number;
+  totalEstimatedCost: number;
+  monthlyRent: number;
+  livingExpenses: number;
+  housingDeposit: number;
+  utilitiesCost: number;
+  electricityCost: number;
+  transportationCost: number;
+  transportationPreference: string;
+  communicationCost: number;
+  communicationPreference: string;
+  foodCost: number;
+  avgMealCost: number;
+  entertainmentCost: number;
+  popularActivities: string;
+  recommendedSpotsCount: number;
+  shoppingCost: number | null;
+  referencePriceItem: string;
+  referencePrice: number;
+  monthlyCostRangeMin: number;
+  monthlyCostRangeMax: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface MonthlyData {
-  month: string;
-  recommendations: number;
+export interface DigitalData {
+  id: number;
+  userId: number;
+  digitalSatisfactionScore: number;
+  internetSpeedMbps: number;
+  internetSpeedScore: number;
+  coworkingSpacesCount: number;
+  coworkingSpacesScore: number;
+  powerStability: string;
+  powerStabilityScore: number;
+  freeWifiAccess: string;
+  freeWifiScore: number;
+  laptopFriendlyCafesCount: number;
+  laptopFriendlyCafesScore: number;
+  monthlyMembershipCost: number;
+  monthlyMembershipScore: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SafetyData {
+  id: number;
+  userId: number;
+  safetySatisfactionScore: number;
+  publicSafetyScore: number;
+  medicalEnvironmentScore: number;
+  tapWaterSafety: string;
+  soloFemaleTravelSafety: string;
+  emergencyNumberGeneral: string;
+  emergencyNumberPolice: string;
+  embassyContact: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HousingData {
+  id: number;
+  userId: number;
+  residentialSatisfactionScore: number;
+  noiseLevel: string;
+  airQuality: string;
+  laundryFacilities: string;
+  laundryFacilitiesCount: number;
+  internetQuality: string;
+  localNecessities: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConvenienceData {
+  id: number;
+  userId: number;
+  convenienceSatisfactionScore: number;
+  deliveryConvenienceScore: number;
+  deliveryPickupLocations: number;
+  deliveryPickupScore: string;
+  martAccessibilityWalkingTime: string;
+  mart24hourAvailability: string;
+  bankingAtmAccess: string;
+  bankingFees: string;
+  pharmacyWalkingTime: string;
+  pharmacy24hour: string;
+  simPurchaseLocation: string;
+  simPurchaseCost: number;
+  wasteDisposalMethod: string;
+  convenienceStores24h: number;
+  cafes24h: number;
+  dailyLifeTips: string;
+  shoppingTipsCount: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TransportData {
+  id: number;
+  userId: number;
+  transportationConvenienceScore: number;
+  publicTransportConvenienceScore: number;
+  airportToCityAvgTime: string;
+  airportToCityRoute: string;
+  touristSiteAccessibility: string;
+  mainTransportMethod: string;
+  airportTransportTaxiTime: string;
+  airportTransportTaxiCost: number;
+  recommendedTransportSubway: string;
+  recommendedTransportBus: string;
+  ridehailApps: string;
+  touristAttractionDistance: string;
+  airportAccessCostAvg: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommunityData {
+  id: number;
+  userId: number;
+  communityFriendlinessScore: number;
+  localAcceptance: string;
+  englishCommunicationLevel: string;
+  communityActivities: string;
+  learningClasses: string;
+  culturalActivities: string;
+  languageEducation: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MonthlySeasonData {
+  month: number;
+  recommendedCount: number;
   avgTemperature: number;
 }
 
-export interface SeasonRecommendation {
-  month: string;
-  reason: string;
-  count: number;
+export interface SeasonComment {
+  id: number;
+  userId: number;
+  commentType: "recommend" | "warning";
+  month: number;
+  commentText: string;
+  voteCount: number;
+  createdAt: string;
 }
 
-export interface SeasonWarning {
-  month: string;
-  reason: string;
-  count: number;
+export interface RecentFeed {
+  id: number;
+  userId: number;
+  feedContent: string;
+  recommendedCnt: number;
+  images: string[];
+  likesCount: number;
+  createdAt: string;
 }
 
-export interface AtmospherePhoto {
-  id: string;
-  src: string;
-  alt: string;
-  isFeatured?: boolean;
+export interface UserProfile {
+  id: number;
+  userId: number;
+  startDate: string;
+  endDate: string;
+  companionType: number;
+  comment: string;
+  profileTags: ProfileTag[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProfileTag {
+  id: number;
+  profileTagType: number;
+  profileTagCode: string;
+  profileTagText: string;
+}
+
+export interface SectionContributions {
+  basic: number;
+  cost: number;
+  digital: number;
+  safety: number;
+  residential: number;
+  convenience: number;
+  transportation: number;
+  community: number;
+  season: number;
+  seasonComments: number;
+  feeds: number;
 }

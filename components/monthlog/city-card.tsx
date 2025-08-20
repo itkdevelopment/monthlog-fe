@@ -1,5 +1,5 @@
-import ContributorIndicators from './contributor-indicator';
-import { DollarSign, Wifi, Wind, Volume2, Users, Plus } from 'lucide-react';
+import ContributorIndicators from "./contributor-indicator";
+import { DollarSign, Wifi, Wind, Volume2, Users, Plus } from "lucide-react";
 
 interface CityCardProps {
   city: string;
@@ -8,6 +8,8 @@ interface CityCardProps {
   tags?: string[];
   costRange?: string;
   livingCost?: number;
+  airQuality?: string;
+  noiseLevel?: string;
   safety?: number;
   culture?: number;
   likes?: number;
@@ -15,6 +17,9 @@ interface CityCardProps {
   contributorCount?: number;
   contributors?: { id: string; name: string; avatar?: string }[]; // Array of contributors
   className?: string;
+  monthlyCostRangeMin?: number;
+  monthlyCostRangeMax?: number;
+  internetSpeedMbps?: number;
   onClick?: () => void;
   onRecord?: () => void;
   onTagClick?: (tag: string) => void;
@@ -26,21 +31,25 @@ const CityCard = ({
   image,
   tags = [],
   costRange,
-  livingCost,
+  airQuality,
+  noiseLevel,
   likes,
   contributorCount = 0,
   contributors = [],
-  className = '',
+  className = "",
+  // monthlyCostRangeMin,
+  // monthlyCostRangeMax,
+  internetSpeedMbps,
   onClick,
   onRecord,
   onTagClick,
 }: CityCardProps) => {
   // Determine message based on contributor count
   const getContributorMessage = () => {
-    if (contributorCount === 0) return '첫번째 개척자가 되어주세요!';
-    if (contributorCount === 1) return '두번째 개척자가 되어주세요!';
-    if (contributorCount === 2) return '마지막 개척자가 되어주세요!';
-    return '';
+    if (contributorCount === 0) return "첫번째 개척자가 되어주세요!";
+    if (contributorCount === 1) return "두번째 개척자가 되어주세요!";
+    if (contributorCount === 2) return "마지막 개척자가 되어주세요!";
+    return "";
   };
 
   // Generate contributor avatars with overlap
@@ -83,7 +92,8 @@ const CityCard = ({
     );
   };
 
-  const isActive = contributors.length >= 3;
+  const isActive =
+    (contributors && contributors.length > 0) || contributorCount > 0;
 
   return (
     <div
@@ -96,7 +106,7 @@ const CityCard = ({
         style={{
           backgroundImage: isActive
             ? `url(${image})`
-            : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
+            : "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent rounded-2xl" />
@@ -107,7 +117,7 @@ const CityCard = ({
             {tags.slice(0, 3).map((tag, index) => (
               <button
                 key={index}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onTagClick?.(tag);
                 }}
@@ -155,7 +165,7 @@ const CityCard = ({
                   </span>
                 </div>
                 <span className="text-sm font-semibold text-gray-700">
-                  {livingCost} Mbps
+                  {internetSpeedMbps} Mbps
                 </span>
               </div>
 
@@ -164,7 +174,7 @@ const CityCard = ({
                   <Wind className="w-5 h-5 " />
                   <span className="text-sm font-medium ">대기질</span>
                 </div>
-                <span className="text-sm font-semibold ">매우 좋음</span>
+                <span className="text-sm font-semibold ">{airQuality}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -173,7 +183,7 @@ const CityCard = ({
                   <span className="text-sm font-medium ">소음 수준</span>
                 </div>
                 <span className="text-sm font-semibold text-gray-700">
-                  조용함
+                  {noiseLevel}
                 </span>
               </div>
             </div>
@@ -187,7 +197,7 @@ const CityCard = ({
                 <Users className="w-5 h-5 " />
                 <span className="text-sm font-medium ">참여자</span>
               </div>
-              {renderContributors()}
+              {renderContributors()} 
             </div>
           </>
         ) : (
@@ -206,7 +216,7 @@ const CityCard = ({
 
             {/* Record button */}
             <button
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 onRecord?.();
               }}

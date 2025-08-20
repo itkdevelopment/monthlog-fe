@@ -1,55 +1,61 @@
-// components/monthlog/city-season-chart.tsx
 'use client';
 
 import { useState } from 'react';
 import SectionCard from './shared/section-card';
 import SeasonEditModal from './modals/season-edit-modal';
-import { SeasonData } from '@/types/monthlog/city-detail';
+import { MonthlySeasonData, SeasonComment } from '@/types/monthlog/city-detail';
 
 interface CitySeasonChartProps {
-  data: SeasonData;
+  data?: MonthlySeasonData[];
+  comments?: SeasonComment[];
 }
 
-export default function CitySeasonChart({ data }: CitySeasonChartProps) {
+export default function CitySeasonChart({ data, comments }: CitySeasonChartProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [seasonData, setSeasonData] = useState(data);
+  const [seasonData, setSeasonData] = useState<MonthlySeasonData[] | undefined>(data);
+  const [seasonComments] = useState<SeasonComment[] | undefined>(comments);
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleSave = (newData: SeasonData) => {
+  const handleSave = (newData: MonthlySeasonData[]) => {
     setSeasonData(newData);
-    // Here you would typically call an API to save the data
+    // TODO: Call API to save
+    // setSeasonComments(comments);
   };
 
-  const getBarColor = (recommendations: number) => {
-    if (recommendations >= 30) return '#0B24FB'; // Blue for high recommendations
-    if (recommendations >= 20) return '#e5e7eb'; // Gray for medium
-    return '#ef4444'; // Red for low recommendations
+  const getBarColor = (count: number) => {
+    if (count >= 30) return '#0B24FB';
+    if (count >= 20) return '#e5e7eb';
+    return '#ef4444';
   };
 
-  const maxRecommendations = Math.max(
-    ...seasonData.monthlyData.map(d => d.recommendations),
-  );
+  const monthlyData = seasonData ?? [];
+  const maxRecommendations =
+    monthlyData.length > 0 ? Math.max(...monthlyData.map(d => d.recommendedCount)) : 0;
+
+  const recommendComments = (seasonComments ?? []).filter(c => c.commentType === 'recommend');
+  const warningComments = (seasonComments ?? []).filter(c => c.commentType === 'warning');
 
   return (
     <>
       <SectionCard
         title="추천 ↔ 피해야하는 시기"
-        subtitle="28명이 참여했어요"
+        subtitle={`${comments?.length ?? 0}명이 참여했어요`}
         emoji="🌗"
         onEdit={handleEditClick}
       >
         {/* Chart Container */}
         <div className="h-80">
           <div className="w-full h-full">
-            {/* Simple Bar Chart */}
             <div className="flex items-end justify-between h-64 px-4 mb-8">
-              {seasonData.monthlyData.map((month, index) => {
+              {monthlyData.map((month, index) => {
                 const barHeight =
-                  (month.recommendations / maxRecommendations) * 200;
-                const color = getBarColor(month.recommendations);
+                  maxRecommendations > 0
+                    ? (month.recommendedCount / maxRecommendations) * 200
+                    : 20;
+                const color = getBarColor(month.recommendedCount);
 
                 return (
                   <div key={index} className="flex flex-col items-center">
@@ -61,10 +67,10 @@ export default function CitySeasonChart({ data }: CitySeasonChartProps) {
                         minHeight: '20px',
                       }}
                     >
-                      {month.recommendations}
+                      {month.recommendedCount}
                     </div>
                     <div className="text-xs text-gray-600 mt-2 text-center">
-                      {month.month}
+                      {month.month}월
                     </div>
                   </div>
                 );
@@ -94,14 +100,14 @@ export default function CitySeasonChart({ data }: CitySeasonChartProps) {
               🥰 추천하는 이유
             </h3>
             <div className="space-y-3">
-              {seasonData.recommendations.map((rec, index) => (
+              {recommendComments.map((rec, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-start justify-between">
                     <p className="text-sm text-gray-700 leading-relaxed flex-1 mr-3">
-                      [{rec.month}] {rec.reason}
+                      [{rec.month}월] {rec.commentText}
                     </p>
                     <span className="text-xs text-black whitespace-nowrap">
-                      {rec.count}명
+                      {rec.voteCount}명
                     </span>
                   </div>
                 </div>
@@ -114,14 +120,14 @@ export default function CitySeasonChart({ data }: CitySeasonChartProps) {
               😰 피해야하는 이유
             </h3>
             <div className="space-y-3">
-              {seasonData.warnings.map((warning, index) => (
+              {warningComments.map((warning, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-start justify-between">
                     <p className="text-sm text-gray-700 leading-relaxed flex-1 mr-3">
-                      [{warning.month}] {warning.reason}
+                      [{warning.month}월] {warning.commentText}
                     </p>
                     <span className="text-xs text-black whitespace-nowrap">
-                      {warning.count}명
+                      {warning.voteCount}명
                     </span>
                   </div>
                 </div>
@@ -131,12 +137,14 @@ export default function CitySeasonChart({ data }: CitySeasonChartProps) {
         </div>
       </SectionCard>
 
-      <SeasonEditModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        data={seasonData}
-        onSave={handleSave}
-      />
+      {seasonData && (
+        <SeasonEditModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          data={seasonData}
+          onSave={handleSave}
+        />
+      )}
     </>
   );
 }

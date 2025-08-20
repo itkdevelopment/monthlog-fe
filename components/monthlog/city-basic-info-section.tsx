@@ -6,10 +6,10 @@ import { Globe, MapPin, CreditCard, Clock, Zap, Users } from 'lucide-react';
 import SectionCard from './shared/section-card';
 import StatItem from './shared/stat-item';
 import BasicInfoEditModal from './modals/basic-info-edit-modal';
-import { BasicInfo } from '@/types/monthlog/city-detail';
+import { DetailInfo } from '@/types/monthlog/city-detail';
 
 interface CityBasicInfoSectionProps {
-  data: BasicInfo;
+  data: DetailInfo;
 }
 
 export default function CityBasicInfoSection({
@@ -22,7 +22,7 @@ export default function CityBasicInfoSection({
     setIsEditModalOpen(true);
   };
 
-  const handleSave = (newData: BasicInfo) => {
+  const handleSave = (newData: DetailInfo) => {
     setBasicInfoData(newData);
     // Here you would typically call an API to save the data
   };
@@ -39,13 +39,13 @@ export default function CityBasicInfoSection({
           <StatItem
             icon={<Globe className="h-4 w-4 text-gray-600" />}
             label="언어"
-            value={basicInfoData.language}
+            value={basicInfoData.primaryLanguage}
           />
 
           <StatItem
             icon={<MapPin className="h-4 w-4 text-gray-600" />}
             label="비자"
-            value={basicInfoData.visa}
+            value={basicInfoData.visaRequirement}
           />
 
           <StatItem
@@ -63,13 +63,13 @@ export default function CityBasicInfoSection({
           <StatItem
             icon={<Zap className="h-4 w-4 text-gray-600" />}
             label="콘센트 (전압/플러그 타입)"
-            value={basicInfoData.plugType}
+            value={`${basicInfoData.electricalVoltage}, ${basicInfoData.electricalPlugType}`}
           />
 
           <StatItem
             icon={<Users className="h-4 w-4 text-gray-600" />}
             label="주요 종교"
-            value={basicInfoData.religion}
+            value={basicInfoData.mainReligions}
           />
         </div>
       </SectionCard>

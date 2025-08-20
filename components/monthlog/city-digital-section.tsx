@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   TrendingUp,
@@ -7,17 +7,22 @@ import {
   Building,
   Coffee,
   CreditCard,
-} from 'lucide-react';
-import SectionCard from './shared/section-card';
-import CircularProgress from './shared/circular-progress';
-import StatItem from './shared/stat-item';
-import { DigitalData } from '@/types/monthlog/city-detail';
+} from "lucide-react";
+import SectionCard from "./shared/section-card";
+import CircularProgress from "./shared/circular-progress";
+import StatItem from "./shared/stat-item";
+import { DigitalData } from "@/types/monthlog/city-detail";
 
 interface CityDigitalSectionProps {
-  data: DigitalData;
+  data?: DigitalData; // Cho phép undefined
 }
 
 export default function CityDigitalSection({ data }: CityDigitalSectionProps) {
+  // Nếu chưa có dữ liệu, không render gì
+  if (!data) {
+    return null;
+  }
+
   return (
     <SectionCard
       title="디지털/업무 환경"
@@ -28,7 +33,7 @@ export default function CityDigitalSection({ data }: CityDigitalSectionProps) {
       <div className="grid grid-cols-5 gap-8 pt-0 pb-6">
         <div className="col-span-2 flex justify-center">
           <CircularProgress
-            value={data.satisfaction}
+            value={data?.digitalSatisfactionScore ?? 0}
             max={10}
             label="워케이션 환경 만족도"
           />
@@ -36,19 +41,19 @@ export default function CityDigitalSection({ data }: CityDigitalSectionProps) {
         <div className="col-span-3 grid grid-cols-3 gap-4 items-center pr-16">
           <div className="text-center">
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {data.avgInternetSpeed}
+              {data?.internetSpeedMbps ?? "-"}MbpsS
             </div>
             <div className="text-sm text-gray-600">인터넷 평균 속도</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {data.coworkingSpaces}곳
+              {data?.coworkingSpacesCount ?? 0}곳
             </div>
             <div className="text-sm text-gray-600">코워킹 스페이스</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {data.powerStability}
+              {data?.powerStability ?? "-"}
             </div>
             <div className="text-sm text-gray-600">전력 안정성</div>
           </div>
@@ -62,43 +67,43 @@ export default function CityDigitalSection({ data }: CityDigitalSectionProps) {
         <StatItem
           icon={<TrendingUp className="h-4 w-4 text-gray-600" />}
           label="워케이션 환경 만족도"
-          value={`${data.satisfaction}/10`}
+          value={`${data?.digitalSatisfactionScore ?? 0}/10`}
         />
 
         <StatItem
           icon={<Wifi className="h-4 w-4 text-gray-600" />}
           label="인터넷 평균 속도"
-          value={data.breakdown.internetSpeed}
+          value={`${data?.internetSpeedMbps ?? "-"}MbpsS , ${data?.internetSpeedScore ?? "-"}`}
         />
 
         <StatItem
           icon={<Zap className="h-4 w-4 text-gray-600" />}
           label="전력 안정성"
-          value={data.breakdown.powerStability}
+          value={`${data?.powerStability ?? "-"}  , ${data?.powerStabilityScore ?? "-"}`}
         />
 
         <StatItem
           icon={<Wifi className="h-4 w-4 text-gray-600" />}
           label="무료 Wi-Fi 접근성"
-          value={data.breakdown.wifiAccess}
+          value={`${data?.freeWifiAccess ?? "-"}  , ${data?.freeWifiScore ?? "-"}`}
         />
 
         <StatItem
           icon={<Building className="h-4 w-4 text-gray-600" />}
           label="코워킹 스페이스"
-          value={data.breakdown.coworkingSpaces}
+          value={`${data?.coworkingSpacesCount ?? "-"}  , ${data?.coworkingSpacesScore ?? "-"}`}
         />
 
         <StatItem
           icon={<Coffee className="h-4 w-4 text-gray-600" />}
           label="노트북 하기 좋은 카페"
-          value={data.breakdown.laptopFriendlyCafes}
+          value={`${data?.laptopFriendlyCafesCount ?? "-"}  , ${data?.laptopFriendlyCafesCount ?? "-"}`}
         />
 
         <StatItem
           icon={<CreditCard className="h-4 w-4 text-gray-600" />}
           label="단기 멤버십 정보"
-          value={data.breakdown.shortTermMembership}
+          value={`${data?.monthlyMembershipCost ?? "-"}  , ${data?.monthlyMembershipScore ?? "-"}`}
         />
       </div>
     </SectionCard>

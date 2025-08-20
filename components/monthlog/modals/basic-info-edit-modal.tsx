@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { BasicInfo } from '@/types/monthlog/city-detail';
+import { DetailInfo } from '@/types/monthlog/city-detail';
 
 interface BasicInfoEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  data: BasicInfo;
-  onSave: (data: BasicInfo) => void;
+  data: DetailInfo;
+  onSave: (data: DetailInfo) => void;
 }
 
 export default function BasicInfoEditModal({
@@ -17,7 +17,7 @@ export default function BasicInfoEditModal({
   data,
   onSave,
 }: BasicInfoEditModalProps) {
-  const [formData, setFormData] = useState<BasicInfo>(data);
+  const [formData, setFormData] = useState<DetailInfo>(data);
 
   if (!isOpen) return null;
 
@@ -26,7 +26,7 @@ export default function BasicInfoEditModal({
     onClose();
   };
 
-  const handleChange = (field: keyof BasicInfo, value: string) => {
+  const handleChange = (field: keyof DetailInfo, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -65,8 +65,8 @@ export default function BasicInfoEditModal({
               <input
                 className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 id="language"
-                value={formData.language}
-                onChange={e => handleChange('language', e.target.value)}
+                value={formData.primaryLanguage}
+                onChange={e => handleChange('primaryLanguage', e.target.value)}
               />
             </div>
 
@@ -77,8 +77,8 @@ export default function BasicInfoEditModal({
               <input
                 className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 id="visa"
-                value={formData.visa}
-                onChange={e => handleChange('visa', e.target.value)}
+                value={formData.visaRequirement}
+                onChange={e => handleChange('visaRequirement', e.target.value)}
               />
             </div>
 
@@ -122,8 +122,8 @@ export default function BasicInfoEditModal({
               <input
                 className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 id="powerOutlet"
-                value={formData.plugType}
-                onChange={e => handleChange('plugType', e.target.value)}
+                value={formData.electricalPlugType}
+                onChange={e => handleChange('electricalPlugType', e.target.value)}
               />
             </div>
 
@@ -137,8 +137,8 @@ export default function BasicInfoEditModal({
               <input
                 className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 id="religion"
-                value={formData.religion}
-                onChange={e => handleChange('religion', e.target.value)}
+                value={formData.mainReligions}
+                onChange={e => handleChange('mainReligions', e.target.value)}
               />
             </div>
           </div>

@@ -1,17 +1,18 @@
+
 export interface City {
-  id?: string;
-  city: string;
-  country: string;
-  image: string;
-  tags?: string[];
-  costRange?: string;
-  livingCost?: number;
-  safety?: number;
-  culture?: number;
-  likes?: number;
-  // New fields for data collection state
-  contributors: any[];
+  city_id: number;
+  city_name: string;
+  country_name: string;
+  city_profile_url: string;
+  monthly_cost_range_min: number;
+  monthly_cost_range_max: number;
+  internet_speed_mbps: number;
+  air_quality: string;
+  noise_level: string;
+  contributors: number;
   slug: string;
+  // New fields for data collection state
+  // contributors: any[];
 }
 
 export interface Recommendation {

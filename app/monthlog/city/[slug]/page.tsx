@@ -1,28 +1,27 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import CityHeader from '@/components/monthlog/city-header';
-import CityHeroSection from '@/components/monthlog/city-hero-section';
-import CityRadarChart from '@/components/monthlog/city-radar-chart';
-import CityOverviewStats from '@/components/monthlog/city-overview-stats';
-import CityCostSection from '@/components/monthlog/city-cost-section';
-import CityHousingSection from '@/components/monthlog/city-housing-section';
-import CityConvenienceSection from '@/components/monthlog/city-convenience-section';
-import CityTransportSection from '@/components/monthlog/city-transport-section';
-import CityCommunitySection from '@/components/monthlog/city-community-section';
-import CityBasicInfoSection from '@/components/monthlog/city-basic-info-section';
-import CityDigitalSection from '@/components/monthlog/city-digital-section';
-import CitySafetySection from '@/components/monthlog/city-safety-section';
-import CitySeasonChart from '@/components/monthlog/city-season-chart';
-import CityAtmosphereGallery from '@/components/monthlog/city-atmosphere-gallery';
-import { getCityDetailData } from '@/lib/monthlog/city-data';
+import { useParams } from "next/navigation";
+import CityHeader from "@/components/monthlog/city-header";
+import CityHeroSection from "@/components/monthlog/city-hero-section";
+// import CityRadarChart from "@/components/monthlog/city-radar-chart";
+import CityOverviewStats from "@/components/monthlog/city-overview-stats";
+import CityCostSection from "@/components/monthlog/city-cost-section";
+import CityHousingSection from "@/components/monthlog/city-housing-section";
+import CityConvenienceSection from "@/components/monthlog/city-convenience-section";
+import CityTransportSection from "@/components/monthlog/city-transport-section";
+import CityCommunitySection from "@/components/monthlog/city-community-section";
+import CityBasicInfoSection from "@/components/monthlog/city-basic-info-section";
+import CityDigitalSection from "@/components/monthlog/city-digital-section";
+import CitySafetySection from "@/components/monthlog/city-safety-section";
+import CitySeasonChart from "@/components/monthlog/city-season-chart";
+import CityAtmosphereGallery from "@/components/monthlog/city-atmosphere-gallery";
+import { useCityDetail } from "./_hook";
 
 export default function CityDetailPage() {
   const params = useParams();
-  const cityId = params.slug as string;
-
+  const citySlug = params.slug as string;
   // Get city data based on cityId
-  const cityData = getCityDetailData(cityId);
+  const { data: cityData } = useCityDetail(citySlug);
 
   if (!cityData) {
     return (
@@ -38,72 +37,79 @@ export default function CityDetailPage() {
       </div>
     );
   }
+  console.log(cityData);
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <CityHeader cityName={cityData.name} countryName={cityData.country} />
+      <CityHeader
+        cityName={cityData.basic.cityName}
+        countryName={cityData.basic.countryCode}
+      />
 
       <div className="max-w-6xl py-8 mx-auto">
         <div className="mx-6 lg:mx-8 pb-8">
           {/* Hero Section */}
           <CityHeroSection
-            city={cityData.name}
-            description={cityData.description}
-            image={cityData.heroImage}
-            tags={cityData.tags}
+            city={cityData.basic.cityName}
+            description={cityData.basic.cityDesc ?? ""}
+            image={cityData.basic.cityProfileUrl ?? ""}
+            // tags={cityData.tags??[]}
           />
 
           {/* Overview Stats */}
           <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 mb-8">
             <CityOverviewStats
-              suitabilityScore={cityData.suitabilityScore}
-              totalContributors={cityData.totalContributors}
-              totalContributions={cityData.totalContributions}
-              reliabilityScore={cityData.reliabilityScore}
-              lastUpdated={cityData.lastUpdated}
+              suitabilityScore={cityData.suitability}
+              totalContributors={cityData.contribution.totalContributors}
+              totalContributions={cityData.contribution.totalContributions}
+              reliabilityScore={cityData.reliability}
+              // lastUpdated={cityData.}
             />
           </div>
 
           {/* Main Content Sections */}
           <div className="space-y-8">
             {/* Radar Chart Section */}
-            <CityRadarChart
-              data={cityData.compatibilityData}
-              tags={cityData.popularTags}
-              comments={cityData.popularComments}
-            />
+            {/* <CityRadarChart
+              data={9}
+              tags={cityData.popularTags ?? []}
+              comments={8}
+            /> */}
 
             {/* Cost Section */}
-            <CityCostSection data={cityData.costData} />
+            <CityCostSection data={cityData.cost} />
 
             {/* Digital/Work Environment */}
-            <CityDigitalSection data={cityData.digitalData} />
+            <CityDigitalSection data={cityData.digital} />
 
             {/* Safety & Medical */}
-            <CitySafetySection data={cityData.safetyData} />
+            <CitySafetySection data={cityData.safety} />
 
             {/* Housing Environment */}
-            <CityHousingSection data={cityData.housingData} />
+            <CityHousingSection data={cityData.residential} />
 
             {/* Local Convenience */}
-            <CityConvenienceSection data={cityData.convenienceData} />
+            <CityConvenienceSection data={cityData.convenience} />
 
             {/* Transportation */}
-            <CityTransportSection data={cityData.transportData} />
+            <CityTransportSection data={cityData.transportation} />
 
             {/* Community & Local Experience */}
-            <CityCommunitySection data={cityData.communityData} />
+            <CityCommunitySection data={cityData.community} />
 
             {/* Basic Information */}
-            <CityBasicInfoSection data={cityData.basicInfo} />
+            <CityBasicInfoSection data={cityData.detail} />
 
             {/* Seasonal Recommendations */}
-            <CitySeasonChart data={cityData.seasonData} />
+            <CitySeasonChart
+              data={cityData.seasonData ?? []}
+              comments={cityData.seasonComments ?? []}
+            />
 
             {/* City Atmosphere Gallery */}
             <CityAtmosphereGallery
-              photos={cityData.atmospherePhotos}
-              totalPhotos={cityData.totalPhotos}
+              photos={cityData.recentFeeds ?? []}
+              totalPhotos={cityData.sectionContributions ?? 0}
             />
           </div>
 

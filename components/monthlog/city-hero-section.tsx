@@ -1,20 +1,20 @@
 // components/monthlog/city-hero-section.tsx
-'use client';
+"use client";
 
-import { Pen } from 'lucide-react';
+import { Pen } from "lucide-react";
 
 interface CityHeroSectionProps {
   city: string;
   description: string;
   image: string;
-  tags: string[];
+  // tags: string[];
 }
 
 export default function CityHeroSection({
   city,
   description,
   image,
-  tags,
+  // tags,
 }: CityHeroSectionProps) {
   return (
     <div className="relative bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border border-gray-100 mb-6 sm:mb-8">
@@ -42,14 +42,14 @@ export default function CityHeroSection({
 
           {/* Tags - Responsive */}
           <div className="flex flex-wrap gap-1 sm:gap-2 justify-center max-w-xs sm:max-w-none">
-            {tags.map((tag, index) => (
+            {/* {(tags ?? []).map((tag, index) => (
               <span
                 key={index}
                 className="px-2 py-0.5 sm:px-3 sm:py-1 backdrop-blur-sm bg-white/20 text-white text-xs sm:text-sm font-medium rounded-full"
               >
                 #{tag}
               </span>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

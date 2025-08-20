@@ -8,7 +8,7 @@ interface CityOverviewStatsProps {
   totalContributors: number;
   totalContributions: number;
   reliabilityScore: number;
-  lastUpdated: string;
+  // lastUpdated: string;
 }
 
 export default function CityOverviewStats({
@@ -16,7 +16,7 @@ export default function CityOverviewStats({
   totalContributors,
   totalContributions,
   reliabilityScore,
-  lastUpdated,
+  // lastUpdated,
 }: CityOverviewStatsProps) {
   return (
     <div className="p-4 sm:p-6">
@@ -67,7 +67,7 @@ export default function CityOverviewStats({
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
           <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
             <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>최근 업데이트: {lastUpdated}</span>
+            {/* <span>최근 업데이트: {lastUpdated}</span> */}
           </div>
           <button className="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white rounded-lg transition-colors duration-200 hover:opacity-90 bg-[#0B24FB]">
             + 내 모든 경험 한번에 개척하기
