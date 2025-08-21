@@ -8,6 +8,23 @@ const apiHandler = axios.create({
   },
 });
 
+apiHandler.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const userString = sessionStorage.getItem("user");
+      if (userString) {
+        const user = JSON.parse(userString);
+        config.headers["Content-Type"] = "application/json";
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 let isRefreshing = false;
 let failedQueue: any[] = [];
 

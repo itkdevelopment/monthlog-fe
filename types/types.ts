@@ -80,3 +80,120 @@ export interface Subsidy {
   travelSubsidy?: boolean;
   etcSubsidy?: string;
 }
+
+export interface User {
+  accessExpiredAt: string;
+  accessToken: string;
+  applyReason: string;
+  birthyear: number;
+  bookmarkId: number;
+  bookmarks: Bookmark[];
+  canReJoin: boolean;
+  commentId: number;
+  createdAt: string;
+  deletedAt: string;
+  email: string;
+  fcmToken: string;
+  gender: string;
+  isRemoveAds: boolean;
+  lastPasswordChangedAt: string;
+  lastRequestAt: string;
+  lastVisitDate: string;
+  loginFailCount: number;
+  nickname: string;
+  notificationCount: number;
+  password: string;
+  profileImage: string;
+  programNotificationId: number;
+  programNotifications: ProgramNotification[];
+  provider: string;
+  refreshExpiredAt: string;
+  refreshToken: string;
+  replyId: number;
+  reset: boolean;
+  resetPasswordToken: string;
+  roles: number[];
+  status: string;
+  updatedAt: string;
+  userDevice: UserDevice[];
+  userId: number;
+  userRole: string;
+  commentAndReplyCount?: number;
+  programNotificationCount?: number;
+  noticeCount?: number;
+  membership?: Membership;
+}
+
+export interface Membership {
+  membershipId?: number;
+  isSubscribed: boolean;
+  role: string;
+  startDate?: string;
+  endDate?: string;
+  membershipOption?: string;
+}
+
+export interface Bookmark {
+  bookmarkId: number;
+  createdAt: string;
+  programId: number;
+  updatedAt: string;
+  userId: number;
+}
+
+export interface ProgramNotification {
+  createdAt: string;
+  programId: number;
+  programNotificationId: number;
+  updatedAt: string;
+  userId: number;
+}
+
+export interface UserDevice {
+  accessExpiredAt: string;
+  accessToken: string;
+  isWeb: boolean;
+  macAddress: string;
+  refreshExpiredAt: string;
+  refreshToken: string;
+  userDeviceId: number;
+  userId: number;
+}
+
+export interface CreatedBy {
+  accessExpiredAt: string;
+  accessToken: string;
+  applyReason: string;
+  birthyear: number;
+  bookmarkId: number;
+  bookmarks: Bookmark[];
+  canReJoin: boolean;
+  commentId: number;
+  createdAt: string;
+  deletedAt: string;
+  email: string;
+  fcmToken: string;
+  gender: string;
+  isRemoveAds: boolean;
+  lastPasswordChangedAt: string;
+  lastRequestAt: string;
+  lastVisitDate: string;
+  loginFailCount: number;
+  nickname: string;
+  notificationCount: number;
+  password: string;
+  profileImage: string;
+  programNotificationId: number;
+  programNotifications: ProgramNotification[];
+  provider: string;
+  refreshExpiredAt: string;
+  refreshToken: string;
+  replyId: number;
+  reset: boolean;
+  resetPasswordToken: string;
+  roles: number[];
+  status: string;
+  updatedAt: string;
+  userDevice: UserDevice[];
+  userId: number;
+}
