@@ -1,29 +1,27 @@
+// lib/api/monthlerApiHandler.ts
+
 import axios from "axios";
 
-const apiHandler = axios.create({
-  // @huy: please adjust env variable for your dev environment
-  baseURL: "http://localhost:8080",
-  withCredentials: true, // ✅ 쿠키 자동 포함 설정
+const monthlerApiHandler = axios.create({
+  baseURL: "https://dev-api.monthler.kr",
+  withCredentials: true,
   headers: {
-    "Content-Type": "application/json", // 기본 설정
+    "Content-Type": "application/json",
   },
 });
 
-apiHandler.interceptors.request.use(
+monthlerApiHandler.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
       const userString = sessionStorage.getItem("user");
       if (userString) {
         const user = JSON.parse(userString);
-        config.headers["Content-Type"] = "application/json";
         config.headers.Authorization = `Bearer ${user.accessToken}`;
       }
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 let isRefreshing = false;
@@ -37,13 +35,10 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-apiHandler.interceptors.response.use(
+monthlerApiHandler.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // 엑세스 토큰 만료로 인한 402 에러 처리
-    console.log("error.response", error.response);
 
     if (error.response?.status === 402 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -52,7 +47,7 @@ apiHandler.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({
             resolve: (token: string) => {
-              resolve(apiHandler(originalRequest));
+              resolve(monthlerApiHandler(originalRequest));
             },
             reject: (err: any) => reject(err),
           });
@@ -63,18 +58,12 @@ apiHandler.interceptors.response.use(
 
       try {
         await axios.post(`https://dev-api.monthler.kr/refresh`, null, {
-          headers: {
-            // "x-refresh-token": `${refreshToken}`,
-            // provider: provider,
-          },
-          withCredentials: true, // 쿠키 포함
+          withCredentials: true,
         });
 
-        // 쿠키에 자동 저장되므로 따로 accessToken 저장 불필요
         processQueue(null, "OK");
-        return apiHandler(originalRequest);
+        return monthlerApiHandler(originalRequest);
       } catch (error) {
-        // Narrow error type before property access
         if (
           typeof error === "object" &&
           error !== null &&
@@ -84,20 +73,15 @@ apiHandler.interceptors.response.use(
           const errResponse = (error as any).response;
           if (errResponse?.status === 406) {
             if (errResponse.data?.code === 112) {
-              // 리프레시 토큰도 만료된 경우 - 로그아웃 처리 필요
               alert(errResponse.data.message);
               window.location.href = "/";
             } else if (errResponse.data?.code === 104) {
-              //비정상적인 접근
               alert(errResponse.data.message);
             }
           }
         }
 
-        console.error(
-          "리프레시 토큰이 만료되었습니다. 다시 로그인하세요.",
-          error
-        );
+        console.error("리프레시 토큰 만료: 다시 로그인 필요", error);
         return Promise.reject(error);
       } finally {
         isRefreshing = false;
@@ -108,4 +92,4 @@ apiHandler.interceptors.response.use(
   }
 );
 
-export default apiHandler;
+export default monthlerApiHandler;

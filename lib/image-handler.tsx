@@ -1,10 +1,10 @@
-import apiHandler from "@/lib/api-handler";
+import monthlerApiHandler from "@/lib/monthler-api-handler";
 import axios from "axios";
 
 const handleImageUpload = async (file: File, onProgress?: (e: { progress: number }) => void): Promise<string> => {
     try {
         // 1. 사전 서명된 URL 요청
-        const res = await apiHandler.get(`/files/upload/pre-signed-url`, {
+        const res = await monthlerApiHandler.get(`/files/upload/pre-signed-url`, {
             params: {
                 fileName: file.name,
             },
