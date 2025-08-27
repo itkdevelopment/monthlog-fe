@@ -31,7 +31,7 @@ export default function HeaderSection({
       </div>
 
       {/* 스텝 표시 개선 */}
-      <div className="flex flex-wrap gap-8 md:gap-2 md:flex-row md:items-center md:justify-center mb-16">
+      <div className="flex flex-wrap gap-16 md:gap-2 md:flex-row items-center justify-center mb-16">
         <div
           className={`relative flex items-center justify-center cursor-pointer transition-all ${
             currentStep === "question" ? "text-[#0000f5]" : "text-gray-400"
@@ -53,7 +53,7 @@ export default function HeaderSection({
         </div>
 
         <div
-          className={`w-16 h-0.5 invisible md:visible transition-all ${
+          className={`w-16 h-0.5 hidden md:block transition-all ${
             currentStep === "search" ||
             currentStep === "compare" ||
             currentStep === "plan" ||
@@ -86,7 +86,7 @@ export default function HeaderSection({
         </div>
 
         <div
-          className={`w-16 h-0.5 invisible md:visible transition-all ${
+          className={`w-16 h-0.5 hidden md:block transition-all ${
             currentStep === "compare" ||
             currentStep === "plan" ||
             currentStep === "complete"
@@ -118,7 +118,7 @@ export default function HeaderSection({
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all invisible md:visible ${
+          className={`w-16 h-0.5 transition-all hidden md:block ${
             currentStep === "plan" || currentStep === "complete"
               ? "bg-[#0000f5]"
               : "bg-gray-300"
@@ -148,7 +148,7 @@ export default function HeaderSection({
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all invisible md:visible ${
+          className={`w-16 h-0.5 transition-all hidden md:block ${
             currentStep === "complete" ? "bg-[#0000f5]" : "bg-gray-300"
           }`}
         ></div>
