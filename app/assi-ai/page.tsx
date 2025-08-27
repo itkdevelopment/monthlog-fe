@@ -1843,152 +1843,150 @@ export default function TravelGrantAssistant() {
       />
 
       {/* Main Content */}
-      <div className="relative">
-        <div
-          className={`flex-1 transition-all duration-300 ease-in-out ${
-            showHistory ? "md:ml-80" : "ml-0"
-          }`}
-        >
-          <div className="p-6">
-            <div className="max-w-5xl mx-auto">
-              {/* Header */}
-              <HeaderSection
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${
+          showHistory ? "md:ml-80" : "ml-0"
+        }`}
+      >
+        <div className="p-6">
+          <div className="max-w-5xl mx-auto">
+            {/* Header */}
+            <HeaderSection
+              currentStep={currentStep}
+              goToStep={goToStep}
+              programsLength={programs.length}
+              selectedProgramsLength={selectedPrograms.length}
+              travelPlanLength={travelPlan.length}
+            />
+
+            {/* Chat Interface - 스텝1~3에서만 표시 */}
+            {(currentStep === "question" ||
+              currentStep === "search" ||
+              currentStep === "compare") && (
+              <QuestionSection
                 currentStep={currentStep}
-                goToStep={goToStep}
-                programsLength={programs.length}
-                selectedProgramsLength={selectedPrograms.length}
-                travelPlanLength={travelPlan.length}
+                handleChatSubmit={handleChatSubmit}
+                handleInputChange={handleInputChange}
+                input={input}
+                isLoading={isLoading}
+                messages={messages}
+                queryHistory={queryHistory}
+                handleQueryHistoryClick={handleQueryHistoryClick}
+                resetAndClearSelection={resetAndClearSelection}
+                copyToClipboard={copyToClipboard}
+                setInput={setInput}
+                isThinking={isThinking}
               />
+            )}
 
-              {/* Chat Interface - 스텝1~3에서만 표시 */}
-              {(currentStep === "question" ||
-                currentStep === "search" ||
-                currentStep === "compare") && (
-                <QuestionSection
-                  currentStep={currentStep}
-                  handleChatSubmit={handleChatSubmit}
-                  handleInputChange={handleInputChange}
-                  input={input}
-                  isLoading={isLoading}
-                  messages={messages}
-                  queryHistory={queryHistory}
-                  handleQueryHistoryClick={handleQueryHistoryClick}
-                  resetAndClearSelection={resetAndClearSelection}
-                  copyToClipboard={copyToClipboard}
-                  setInput={setInput}
-                  isThinking={isThinking}
-                />
-              )}
+            {/* Step 2: Program Selection */}
+            {currentStep === "search" && programs.length > 0 && (
+              <SearchSection
+                programs={programs}
+                selectedPrograms={selectedPrograms}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                clearSelectedPrograms={clearSelectedPrograms}
+                handleProgramSelect={handleProgramSelect}
+                selectedProgramDetail={selectedProgramDetail}
+                setSelectedProgramDetail={setSelectedProgramDetail}
+                openSidePanel={openSidePanel}
+                goToStep={goToStep}
+                changedItems={changedItems}
+                handleCompare={handleCompare}
+              />
+            )}
 
-              {/* Step 2: Program Selection */}
-              {currentStep === "search" && programs.length > 0 && (
-                <SearchSection
-                  programs={programs}
-                  selectedPrograms={selectedPrograms}
-                  sortBy={sortBy}
-                  setSortBy={setSortBy}
-                  clearSelectedPrograms={clearSelectedPrograms}
-                  handleProgramSelect={handleProgramSelect}
-                  selectedProgramDetail={selectedProgramDetail}
-                  setSelectedProgramDetail={setSelectedProgramDetail}
-                  openSidePanel={openSidePanel}
-                  goToStep={goToStep}
-                  changedItems={changedItems}
-                  handleCompare={handleCompare}
-                />
-              )}
+            {/* Step 3: Comparison */}
+            {currentStep === "compare" && (
+              <CompareSection
+                programs={programs}
+                selectedPrograms={selectedPrograms}
+                goToStep={goToStep}
+                handleCreatePlan={handleCreatePlan}
+                openSidePanel={openSidePanel}
+              />
+            )}
 
-              {/* Step 3: Comparison */}
-              {currentStep === "compare" && (
-                <CompareSection
-                  programs={programs}
-                  selectedPrograms={selectedPrograms}
-                  goToStep={goToStep}
-                  handleCreatePlan={handleCreatePlan}
-                  openSidePanel={openSidePanel}
-                />
-              )}
+            {/* Step 4 & 5: Travel Plan */}
+            {(currentStep === "plan" || currentStep === "complete") && (
+              <PlanSection
+                currentStep={currentStep}
+                travelPlan={travelPlan}
+                completeTravel={completeTravel}
+                getCategoryColor={getCategoryColor}
+                handleActivitySelect={handleActivitySelect}
+                handleMemoChange={handleMemoChange}
+                showDetailFor={showDetailFor}
+                setShowDetailFor={setShowDetailFor}
+                showMemoFor={showMemoFor}
+                setShowMemoFor={setShowMemoFor}
+                planTitle={planTitle}
+                setPlanTitle={setPlanTitle}
+                overallSummary={overallSummary}
+                setOverallSummary={setOverallSummary}
+                openOnlineDocument={openOnlineDocument}
+                goToStep={goToStep}
+                isThinking={isThinking}
+              />
+            )}
 
-              {/* Step 4 & 5: Travel Plan */}
-              {(currentStep === "plan" || currentStep === "complete") && (
-                <PlanSection
-                  currentStep={currentStep}
-                  travelPlan={travelPlan}
-                  completeTravel={completeTravel}
-                  getCategoryColor={getCategoryColor}
-                  handleActivitySelect={handleActivitySelect}
-                  handleMemoChange={handleMemoChange}
-                  showDetailFor={showDetailFor}
-                  setShowDetailFor={setShowDetailFor}
-                  showMemoFor={showMemoFor}
-                  setShowMemoFor={setShowMemoFor}
-                  planTitle={planTitle}
-                  setPlanTitle={setPlanTitle}
-                  overallSummary={overallSummary}
-                  setOverallSummary={setOverallSummary}
-                  openOnlineDocument={openOnlineDocument}
-                  goToStep={goToStep}
-                  isThinking={isThinking}
-                />
-              )}
+            {/* Side Panel */}
+            {sidePanel.isOpen && (
+              <div className="fixed inset-0 z-50 flex">
+                <div
+                  className="fixed inset-0 bg-black/20"
+                  onClick={() =>
+                    setSidePanel({ isOpen: false, url: "", title: "" })
+                  }
+                ></div>
 
-              {/* Side Panel */}
-              {sidePanel.isOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                  <div
-                    className="fixed inset-0 bg-black/20"
-                    onClick={() =>
-                      setSidePanel({ isOpen: false, url: "", title: "" })
-                    }
-                  ></div>
-
-                  <div className="fixed inset-y-0 right-0 w-1/2 bg-white shadow-xl z-50 border-l border-gray-200">
-                    <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                      <h3 className="font-medium text-gray-900">
-                        {sidePanel.title}
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        onClick={() =>
-                          setSidePanel({ isOpen: false, url: "", title: "" })
-                        }
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <iframe
-                      src={sidePanel.url}
-                      className="w-full h-full"
-                      title={sidePanel.title}
-                    />
+                <div className="fixed inset-y-0 right-0 w-1/2 bg-white shadow-xl z-50 border-l border-gray-200">
+                  <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                    <h3 className="font-medium text-gray-900">
+                      {sidePanel.title}
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      onClick={() =>
+                        setSidePanel({ isOpen: false, url: "", title: "" })
+                      }
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
                   </div>
+                  <iframe
+                    src={sidePanel.url}
+                    className="w-full h-full"
+                    title={sidePanel.title}
+                  />
                 </div>
-              )}
-
-              {/* History Button */}
-              <div className="fixed top-6 left-6 z-40">
-                <Button
-                  onClick={() => setShowHistory(!showHistory)}
-                  className={`w-16 h-16 cursor-pointer rounded-full bg-transparent hover:bg-transparent border-none shadow-none transition-all duration-300 ease-in-out ${
-                    showHistory ? "ml-55" : "ml-0"
-                  }`}
-                  style={{ boxShadow: "none" }}
-                >
-                  <Menu className="w-12 h-12" style={{ color: "#222" }} />
-                </Button>
               </div>
+            )}
+
+            {/* History Button */}
+            <div className="fixed top-6 left-6 z-40">
+              <Button
+                onClick={() => setShowHistory(!showHistory)}
+                className={`w-16 h-16 cursor-pointer rounded-full bg-transparent hover:bg-transparent border-none shadow-none transition-all duration-300 ease-in-out ${
+                  showHistory ? "ml-55" : "ml-0"
+                }`}
+                style={{ boxShadow: "none" }}
+              >
+                <Menu className="w-12 h-12" style={{ color: "#222" }} />
+              </Button>
             </div>
           </div>
         </div>
-
-        {showHistory && (
-          <div
-            onClick={() => setShowHistory(false)}
-            className="fixed inset-0 bg-black/50 z-20 md:hidden"
-            aria-hidden="true"
-          />
-        )}
       </div>
+
+      {showHistory && (
+        <div
+          onClick={() => setShowHistory(false)}
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 }
