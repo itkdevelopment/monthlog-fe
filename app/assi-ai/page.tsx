@@ -1969,7 +1969,9 @@ export default function TravelGrantAssistant() {
               <div className="fixed top-6 left-6 z-40">
                 <Button
                   onClick={() => setShowHistory(!showHistory)}
-                  className="w-16 h-16 rounded-full bg-transparent hover:bg-transparent border-none shadow-none"
+                  className={`w-16 h-16 rounded-full bg-transparent hover:bg-transparent border-none shadow-none transition-all duration-300 ease-in-out ${
+                    showHistory ? "ml-55" : "ml-0"
+                  }`}
                   style={{ boxShadow: "none" }}
                 >
                   <Menu className="w-12 h-12" style={{ color: "#222" }} />
