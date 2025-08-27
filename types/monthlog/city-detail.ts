@@ -252,3 +252,189 @@ export interface SectionContributions {
   seasonComments: number;
   feeds: number;
 }
+
+export interface CityDetail {
+  primaryLanguage?: string | null;
+  visaRequirement?: string | null;
+  currency?: string | null;
+  timezone?: string | null;
+  electricalVoltage?: string | null;
+  electricalPlugType?: string | null;
+  mainReligions?: string;
+}
+
+export type Month =
+  | "JANUARY"
+  | "FEBRUARY"
+  | "MARCH"
+  | "APRIL"
+  | "MAY"
+  | "JUNE"
+  | "JULY"
+  | "AUGUST"
+  | "SEPTEMBER"
+  | "OCTOBER"
+  | "NOVEMBER"
+  | "DECEMBER";
+
+export type CommentType = "WEATHER" | "LIFESTYLE";
+
+export interface SeasonComment {
+  commentTypeSeason: CommentType;
+  monthTypeSeason: Month;
+  commentText: string;
+}
+
+export interface CityContributionPayload {
+  cityDetail?: CityDetail;
+  seasonComment: SeasonComment | null;
+  cityCost: {
+    totalCost?: {
+      startDate?: string;
+      endDate?: string;
+      totalCost?: number;
+    };
+    monthlyRent?: {
+      monthlyRent?: number;
+      month: Month;
+      numberOfPeople?: number;
+      walkable?: boolean;
+      accommodationType?: { id?: number; name?: string };
+      roomCount?: { id?: number; name?: string };
+      accommodationFeatures?: { id?: number; name?: string }[];
+      recommendedAccommodations?: {
+        id?: number;
+        name: string;
+        oneLineComment?: string;
+        url?: string;
+      };
+    };
+    foodCost?: {
+      avgMonthlyCost?: number;
+      eatingStyles?: { id?: number; name?: string }[];
+      foodItemPrices?: {
+        foodItem: { id?: number; name?: string; type?: "INGREDIENT" | "MENU" };
+        price: number;
+      }[];
+    };
+    communicationCost?: {
+      communicationMethod: { id?: number; name: string };
+      telecomAgency?: { id?: number; name?: string };
+      communicationPlan?: { id?: number; name?: string };
+      simPurchaseCost?: number;
+      avgMonthlyCost?: number;
+    };
+    transportationExpenses?: {
+      transportationExpenses: {
+        transportation: { id?: number; name: string };
+        monthlyCost: number;
+      }[];
+    };
+    utilityBills?: {
+      electricityBill?: number;
+      waterBill?: number;
+      gasBill?: number;
+      etc?: number;
+    };
+    initialSettlement?: {
+      securityFee?: number;
+      brokerageFee?: number;
+      initialSupplyItems?: { id?: number; name?: string; price?: number }[];
+    };
+    leisureActivityCost?: {
+      avgMonthlyCost?: number;
+      leisureActivityDetails?: {
+        leisureActivity: { id?: number; name: string };
+        price?: number;
+        url?: string;
+        companions?: { id?: number; name?: string }[];
+        categories?: { id?: number; name?: string }[];
+      }[];
+    };
+    localPrice?: {
+      price?: number;
+      localItem: { id?: number; name: string };
+    };
+  } | null;
+}
+
+export interface CityDetailFormData {
+  primaryLanguage: string | null;
+  visaRequirement: string | null;
+  currency: string | null;
+  timezone: string | null;
+  electricalVoltage: string | null;
+  electricalPlugType: string | null;
+  mainReligions: string| null;
+
+  seasonComment: SeasonComment | null;
+
+  cityCost: {
+    totalCost?: {
+      startDate?: string;
+      endDate?: string;
+      totalCost?: number;
+    };
+    monthlyRent?: {
+      monthlyRent?: number;
+      month: Month;
+      numberOfPeople?: number;
+      walkable?: boolean;
+      accommodationType?: { id?: number; name?: string };
+      roomCount?: { id?: number; name?: string };
+      accommodationFeatures?: { id?: number; name?: string }[];
+      recommendedAccommodations?: {
+        id?: number;
+        name: string;
+        oneLineComment?: string;
+        url?: string;
+      };
+    };
+    foodCost?: {
+      avgMonthlyCost?: number;
+      eatingStyles?: { id?: number; name?: string }[];
+      foodItemPrices?: {
+        foodItem: { id?: number; name?: string; type?: "INGREDIENT" | "MENU" };
+        price: number;
+      }[];
+    };
+    communicationCost?: {
+      communicationMethod: { id?: number; name: string };
+      telecomAgency?: { id?: number; name?: string };
+      communicationPlan?: { id?: number; name?: string };
+      simPurchaseCost?: number;
+      avgMonthlyCost?: number;
+    };
+    transportationExpenses?: {
+      transportationExpenses: {
+        transportation: { id?: number; name: string };
+        monthlyCost: number;
+      }[];
+    };
+    utilityBills?: {
+      electricityBill?: number;
+      waterBill?: number;
+      gasBill?: number;
+      etc?: number;
+    };
+    initialSettlement?: {
+      securityFee?: number;
+      brokerageFee?: number;
+      initialSupplyItems?: { id?: number; name?: string; price?: number }[];
+    };
+    leisureActivityCost?: {
+      avgMonthlyCost?: number;
+      leisureActivityDetails?: {
+        leisureActivity: { id?: number; name: string };
+        price?: number;
+        url?: string;
+        companions?: { id?: number; name?: string }[];
+        categories?: { id?: number; name?: string }[];
+      }[];
+    };
+    localPrice?: {
+      price?: number;
+      localItem: { id?: number; name: string };
+    };
+  } | null;
+}

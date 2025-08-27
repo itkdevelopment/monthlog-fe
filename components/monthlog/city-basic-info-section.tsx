@@ -18,9 +18,9 @@ export default function CityBasicInfoSection({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [basicInfoData, setBasicInfoData] = useState(data);
 
-  const handleEditClick = () => {
-    setIsEditModalOpen(true);
-  };
+  // const handleEditClick = () => {
+  //   setIsEditModalOpen(true);
+  // };
 
   const handleSave = (newData: DetailInfo) => {
     setBasicInfoData(newData);
@@ -33,7 +33,7 @@ export default function CityBasicInfoSection({
         title="기본 정보"
         subtitle="24명이 기여한 정보"
         emoji="🌏"
-        onEdit={handleEditClick}
+        // onEdit={handleEditClick}
       >
         <div className="space-y-1">
           <StatItem

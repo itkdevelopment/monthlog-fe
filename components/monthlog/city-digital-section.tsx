@@ -14,11 +14,10 @@ import StatItem from "./shared/stat-item";
 import { DigitalData } from "@/types/monthlog/city-detail";
 
 interface CityDigitalSectionProps {
-  data?: DigitalData; // Cho phép undefined
+  data?: DigitalData;
 }
 
 export default function CityDigitalSection({ data }: CityDigitalSectionProps) {
-  // Nếu chưa có dữ liệu, không render gì
   if (!data) {
     return null;
   }

@@ -1,3 +1,5 @@
+import apiHandler from "../api-handler";
+
 export interface HomeCityApi {
   city_id: number;
   city_name: string;
@@ -34,11 +36,6 @@ export interface HomeApiResponse {
 }
 
 export async function fetchHomeCities(): Promise<HomeApiResponse> {
-  const res = await fetch("/api/v1/explorer/home/cms", {
-    method: "GET",
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch home cities: ${res.status}`);
-  }
-  return res.json();
+  const res = await apiHandler.get("explorer/home/cms");
+  return res.data
 }

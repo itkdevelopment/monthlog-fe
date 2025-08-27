@@ -15,9 +15,9 @@ export default function CitySeasonChart({ data, comments }: CitySeasonChartProps
   const [seasonData, setSeasonData] = useState<MonthlySeasonData[] | undefined>(data);
   const [seasonComments] = useState<SeasonComment[] | undefined>(comments);
 
-  const handleEditClick = () => {
-    setIsEditModalOpen(true);
-  };
+  // const handleEditClick = () => {
+  //   setIsEditModalOpen(true);
+  // };
 
   const handleSave = (newData: MonthlySeasonData[]) => {
     setSeasonData(newData);
@@ -44,7 +44,7 @@ export default function CitySeasonChart({ data, comments }: CitySeasonChartProps
         title="추천 ↔ 피해야하는 시기"
         subtitle={`${comments?.length ?? 0}명이 참여했어요`}
         emoji="🌗"
-        onEdit={handleEditClick}
+        // onEdit={handleEditClick}
       >
         {/* Chart Container */}
         <div className="h-80">

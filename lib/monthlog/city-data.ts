@@ -1,26 +1,30 @@
 // lib/monthlog/city-data.ts
-import { CityDetailData } from "@/types/monthlog/city-detail";
-
-
+import {
+  CityContributionPayload,
+  CityDetailData,
+} from "@/types/monthlog/city-detail";
+import apiHandler from "../api-handler";
 
 /**
  * Fetch city detail by cityId
  * @param id City ID (string)
  * @returns CityDetailData
  */
- 
+
 export async function fetchCityDetail(id: string): Promise<CityDetailData> {
-  const res = await fetch(`/api/v1/explorer/cities/${id}/details`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await apiHandler.get<{ data: CityDetailData }>(
+    `/explorer/cities/${id}/details`
+  );
+  return res.data.data;
+}
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch city detail: ${res.status}`);
-  }
-
-  const json = await res.json();
-  return json.data as CityDetailData;
+export async function contributeCity(
+  id: string,
+  payload: CityContributionPayload
+): Promise<CityDetailData> {
+  const res = await apiHandler.post<CityDetailData>(
+    `/explorer/cities/${id}/contribute`,
+    payload
+  );
+  return res.data;
 }

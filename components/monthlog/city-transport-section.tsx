@@ -14,14 +14,14 @@ import StatItem from "./shared/stat-item";
 import { TransportData } from "@/types/monthlog/city-detail";
 
 interface CityTransportSectionProps {
-  data?: TransportData; // Cho phép undefined
+  data?: TransportData; 
 }
 
 export default function CityTransportSection({
   data,
 }: CityTransportSectionProps) {
   if (!data) {
-    return null; // Không render nếu chưa có dữ liệu
+    return null;
   }
 
   return (
