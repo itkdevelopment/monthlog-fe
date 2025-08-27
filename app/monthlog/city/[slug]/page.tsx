@@ -21,7 +21,7 @@ export default function CityDetailPage() {
   const params = useParams();
   const citySlug = params.slug as string;
   // Get city data based on cityId
-  const { data: cityData } = useCityDetail(citySlug);
+  const { data: cityData, cityId } = useCityDetail(citySlug);
 
   if (!cityData) {
     return (
@@ -77,7 +77,7 @@ export default function CityDetailPage() {
             /> */}
 
             {/* Cost Section */}
-            <CityCostSection data={cityData.cost} />
+            <CityCostSection data={cityData.cost} cityId={cityId} />
 
             {/* Digital/Work Environment */}
             <CityDigitalSection data={cityData.digital} />
@@ -103,7 +103,7 @@ export default function CityDetailPage() {
             {/* Seasonal Recommendations */}
             <CitySeasonChart
               data={cityData.seasonData ?? []}
-              comments={cityData.seasonComments ?? []}
+              // comments={cityData.seasonComments ?? []}
             />
 
             {/* City Atmosphere Gallery */}
