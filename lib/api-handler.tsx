@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const apiHandler = axios.create({
-  // @huy: please adjust env variable for your dev environment
-  baseURL: "http://localhost:8080",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true, // ✅ 쿠키 자동 포함 설정
   headers: {
     "Content-Type": "application/json", // 기본 설정
@@ -62,7 +61,7 @@ apiHandler.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axios.post(`https://dev-api.monthler.kr/refresh`, null, {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/refresh`, null, {
           headers: {
             // "x-refresh-token": `${refreshToken}`,
             // provider: provider,

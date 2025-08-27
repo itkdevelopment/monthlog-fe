@@ -1,13 +1,13 @@
 // components/monthlog/shared/section-card.tsx
-import { ReactNode } from 'react';
-import EditButton from './edit-button';
+import { ReactNode } from "react";
+// import EditButton from "./edit-button";
 
 interface SectionCardProps {
   title: string;
   subtitle?: string;
   emoji?: string;
   children: ReactNode;
-  onEdit?: () => void;
+  onEdit?: ReactNode;
 }
 
 export default function SectionCard({
@@ -34,7 +34,7 @@ export default function SectionCard({
               )}
             </div>
           </div>
-          {onEdit && <EditButton onClick={onEdit} />}
+          {onEdit && <div>{onEdit}</div>}
         </div>
       </div>
       <div className="p-4 sm:p-6 pt-0 space-y-1">{children}</div>
