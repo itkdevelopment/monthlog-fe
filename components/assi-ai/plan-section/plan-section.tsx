@@ -1,31 +1,50 @@
-"use client"
+"use client";
 
-import { Calendar, Sparkles, ChevronLeft, ImageIcon, Plus, Route } from "lucide-react"
-import { Button } from "@/components/assi-ai-proto/ui/button"
-import { Card, CardContent } from "@/components/assi-ai-proto/ui/card"
-import { Textarea } from "@/components/assi-ai-proto/ui/textarea"
-import { Input } from "@/components/assi-ai-proto/ui/input"
-import { Badge } from "@/components/assi-ai-proto/ui/badge"
-import { MapPin, Clock, ThumbsUp, Info, PenLine, Map } from "lucide-react"
+import {
+  Calendar,
+  Sparkles,
+  ChevronLeft,
+  ImageIcon,
+  Plus,
+  Route,
+} from "lucide-react";
+import { Button } from "@/components/assi-ai/ui/button";
+import { Card, CardContent } from "@/components/assi-ai/ui/card";
+import { Textarea } from "@/components/assi-ai/ui/textarea";
+import { Input } from "@/components/assi-ai/ui/input";
+import { Badge } from "@/components/assi-ai/ui/badge";
+import { MapPin, Clock, ThumbsUp, Info, PenLine, Map } from "lucide-react";
 
 interface PlanSectionProps {
-  currentStep: "question" | "search" | "compare" | "plan" | "complete"
-  travelPlan: any[]
-  completeTravel: () => void
-  getCategoryColor: (category: string) => string
-  handleActivitySelect: (dayIndex: number, activityIndex: number) => void
-  handleMemoChange: (dayIndex: number, activityIndex: number, memo: string) => void
-  showDetailFor: { dayIndex: number; activityIndex: number } | null
-  setShowDetailFor: (detail: { dayIndex: number; activityIndex: number } | null) => void
-  showMemoFor: { dayIndex: number; activityIndex: number } | null
-  setShowMemoFor: (memo: { dayIndex: number; activityIndex: number } | null) => void
-  planTitle: string
-  setPlanTitle: (title: string) => void
-  overallSummary: string
-  setOverallSummary: (summary: string) => void
-  openOnlineDocument: (style: "simple" | "standard" | "visual" | "calendar" | "calendar2") => void
-  goToStep: (step: "question" | "search" | "compare" | "plan" | "complete") => void
-  isThinking: boolean
+  currentStep: "question" | "search" | "compare" | "plan" | "complete";
+  travelPlan: any[];
+  completeTravel: () => void;
+  getCategoryColor: (category: string) => string;
+  handleActivitySelect: (dayIndex: number, activityIndex: number) => void;
+  handleMemoChange: (
+    dayIndex: number,
+    activityIndex: number,
+    memo: string
+  ) => void;
+  showDetailFor: { dayIndex: number; activityIndex: number } | null;
+  setShowDetailFor: (
+    detail: { dayIndex: number; activityIndex: number } | null
+  ) => void;
+  showMemoFor: { dayIndex: number; activityIndex: number } | null;
+  setShowMemoFor: (
+    memo: { dayIndex: number; activityIndex: number } | null
+  ) => void;
+  planTitle: string;
+  setPlanTitle: (title: string) => void;
+  overallSummary: string;
+  setOverallSummary: (summary: string) => void;
+  openOnlineDocument: (
+    style: "simple" | "standard" | "visual" | "calendar" | "calendar2"
+  ) => void;
+  goToStep: (
+    step: "question" | "search" | "compare" | "plan" | "complete"
+  ) => void;
+  isThinking: boolean;
 }
 
 export default function PlanSection({
@@ -73,7 +92,9 @@ export default function PlanSection({
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center">
             <div className="w-8 h-8 border-2 border-[#0000f5] border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-xl text-gray-800 mb-2">AI가 맞춤형 여행계획을 생성하고 있어요</p>
+          <p className="text-xl text-gray-800 mb-2">
+            AI가 맞춤형 여행계획을 생성하고 있어요
+          </p>
           <p className="text-sm text-gray-600">잠시만 기다려주세요</p>
         </div>
       ) : travelPlan.length > 0 ? (
@@ -89,7 +110,9 @@ export default function PlanSection({
 
           {currentStep === "complete" && (
             <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">여행 계획 요약</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">
+                여행 계획 요약
+              </h3>
               <Textarea
                 placeholder="여행 계획에 대한 요약을 입력하세요..."
                 value={overallSummary}
@@ -122,7 +145,7 @@ export default function PlanSection({
                       size="sm"
                       className="flex items-center gap-2 border-gray-300 text-gray-600 hover:bg-gray-50 bg-white"
                       onClick={() => {
-                        window.open("", "_blank")
+                        window.open("", "_blank");
                       }}
                     >
                       <Route className="w-4 h-4" />
@@ -137,15 +160,18 @@ export default function PlanSection({
 
                     <div className="space-y-6">
                       {day.activities.map((activity, activityIndex) => (
-                        <div key={activityIndex} className="relative flex items-start">
+                        <div
+                          key={activityIndex}
+                          className="relative flex items-start"
+                        >
                           {/* 타임라인 원 - 세로선 중앙에 절대 위치로 고정 */}
                           <div
                             className={`absolute w-4 h-4 rounded-full shadow-sm z-10 ${
                               currentStep === "complete"
                                 ? "bg-gray-300"
                                 : activity.selected
-                                  ? "bg-[#0000f5]"
-                                  : "bg-gray-300"
+                                ? "bg-[#0000f5]"
+                                : "bg-gray-300"
                             }`}
                             style={{
                               left: "65px",
@@ -161,11 +187,17 @@ export default function PlanSection({
                                 currentStep === "complete"
                                   ? "bg-[#fafafa]"
                                   : activity.selected
-                                    ? "bg-blue-50 border-[#0000f5] border-2 shadow-sm cursor-pointer"
-                                    : "bg-white border-gray-200 hover:border-gray-300 cursor-pointer"
+                                  ? "bg-blue-50 border-[#0000f5] border-2 shadow-sm cursor-pointer"
+                                  : "bg-white border-gray-200 hover:border-gray-300 cursor-pointer"
                               }`}
                               onClick={
-                                currentStep === "plan" ? () => handleActivitySelect(dayIndex, activityIndex) : undefined
+                                currentStep === "plan"
+                                  ? () =>
+                                      handleActivitySelect(
+                                        dayIndex,
+                                        activityIndex
+                                      )
+                                  : undefined
                               }
                             >
                               {/* 기존 CardContent 내용은 그대로 유지 */}
@@ -175,14 +207,18 @@ export default function PlanSection({
                                     <div className="flex items-center gap-3 mb-3">
                                       <h5
                                         className={`text-xl text-gray-900 ${
-                                          activity.selected ? "font-black" : "font-bold"
+                                          activity.selected
+                                            ? "font-black"
+                                            : "font-bold"
                                         }`}
                                       >
                                         {activity.name}
                                       </h5>
                                       <Badge
                                         variant="secondary"
-                                        className={`text-sm ${getCategoryColor(activity.category)}`}
+                                        className={`text-sm ${getCategoryColor(
+                                          activity.category
+                                        )}`}
                                       >
                                         {activity.category}
                                       </Badge>
@@ -199,22 +235,33 @@ export default function PlanSection({
                                       </div>
                                     </div>
 
-                                    <p className="text-gray-700 text-sm leading-relaxed mb-3">{activity.comment}</p>
+                                    <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                                      {activity.comment}
+                                    </p>
 
                                     {activity.userMemo && (
                                       <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200 mb-3">
-                                        <p className="text-sm text-yellow-800 italic">💭 {activity.userMemo}</p>
+                                        <p className="text-sm text-yellow-800 italic">
+                                          💭 {activity.userMemo}
+                                        </p>
                                       </div>
                                     )}
 
                                     {/* 메모 입력 영역 */}
                                     {showMemoFor?.dayIndex === dayIndex &&
-                                      showMemoFor?.activityIndex === activityIndex && (
+                                      showMemoFor?.activityIndex ===
+                                        activityIndex && (
                                         <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
                                           <Textarea
                                             placeholder="메모를 입력하세요..."
                                             value={activity.userMemo || ""}
-                                            onChange={(e) => handleMemoChange(dayIndex, activityIndex, e.target.value)}
+                                            onChange={(e) =>
+                                              handleMemoChange(
+                                                dayIndex,
+                                                activityIndex,
+                                                e.target.value
+                                              )
+                                            }
                                             className="w-full h-20 text-sm resize-none border-yellow-300 focus:border-yellow-400"
                                             onClick={(e) => e.stopPropagation()}
                                           />
@@ -222,8 +269,8 @@ export default function PlanSection({
                                             <Button
                                               size="sm"
                                               onClick={(e) => {
-                                                e.stopPropagation()
-                                                setShowMemoFor(null)
+                                                e.stopPropagation();
+                                                setShowMemoFor(null);
                                               }}
                                               className="bg-yellow-600 hover:bg-yellow-700 text-white"
                                             >
@@ -233,8 +280,8 @@ export default function PlanSection({
                                               size="sm"
                                               variant="outline"
                                               onClick={(e) => {
-                                                e.stopPropagation()
-                                                setShowMemoFor(null)
+                                                e.stopPropagation();
+                                                setShowMemoFor(null);
                                               }}
                                               className="border-yellow-300 text-yellow-700 hover:bg-yellow-50"
                                             >
@@ -251,7 +298,12 @@ export default function PlanSection({
                                       <div className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded-full">
                                         <ThumbsUp className="w-4 h-4 text-blue-600" />
                                         <span className="text-sm font-medium text-blue-800">
-                                          한달살러 {activity.popularityData.recommendedBy}명 선택
+                                          한달살러{" "}
+                                          {
+                                            activity.popularityData
+                                              .recommendedBy
+                                          }
+                                          명 선택
                                         </span>
                                       </div>
 
@@ -263,8 +315,11 @@ export default function PlanSection({
                                             : "border-gray-300 hover:border-gray-400"
                                         }`}
                                         onClick={(e) => {
-                                          e.stopPropagation()
-                                          handleActivitySelect(dayIndex, activityIndex)
+                                          e.stopPropagation();
+                                          handleActivitySelect(
+                                            dayIndex,
+                                            activityIndex
+                                          );
                                         }}
                                       >
                                         {activity.selected && (
@@ -296,14 +351,16 @@ export default function PlanSection({
                                         size="sm"
                                         className="h-8 px-3 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                         onClick={(e) => {
-                                          e.stopPropagation()
+                                          e.stopPropagation();
                                           setShowMemoFor(
-                                            showMemoFor?.dayIndex === dayIndex &&
-                                              showMemoFor?.activityIndex === activityIndex
+                                            showMemoFor?.dayIndex ===
+                                              dayIndex &&
+                                              showMemoFor?.activityIndex ===
+                                                activityIndex
                                               ? null
-                                              : { dayIndex, activityIndex },
-                                          )
-                                          setShowDetailFor(null)
+                                              : { dayIndex, activityIndex }
+                                          );
+                                          setShowDetailFor(null);
                                         }}
                                       >
                                         <PenLine className="w-3 h-3 mr-1" />
@@ -314,8 +371,8 @@ export default function PlanSection({
                                         size="sm"
                                         className="h-8 px-3 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                         onClick={(e) => {
-                                          e.stopPropagation()
-                                          window.open("", "_blank")
+                                          e.stopPropagation();
+                                          window.open("", "_blank");
                                         }}
                                       >
                                         <Info className="w-3 h-3 mr-1" />
@@ -326,8 +383,11 @@ export default function PlanSection({
                                         size="sm"
                                         className="h-8 px-3 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                         onClick={(e) => {
-                                          e.stopPropagation()
-                                          window.open(activity.mapUrl, "_blank")
+                                          e.stopPropagation();
+                                          window.open(
+                                            activity.mapUrl,
+                                            "_blank"
+                                          );
                                         }}
                                       >
                                         <Map className="w-3 h-3 mr-1" />
@@ -360,8 +420,12 @@ export default function PlanSection({
                                 <div className="flex items-center justify-center gap-3 text-gray-500">
                                   <Plus className="w-6 h-6" />
                                   <div className="text-center">
-                                    <h5 className="text-lg font-medium text-gray-600 mb-1">장소 추가하기</h5>
-                                    <p className="text-sm text-gray-500">원하는 장소를 직접 추가해보세요</p>
+                                    <h5 className="text-lg font-medium text-gray-600 mb-1">
+                                      장소 추가하기
+                                    </h5>
+                                    <p className="text-sm text-gray-500">
+                                      원하는 장소를 직접 추가해보세요
+                                    </p>
                                   </div>
                                 </div>
                               </CardContent>
@@ -419,7 +483,9 @@ export default function PlanSection({
           <div className="flex justify-between items-center">
             <Button
               variant="outline"
-              onClick={() => goToStep(currentStep === "complete" ? "plan" : "compare")}
+              onClick={() =>
+                goToStep(currentStep === "complete" ? "plan" : "compare")
+              }
               className="flex items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -429,7 +495,8 @@ export default function PlanSection({
             {currentStep === "plan" && (
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-700 text-center">
-                  💡 <strong>팁:</strong> 카드를 드래그해서 순서를 변경할 수 있어요!
+                  💡 <strong>팁:</strong> 카드를 드래그해서 순서를 변경할 수
+                  있어요!
                 </p>
               </div>
             )}
@@ -440,10 +507,15 @@ export default function PlanSection({
       ) : (
         <div className="text-center py-20">
           <ImageIcon className="w-10 h-10 mx-auto mb-6 text-gray-400" />
-          <p className="text-xl text-gray-800 mb-2">아직 추천된 여행 계획이 없습니다</p>
-          <p className="text-sm text-gray-600">상세한 여행 조건을 입력하거나, 이전 단계에서 프로그램을 선택해주세요.</p>
+          <p className="text-xl text-gray-800 mb-2">
+            아직 추천된 여행 계획이 없습니다
+          </p>
+          <p className="text-sm text-gray-600">
+            상세한 여행 조건을 입력하거나, 이전 단계에서 프로그램을
+            선택해주세요.
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 }

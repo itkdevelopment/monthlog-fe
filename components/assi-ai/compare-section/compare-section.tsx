@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/assi-ai-proto/ui/button"
-import { Badge } from "@/components/assi-ai-proto/ui/badge"
-import { FileText, ChevronLeft, ExternalLink } from "lucide-react"
-import MobileProgramComparison from "@/components/assi-ai-proto/mobile-program-comparison"
+import { Button } from "@/components/assi-ai/ui/button";
+import { Badge } from "@/components/assi-ai/ui/badge";
+import { FileText, ChevronLeft, ExternalLink } from "lucide-react";
+import MobileProgramComparison from "@/components/assi-ai/mobile-program-comparison";
 
 interface CompareSectionProps {
-  programs: any[]
-  selectedPrograms: string[]
-  goToStep: (step: "question" | "search" | "compare" | "plan" | "complete") => void
-  handleCreatePlan: (programId: string) => void
-  openSidePanel: (url: string, title: string) => void
+  programs: any[];
+  selectedPrograms: string[];
+  goToStep: (
+    step: "question" | "search" | "compare" | "plan" | "complete"
+  ) => void;
+  handleCreatePlan: (programId: string) => void;
+  openSidePanel: (url: string, title: string) => void;
 }
 
 export default function CompareSection({
@@ -27,7 +29,9 @@ export default function CompareSection({
           <div className="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center">
             <FileText className="w-4 h-4 text-[#0000f5]" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-900">선택 프로그램 비교</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            선택 프로그램 비교
+          </h2>
         </div>
       </div>
 
@@ -36,11 +40,19 @@ export default function CompareSection({
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left p-4 text-gray-600 font-medium">프로그램명</th>
+              <th className="text-left p-4 text-gray-600 font-medium">
+                프로그램명
+              </th>
               <th className="text-left p-4 text-gray-600 font-medium">지역</th>
-              <th className="text-left p-4 text-gray-600 font-medium">지원금</th>
-              <th className="text-left p-4 text-gray-600 font-medium">가족 친화도</th>
-              <th className="text-left p-4 text-gray-600 font-medium">계획서 필요</th>
+              <th className="text-left p-4 text-gray-600 font-medium">
+                지원금
+              </th>
+              <th className="text-left p-4 text-gray-600 font-medium">
+                가족 친화도
+              </th>
+              <th className="text-left p-4 text-gray-600 font-medium">
+                계획서 필요
+              </th>
               <th className="text-left p-4 text-gray-600 font-medium">액션</th>
             </tr>
           </thead>
@@ -48,15 +60,22 @@ export default function CompareSection({
             {programs
               .filter((p) => selectedPrograms.includes(p.id))
               .map((program) => (
-                <tr key={program.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr
+                  key={program.id}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
                   <td className="p-4">
                     <div>
-                      <div className="font-medium text-gray-900">{program.name}</div>
+                      <div className="font-medium text-gray-900">
+                        {program.name}
+                      </div>
                       <Button
                         variant="ghost"
                         size="sm"
                         className="h-6 px-2 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 mt-1"
-                        onClick={() => window.open(program.applicationUrl, "_blank")}
+                        onClick={() =>
+                          window.open(program.applicationUrl, "_blank")
+                        }
                       >
                         <ExternalLink className="w-3 h-3 mr-1" />
                         프로그램 바로가기
@@ -65,12 +84,19 @@ export default function CompareSection({
                   </td>
                   <td className="p-4 text-gray-700">{program.region}</td>
                   <td className="p-4">
-                    <Badge variant="secondary" className="bg-blue-100 text-[#0000f5] border border-blue-200">
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-100 text-[#0000f5] border border-blue-200"
+                    >
                       {program.amount}
                     </Badge>
                   </td>
-                  <td className="p-4 text-gray-700">{program.familyFriendly ? "⭐⭐⭐" : "⭐"}</td>
-                  <td className="p-4 text-gray-700">{program.needsPlan ? "필요" : "불필요"}</td>
+                  <td className="p-4 text-gray-700">
+                    {program.familyFriendly ? "⭐⭐⭐" : "⭐"}
+                  </td>
+                  <td className="p-4 text-gray-700">
+                    {program.needsPlan ? "필요" : "불필요"}
+                  </td>
                   <td className="p-4">
                     <Button
                       size="sm"
@@ -109,12 +135,13 @@ export default function CompareSection({
 
         <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
           <p className="text-sm text-blue-700 text-center">
-            💡 <strong>팁:</strong> "가족 친화도 높은 순서로 정렬해줘" 같은 요청도 언제든 환영합니다!
+            💡 <strong>팁:</strong> "가족 친화도 높은 순서로 정렬해줘" 같은
+            요청도 언제든 환영합니다!
           </p>
         </div>
 
         <div></div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,34 +1,42 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/assi-ai-proto/ui/card"
-import { Badge } from "@/components/assi-ai-proto/ui/badge"
-import { Button } from "@/components/assi-ai-proto/ui/button"
-import { ChevronRight, ExternalLink } from "lucide-react"
+import { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "@/components/assi-ai/ui/card";
+import { Badge } from "@/components/assi-ai/ui/badge";
+import { Button } from "@/components/assi-ai/ui/button";
+import { ChevronRight, ExternalLink } from "lucide-react";
 
 interface TravelProgram {
-  id: string
-  name: string
-  region: string
-  amount: string
-  duration: string
-  requirements: string[]
-  needsPlan: boolean
-  familyFriendly: boolean
-  applicationMethod: string
-  applicationUrl: string
+  id: string;
+  name: string;
+  region: string;
+  amount: string;
+  duration: string;
+  requirements: string[];
+  needsPlan: boolean;
+  familyFriendly: boolean;
+  applicationMethod: string;
+  applicationUrl: string;
 }
 
 interface MobileProgramComparisonProps {
-  programs: TravelProgram[]
-  onCreatePlan: (id: string) => void
+  programs: TravelProgram[];
+  onCreatePlan: (id: string) => void;
 }
 
-export default function MobileProgramComparison({ programs, onCreatePlan }: MobileProgramComparisonProps) {
-  const [activeTab, setActiveTab] = useState(0)
+export default function MobileProgramComparison({
+  programs,
+  onCreatePlan,
+}: MobileProgramComparisonProps) {
+  const [activeTab, setActiveTab] = useState(0);
 
-  if (programs.length === 0) return null
-  const current = programs[activeTab]
+  if (programs.length === 0) return null;
+  const current = programs[activeTab];
 
   return (
     <div className="lg:hidden mb-8">
@@ -53,7 +61,9 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
       <Card className="border-2 border-[#0000f5] bg-blue-50">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
-            <CardTitle className="text-xl leading-tight">{current.name}</CardTitle>
+            <CardTitle className="text-xl leading-tight">
+              {current.name}
+            </CardTitle>
             <Badge
               variant="secondary"
               className="bg-[#0000f5] text-white border-[#0000f5] text-sm font-medium ml-2 flex-shrink-0"
@@ -66,7 +76,10 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
           {[
             ["📍 지역", current.region],
             ["⏰ 기간", current.duration],
-            ["👨‍👩‍👧‍👦 가족 친화도", current.familyFriendly ? "⭐⭐⭐ 높음" : "⭐ 보통"],
+            [
+              "👨‍👩‍👧‍👦 가족 친화도",
+              current.familyFriendly ? "⭐⭐⭐ 높음" : "⭐ 보통",
+            ],
             ["📝 계획서 필요", current.needsPlan ? "필요" : "불필요"],
             ["📋 신청 방법", current.applicationMethod],
           ].map(([label, value]) => (
@@ -91,10 +104,15 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
 
           {/* 요구사항 */}
           <div className="p-3 bg-white rounded-lg border border-gray-200">
-            <span className="text-gray-600 font-medium block mb-2">✅ 요구사항</span>
+            <span className="text-gray-600 font-medium block mb-2">
+              ✅ 요구사항
+            </span>
             <ul className="space-y-1">
               {current.requirements.map((req) => (
-                <li key={req} className="text-sm text-gray-700 flex items-center gap-2">
+                <li
+                  key={req}
+                  className="text-sm text-gray-700 flex items-center gap-2"
+                >
                   <span className="w-1.5 h-1.5 bg-[#0000f5] rounded-full"></span>
                   {req}
                 </li>
@@ -132,7 +150,9 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
       {/* quick-switch list */}
       {programs.length > 1 && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">💡 다른 프로그램과 비교</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">
+            💡 다른 프로그램과 비교
+          </h4>
           <div className="space-y-2">
             {programs.map((p, idx) =>
               idx === activeTab ? null : (
@@ -149,7 +169,7 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </button>
-              ),
+              )
             )}
           </div>
         </div>
@@ -160,5 +180,5 @@ export default function MobileProgramComparison({ programs, onCreatePlan }: Mobi
         👆 탭을 눌러 다른 프로그램과 비교해보세요
       </div>
     </div>
-  )
+  );
 }

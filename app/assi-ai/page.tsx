@@ -4,14 +4,14 @@ import type React from "react";
 
 import { useState, useEffect } from "react";
 import { useChat } from "ai/react";
-import { Button } from "@/components/assi-ai-proto/ui/button";
+import { Button } from "@/components/assi-ai/ui/button";
 import { X, Menu } from "lucide-react";
-import HeaderSection from "@/components/assi-ai-proto/header-section/header-section";
-import QuestionSection from "@/components/assi-ai-proto/question-section/question-section";
-import SearchSection from "@/components/assi-ai-proto/search-section/search-section";
-import CompareSection from "@/components/assi-ai-proto/compare-section/compare-section";
-import PlanSection from "@/components/assi-ai-proto/plan-section/plan-section";
-import HistoryPanel from "@/components/assi-ai-proto/history-panel/history-panel";
+import HeaderSection from "@/components/assi-ai/header-section/header-section";
+import QuestionSection from "@/components/assi-ai/question-section/question-section";
+import SearchSection from "@/components/assi-ai/search-section/search-section";
+import CompareSection from "@/components/assi-ai/compare-section/compare-section";
+import PlanSection from "@/components/assi-ai/plan-section/plan-section";
+import HistoryPanel from "@/components/assi-ai/history-panel/history-panel";
 
 interface ActivityDetail {
   name: string;
@@ -1969,7 +1969,7 @@ export default function TravelGrantAssistant() {
               <div className="fixed top-6 left-6 z-40">
                 <Button
                   onClick={() => setShowHistory(!showHistory)}
-                  className={`w-16 h-16 rounded-full bg-transparent hover:bg-transparent border-none shadow-none transition-all duration-300 ease-in-out ${
+                  className={`w-16 h-16 cursor-pointer rounded-full bg-transparent hover:bg-transparent border-none shadow-none transition-all duration-300 ease-in-out ${
                     showHistory ? "ml-55" : "ml-0"
                   }`}
                   style={{ boxShadow: "none" }}

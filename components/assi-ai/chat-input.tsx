@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/assi-ai-proto/ui/button"
-import { Textarea } from "@/components/assi-ai-proto/ui/textarea"
-import { ArrowUp, RotateCcw, Copy } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/assi-ai/ui/button";
+import { Textarea } from "@/components/assi-ai/ui/textarea";
+import { ArrowUp, RotateCcw, Copy } from "lucide-react";
 
 interface ChatInputProps {
-  input: string
-  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  handleSubmit: (e: React.FormEvent) => void
-  isLoading: boolean
-  currentStep: "question" | "search" | "compare" | "plan" | "complete"
-  queryHistory: string[]
-  onQueryHistoryClick: (query: string) => void
-  onReset: () => void
+  input: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  isLoading: boolean;
+  currentStep: "question" | "search" | "compare" | "plan" | "complete";
+  queryHistory: string[];
+  onQueryHistoryClick: (query: string) => void;
+  onReset: () => void;
 }
 
 export function ChatInput({
@@ -28,22 +28,22 @@ export function ChatInput({
   onQueryHistoryClick,
   onReset,
 }: ChatInputProps) {
-  const [showHistory, setShowHistory] = useState(false)
+  const [showHistory, setShowHistory] = useState(false);
 
   const getPlaceholder = () => {
     switch (currentStep) {
       case "search":
-        return "추가 조건을 입력하세요... (예: '6월 진행만 보기', '30만원 이상만')"
+        return "추가 조건을 입력하세요... (예: '6월 진행만 보기', '30만원 이상만')";
       case "compare":
-        return "비교 조건을 입력하세요... (예: '가족 친화도 높은 순으로 정렬')"
+        return "비교 조건을 입력하세요... (예: '가족 친화도 높은 순으로 정렬')";
       case "plan":
-        return "계획 수정 요청을 입력하세요... (예: '카페는 조용한 곳으로 바꿔줘')"
+        return "계획 수정 요청을 입력하세요... (예: '카페는 조용한 곳으로 바꿔줘')";
       case "complete":
-        return "제목이나 요약을 수정하세요... (예: '제목은 익산 가족여행으로 넣어줘')"
+        return "제목이나 요약을 수정하세요... (예: '제목은 익산 가족여행으로 넣어줘')";
       default:
-        return "여행 조건을 자유롭게 입력하세요..."
+        return "여행 조건을 자유롭게 입력하세요...";
     }
-  }
+  };
 
   const getExamplePrompts = () => {
     switch (currentStep) {
@@ -53,45 +53,45 @@ export function ChatInput({
           "제주도로 가족여행 가려는데 어떤 지원 프로그램이 있을까요?",
           "여행계획서 없이 바로 신청할 수 있는 지원금 찾아주세요",
           "30만원 이상 지원받을 수 있는 여행 프로그램 추천해주세요",
-        ]
+        ];
       case "search":
         return [
           "6월 진행만 보기",
           "30만원 이상 지원금만 필터링해줘",
           "계획서 없이 바로 신청 가능한 것만",
           "가족 친화적인 프로그램만 보여줘",
-        ]
+        ];
       case "compare":
         return [
           "가족 친화도 높은 순으로 정렬해줘",
           "지원금 많은 순서로 보여줘",
           "신청 방법이 간단한 순으로 정렬",
           "계획서 필요 여부로 그룹화해줘",
-        ]
+        ];
       case "plan":
         return [
           "카페는 조용한 곳으로 바꿔줘",
           "아이들이 더 좋아할 만한 장소 추가해줘",
           "첫째 날 일정을 더 여유롭게 조정해줘",
           "맛집을 현지 특산물 위주로 바꿔줘",
-        ]
+        ];
       case "complete":
         return [
           "제목은 '익산 가족여행'으로 넣어줘",
           "요약에 '아이와 함께하는 교육적 여행'이라고 써줘",
           "제목을 더 감성적으로 바꿔줘",
           "요약을 더 구체적으로 작성해줘",
-        ]
+        ];
       default:
-        return []
+        return [];
     }
-  }
+  };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-  }
+    navigator.clipboard.writeText(text);
+  };
 
-  const examples = getExamplePrompts()
+  const examples = getExamplePrompts();
 
   return (
     <div className="space-y-4">
@@ -107,7 +107,9 @@ export function ChatInput({
               className="h-7 px-3 text-xs bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full"
               onClick={() => onQueryHistoryClick(query)}
             >
-              <span className="text-gray-600">❯ {query.length > 20 ? query.slice(0, 20) + "..." : query}</span>
+              <span className="text-gray-600">
+                ❯ {query.length > 20 ? query.slice(0, 20) + "..." : query}
+              </span>
             </Button>
           ))}
           <Button
@@ -133,7 +135,9 @@ export function ChatInput({
                 className="h-7 px-3 text-xs bg-white hover:bg-gray-100 border border-gray-200 rounded-full group"
                 onClick={() => onQueryHistoryClick(query)}
               >
-                <span className="text-gray-600 flex-1">{query.length > 30 ? query.slice(0, 30) + "..." : query}</span>
+                <span className="text-gray-600 flex-1">
+                  {query.length > 30 ? query.slice(0, 30) + "..." : query}
+                </span>
                 <Copy className="w-3 h-3 text-gray-400 group-hover:text-gray-600 ml-2 flex-shrink-0" />
               </Button>
             ))}
@@ -144,7 +148,9 @@ export function ChatInput({
       {/* 예시 프롬프트 - 질문 단계가 아닐 때만 표시 */}
       {currentStep !== "question" && examples.length > 0 && (
         <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-700 mb-2 font-medium">💡 이런 요청을 해보세요:</p>
+          <p className="text-sm text-blue-700 mb-2 font-medium">
+            💡 이런 요청을 해보세요:
+          </p>
           <div className="flex flex-wrap gap-2">
             {examples.map((example, index) => (
               <Button
@@ -153,8 +159,8 @@ export function ChatInput({
                 size="sm"
                 className="h-7 px-3 text-xs bg-white hover:bg-blue-100 border border-blue-200 rounded-full group"
                 onClick={() => {
-                  onQueryHistoryClick(example)
-                  copyToClipboard(example)
+                  onQueryHistoryClick(example);
+                  copyToClipboard(example);
                 }}
               >
                 <span className="text-blue-700 flex-1">{example}</span>
@@ -173,9 +179,9 @@ export function ChatInput({
             onChange={handleInputChange}
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.shiftKey) {
-                e.preventDefault()
+                e.preventDefault();
                 if (input.trim()) {
-                  handleSubmit(e as any)
+                  handleSubmit(e as any);
                 }
               }
             }}
@@ -222,5 +228,5 @@ export function ChatInput({
         )}
       </div>
     </div>
-  )
+  );
 }

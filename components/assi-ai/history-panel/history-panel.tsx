@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent } from "@/components/assi-ai-proto/ui/card";
+import { Card, CardContent } from "@/components/assi-ai/ui/card";
 import { Menu, ChevronRight } from "lucide-react";
 
 interface HistoryPanelProps {
