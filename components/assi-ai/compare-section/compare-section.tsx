@@ -123,7 +123,7 @@ export default function CompareSection({
         onCreatePlan={handleCreatePlan}
       />
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
         <Button
           variant="outline"
           onClick={() => goToStep("search")}

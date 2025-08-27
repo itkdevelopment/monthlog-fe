@@ -260,6 +260,7 @@ export default function SearchSection({
             </div>
           </Button>
         )}
+        <div></div>
       </div>
     </div>
   );
