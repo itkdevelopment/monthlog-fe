@@ -1,11 +1,13 @@
-"use client"
+"use client";
 
 interface HeaderSectionProps {
-  currentStep: "question" | "search" | "compare" | "plan" | "complete"
-  goToStep: (step: "question" | "search" | "compare" | "plan" | "complete") => void
-  programsLength: number
-  selectedProgramsLength: number
-  travelPlanLength: number
+  currentStep: "question" | "search" | "compare" | "plan" | "complete";
+  goToStep: (
+    step: "question" | "search" | "compare" | "plan" | "complete"
+  ) => void;
+  programsLength: number;
+  selectedProgramsLength: number;
+  travelPlanLength: number;
 }
 
 export default function HeaderSection({
@@ -23,11 +25,13 @@ export default function HeaderSection({
             여행지원금 어시 AI
           </h1>
         </div>
-        <p className="mt-4 text-gray-600 text-lg">AI가 분석하고 추천하는 맞춤형 여행지원금</p>
+        <p className="mt-4 text-gray-600 text-lg">
+          AI가 분석하고 추천하는 맞춤형 여행지원금
+        </p>
       </div>
 
       {/* 스텝 표시 개선 */}
-      <div className="flex items-center justify-center gap-2 mb-16">
+      <div className="flex flex-wrap gap-8 md:gap-2 md:flex-row md:items-center md:justify-center mb-16">
         <div
           className={`relative flex items-center justify-center cursor-pointer transition-all ${
             currentStep === "question" ? "text-[#0000f5]" : "text-gray-400"
@@ -43,11 +47,13 @@ export default function HeaderSection({
           >
             1
           </div>
-          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">질문하기</span>
+          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">
+            질문하기
+          </span>
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all ${
+          className={`w-16 h-0.5 invisible md:visible transition-all ${
             currentStep === "search" ||
             currentStep === "compare" ||
             currentStep === "plan" ||
@@ -68,18 +74,22 @@ export default function HeaderSection({
               currentStep === "search"
                 ? "border-[#0000f5] bg-[#0000f5] text-white shadow-lg"
                 : programsLength > 0
-                  ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
-                  : "border-gray-200 bg-gray-100 text-gray-400"
+                ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
+                : "border-gray-200 bg-gray-100 text-gray-400"
             }`}
           >
             2
           </div>
-          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">추천결과 선택</span>
+          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">
+            추천결과 선택
+          </span>
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all ${
-            currentStep === "compare" || currentStep === "plan" || currentStep === "complete"
+          className={`w-16 h-0.5 invisible md:visible transition-all ${
+            currentStep === "compare" ||
+            currentStep === "plan" ||
+            currentStep === "complete"
               ? "bg-[#0000f5]"
               : "bg-gray-300"
           }`}
@@ -96,17 +106,23 @@ export default function HeaderSection({
               currentStep === "compare"
                 ? "border-[#0000f5] bg-[#0000f5] text-white shadow-lg"
                 : selectedProgramsLength > 0
-                  ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
-                  : "border-gray-200 bg-gray-100 text-gray-400"
+                ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
+                : "border-gray-200 bg-gray-100 text-gray-400"
             }`}
           >
             3
           </div>
-          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">추천결과 비교</span>
+          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">
+            추천결과 비교
+          </span>
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all ${currentStep === "plan" || currentStep === "complete" ? "bg-[#0000f5]" : "bg-gray-300"}`}
+          className={`w-16 h-0.5 transition-all invisible md:visible ${
+            currentStep === "plan" || currentStep === "complete"
+              ? "bg-[#0000f5]"
+              : "bg-gray-300"
+          }`}
         ></div>
 
         <div
@@ -120,17 +136,21 @@ export default function HeaderSection({
               currentStep === "plan"
                 ? "border-[#0000f5] bg-[#0000f5] text-white shadow-lg"
                 : travelPlanLength > 0
-                  ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
-                  : "border-gray-200 bg-gray-100 text-gray-400"
+                ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
+                : "border-gray-200 bg-gray-100 text-gray-400"
             }`}
           >
             4
           </div>
-          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">여행계획서 작성</span>
+          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">
+            여행계획서 작성
+          </span>
         </div>
 
         <div
-          className={`w-16 h-0.5 transition-all ${currentStep === "complete" ? "bg-[#0000f5]" : "bg-gray-300"}`}
+          className={`w-16 h-0.5 transition-all invisible md:visible ${
+            currentStep === "complete" ? "bg-[#0000f5]" : "bg-gray-300"
+          }`}
         ></div>
 
         <div
@@ -144,15 +164,17 @@ export default function HeaderSection({
               currentStep === "complete"
                 ? "border-[#0000f5] bg-[#0000f5] text-white shadow-lg"
                 : travelPlanLength > 0
-                  ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
-                  : "border-gray-200 bg-gray-100 text-gray-400"
+                ? "border-gray-300 bg-white text-gray-600 hover:border-[#0000f5] hover:text-[#0000f5]"
+                : "border-gray-200 bg-gray-100 text-gray-400"
             }`}
           >
             5
           </div>
-          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">계획서 완성</span>
+          <span className="absolute -bottom-6 whitespace-nowrap text-xs font-medium">
+            계획서 완성
+          </span>
         </div>
       </div>
     </div>
-  )
+  );
 }
