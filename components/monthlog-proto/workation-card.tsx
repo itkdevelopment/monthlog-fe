@@ -1,78 +1,113 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
-import { Edit, TrendingUp, Wifi, Zap, Building, Coffee, CreditCard } from "lucide-react"
-import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
-import SatisfactionPanel from "@/components/monthlog-proto/workation-panels/satisfaction-panel"
-import InternetSpeedPanel from "@/components/monthlog-proto/workation-panels/internet-speed-panel"
-import PowerStabilityPanel from "@/components/monthlog-proto/workation-panels/power-stability-panel"
-import WifiAccessPanel from "@/components/monthlog-proto/workation-panels/wifi-access-panel"
-import CoworkingSpacePanel from "@/components/monthlog-proto/workation-panels/coworking-space-panel"
-import CafePanel from "@/components/monthlog-proto/workation-panels/cafe-panel"
-import MembershipPanel from "@/components/monthlog-proto/workation-panels/membership-panel"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/monthlog-proto/ui/card';
+import {
+  Edit,
+  TrendingUp,
+  Wifi,
+  Zap,
+  Building,
+  Coffee,
+  CreditCard,
+} from 'lucide-react';
+import { AnimatedGauge } from '@/components/monthlog-proto/charts/animated-gauge';
+import SatisfactionPanel from '@/components/monthlog-proto/workation-panels/satisfaction-panel';
+import InternetSpeedPanel from '@/components/monthlog-proto/workation-panels/internet-speed-panel';
+import PowerStabilityPanel from '@/components/monthlog-proto/workation-panels/power-stability-panel';
+import WifiAccessPanel from '@/components/monthlog-proto/workation-panels/wifi-access-panel';
+import CoworkingSpacePanel from '@/components/monthlog-proto/workation-panels/coworking-space-panel';
+import CafePanel from '@/components/monthlog-proto/workation-panels/cafe-panel';
+import MembershipPanel from '@/components/monthlog-proto/workation-panels/membership-panel';
 
 interface WorkationCardProps {
   cardData: {
-    title: string
-    contributorCount: number
+    title: string;
+    contributorCount: number;
     satisfaction: {
-      value: number
-      maxValue: number
-    }
+      value: number;
+      maxValue: number;
+    };
     internetSpeed: {
-      value: string
-      unit: string
-    }
+      value: string;
+      unit: string;
+    };
     coworkingSpaces: {
-      count: string
-      description: string
-    }
+      count: string;
+      description: string;
+    };
     powerStability: {
-      status: string
-    }
+      status: string;
+    };
     detailItems: Array<{
-      icon: any
-      label: string
-      value: string
-      modalKey: string
-    }>
-    modalData: any
-  }
-  onExpGain: (amount: number) => void
-  onGroupEdit: () => void
+      icon: any;
+      label: string;
+      value: string;
+      modalKey: string;
+    }>;
+    modalData: any;
+  };
+  onExpGain: (amount: number) => void;
+  onGroupEdit: () => void;
 }
 
-export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCardProps) {
-  const router = useRouter()
-  const [activePanelType, setActivePanelType] = useState<string | null>(null)
+export function WorkationCard({
+  cardData,
+  onExpGain,
+  onGroupEdit,
+}: WorkationCardProps) {
+  const router = useRouter();
+  const [activePanelType, setActivePanelType] = useState<string | null>(null);
 
   // 패널 열기 함수
   const openPanel = (key: string) => {
-    setActivePanelType(key)
-  }
+    setActivePanelType(key);
+  };
 
   // 패널 닫기 함수
   const closePanel = () => {
-    setActivePanelType(null)
-  }
+    setActivePanelType(null);
+  };
 
   // 그룹 수정 페이지로 이동
   const handleGroupEdit = () => {
-    router.push("/monthlog-proto/workation-group-edit")
-  }
+    router.push('/monthlog-proto/workation-group-edit');
+  };
 
   return (
     <>
       {/* 패널들 */}
-      <SatisfactionPanel isOpen={activePanelType === "satisfaction"} onClose={closePanel} />
-      <InternetSpeedPanel isOpen={activePanelType === "internetSpeed"} onClose={closePanel} />
-      <PowerStabilityPanel isOpen={activePanelType === "powerStability"} onClose={closePanel} />
-      <WifiAccessPanel isOpen={activePanelType === "wifiAccess"} onClose={closePanel} />
-      <CoworkingSpacePanel isOpen={activePanelType === "coworkingSpace"} onClose={closePanel} />
-      <CafePanel isOpen={activePanelType === "cafe"} onClose={closePanel} />
-      <MembershipPanel isOpen={activePanelType === "membership"} onClose={closePanel} />
+      <SatisfactionPanel
+        isOpen={activePanelType === 'satisfaction'}
+        onClose={closePanel}
+      />
+      <InternetSpeedPanel
+        isOpen={activePanelType === 'internetSpeed'}
+        onClose={closePanel}
+      />
+      <PowerStabilityPanel
+        isOpen={activePanelType === 'powerStability'}
+        onClose={closePanel}
+      />
+      <WifiAccessPanel
+        isOpen={activePanelType === 'wifiAccess'}
+        onClose={closePanel}
+      />
+      <CoworkingSpacePanel
+        isOpen={activePanelType === 'coworkingSpace'}
+        onClose={closePanel}
+      />
+      <CafePanel isOpen={activePanelType === 'cafe'} onClose={closePanel} />
+      <MembershipPanel
+        isOpen={activePanelType === 'membership'}
+        onClose={closePanel}
+      />
 
       {/* 💻 디지털/업무 환경 카드 - 새로운 2단 분할 레이아웃 */}
       <Card className="bg-white shadow-sm border border-gray-100 rounded-2xl">
@@ -81,7 +116,9 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
             <div className="flex items-center space-x-3">
               <div>
                 <span className="text-2xl">{cardData.title}</span>
-                <p className="text-sm text-gray-500 font-normal mt-1">{cardData.contributorCount}명이 기여한 정보</p>
+                <p className="text-sm text-gray-500 font-normal mt-1">
+                  {cardData.contributorCount}명이 기여한 정보
+                </p>
               </div>
             </div>
             <button
@@ -110,19 +147,25 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
             <div className="col-span-3 grid grid-cols-3 gap-4 items-center pr-16">
               {/* 보조 지표 1 */}
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">100Mbps</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">
+                  100Mbps
+                </div>
                 <div className="text-sm text-gray-600">인터넷 평균 속도</div>
               </div>
 
               {/* 보조 지표 2 */}
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">12곳</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">
+                  12곳
+                </div>
                 <div className="text-sm text-gray-600">코워킹 스페이스</div>
               </div>
 
               {/* 보조 지표 3 */}
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">매우안정</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">
+                  매우안정
+                </div>
                 <div className="text-sm text-gray-600">전력 안정성</div>
               </div>
             </div>
@@ -141,12 +184,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("satisfaction")}
+                  onClick={() => openPanel('satisfaction')}
                 >
                   {cardData.satisfaction.value}/{cardData.satisfaction.maxValue}
                 </span>
                 <button
-                  onClick={() => openPanel("satisfaction")}
+                  onClick={() => openPanel('satisfaction')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -162,12 +205,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("internetSpeed")}
+                  onClick={() => openPanel('internetSpeed')}
                 >
                   100Mbps, 9/10
                 </span>
                 <button
-                  onClick={() => openPanel("internetSpeed")}
+                  onClick={() => openPanel('internetSpeed')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -183,12 +226,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("powerStability")}
+                  onClick={() => openPanel('powerStability')}
                 >
                   정전 거의 없음, 9/10
                 </span>
                 <button
-                  onClick={() => openPanel("powerStability")}
+                  onClick={() => openPanel('powerStability')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -204,12 +247,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("wifiAccess")}
+                  onClick={() => openPanel('wifiAccess')}
                 >
                   카페에서 매우 용이, 8/10
                 </span>
                 <button
-                  onClick={() => openPanel("wifiAccess")}
+                  onClick={() => openPanel('wifiAccess')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -225,12 +268,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("coworkingSpace")}
+                  onClick={() => openPanel('coworkingSpace')}
                 >
                   추천 12곳, 9/10
                 </span>
                 <button
-                  onClick={() => openPanel("coworkingSpace")}
+                  onClick={() => openPanel('coworkingSpace')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -246,12 +289,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("cafe")}
+                  onClick={() => openPanel('cafe')}
                 >
                   추천 3곳, 6/10
                 </span>
                 <button
-                  onClick={() => openPanel("cafe")}
+                  onClick={() => openPanel('cafe')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -267,12 +310,12 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
               <div className="flex items-center space-x-3">
                 <span
                   className="font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-                  onClick={() => openPanel("membership")}
+                  onClick={() => openPanel('membership')}
                 >
                   한달플랜 35만원, 8/10
                 </span>
                 <button
-                  onClick={() => openPanel("membership")}
+                  onClick={() => openPanel('membership')}
                   className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
                 >
                   <Edit className="h-4 w-4 text-gray-600" />
@@ -283,5 +326,5 @@ export function WorkationCard({ cardData, onExpGain, onGroupEdit }: WorkationCar
         </CardContent>
       </Card>
     </>
-  )
+  );
 }

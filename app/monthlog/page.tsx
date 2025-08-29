@@ -1,10 +1,5 @@
-import Sample from "@/components/monthlog/sample";
+import { redirect } from 'next/navigation';
 
-export default function HomePage() {
-    return (
-        <div>
-            this is root directory of Monthlog development.
-            <Sample></Sample>
-        </div>
-    );
+export default function MonthlogPage() {
+  redirect('/monthlog/city');
 }

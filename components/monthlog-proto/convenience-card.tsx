@@ -1,6 +1,11 @@
-"use client"
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/monthlog-proto/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/monthlog-proto/ui/card';
 import {
   Edit,
   ShoppingCart,
@@ -12,63 +17,83 @@ import {
   Trash2,
   Clock,
   Lightbulb,
-} from "lucide-react"
-import { AnimatedGauge } from "@/components/monthlog-proto/charts/animated-gauge"
+} from 'lucide-react';
+import { AnimatedGauge } from '@/components/monthlog-proto/charts/animated-gauge';
 
 interface ConvenienceCardProps {
   cardData?: {
-    title: string
-    contributorCount: number
+    title: string;
+    contributorCount: number;
     satisfaction: {
-      value: number
-      maxValue: number
-    }
+      value: number;
+      maxValue: number;
+    };
     storeAccess: {
-      description: string
-    }
+      description: string;
+    };
     deliveryRestaurants: {
-      count: string
-    }
+      count: string;
+    };
     nighttimeFacilities: {
-      count: string
-    }
+      count: string;
+    };
     detailItems: Array<{
-      icon: any
-      label: string
-      value: string
-    }>
-  }
-  onGroupEdit?: () => void
+      icon: any;
+      label: string;
+      value: string;
+    }>;
+  };
+  onGroupEdit?: () => void;
 }
 
 export default function ConvenienceCard({
   cardData = {
-    title: "🛍️ 현지생활 편의성",
+    title: '🛍️ 현지생활 편의성',
     contributorCount: 38,
     satisfaction: {
       value: 8.2,
       maxValue: 10,
     },
     storeAccess: {
-      description: "도보 5분 내",
+      description: '도보 5분 내',
     },
     deliveryRestaurants: {
-      count: "4곳",
+      count: '4곳',
     },
     nighttimeFacilities: {
-      count: "12곳",
+      count: '12곳',
     },
     detailItems: [
-      { icon: ShoppingCart, label: "생활편의성 만족도", value: "8.2/10" },
-      { icon: Utensils, label: "배달 편의성", value: "배달의민족, 9/10" },
-      { icon: MapPin, label: "배달 맛집 & 꿀팁", value: "OO치킨 / 추천 4곳" },
-      { icon: ShoppingCart, label: "마트/편의점 접근성", value: "도보 5분 내, 24시간" },
-      { icon: CreditCard, label: "현지 금융 & 환전 팁", value: "신한은행 ATM (수수료 무료)" },
-      { icon: Pill, label: "약국 접근성", value: "도보 3분 내, 24시간 약국 있음" },
-      { icon: Smartphone, label: "유심/데이터 구매 편의성", value: "공항 내 KT 매장 / 8,000원" },
-      { icon: Trash2, label: "쓰레기 배출 방법", value: "#분리수거 간편" },
-      { icon: Clock, label: "심야/24시간 시설", value: "편의점 3곳, 카페 2곳" },
-      { icon: Lightbulb, label: "생활 꿀팁 & 비상상황 대비", value: '"분리수거는 안해도..." / 찐꿀팁 8개' },
+      { icon: ShoppingCart, label: '생활편의성 만족도', value: '8.2/10' },
+      { icon: Utensils, label: '배달 편의성', value: '배달의민족, 9/10' },
+      { icon: MapPin, label: '배달 맛집 & 꿀팁', value: 'OO치킨 / 추천 4곳' },
+      {
+        icon: ShoppingCart,
+        label: '마트/편의점 접근성',
+        value: '도보 5분 내, 24시간',
+      },
+      {
+        icon: CreditCard,
+        label: '현지 금융 & 환전 팁',
+        value: '신한은행 ATM (수수료 무료)',
+      },
+      {
+        icon: Pill,
+        label: '약국 접근성',
+        value: '도보 3분 내, 24시간 약국 있음',
+      },
+      {
+        icon: Smartphone,
+        label: '유심/데이터 구매 편의성',
+        value: '공항 내 KT 매장 / 8,000원',
+      },
+      { icon: Trash2, label: '쓰레기 배출 방법', value: '#분리수거 간편' },
+      { icon: Clock, label: '심야/24시간 시설', value: '편의점 3곳, 카페 2곳' },
+      {
+        icon: Lightbulb,
+        label: '생활 꿀팁 & 비상상황 대비',
+        value: '"분리수거는 안해도..." / 찐꿀팁 8개',
+      },
     ],
   },
   onGroupEdit = () => {},
@@ -80,7 +105,9 @@ export default function ConvenienceCard({
           <div className="flex items-center space-x-3">
             <div>
               <span className="text-2xl">{cardData.title}</span>
-              <p className="text-sm text-gray-500 font-normal mt-1">{cardData.contributorCount}명이 기여한 정보</p>
+              <p className="text-sm text-gray-500 font-normal mt-1">
+                {cardData.contributorCount}명이 기여한 정보
+              </p>
             </div>
           </div>
           <button
@@ -101,7 +128,7 @@ export default function ConvenienceCard({
               maxValue={cardData.satisfaction.maxValue}
               label="생활편의성 만족도"
               color="#141414"
-              size={160}
+              size={50}
             />
           </div>
 
@@ -109,19 +136,25 @@ export default function ConvenienceCard({
           <div className="col-span-3 grid grid-cols-3 gap-4 items-center pr-16">
             {/* 보조 지표 1 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.storeAccess.description}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.storeAccess.description}
+              </div>
               <div className="text-sm text-gray-600">마트/편의점 접근성</div>
             </div>
 
             {/* 보조 지표 2 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.deliveryRestaurants.count}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.deliveryRestaurants.count}
+              </div>
               <div className="text-sm text-gray-600">추천 배달맛집</div>
             </div>
 
             {/* 보조 지표 3 */}
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{cardData.nighttimeFacilities.count}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {cardData.nighttimeFacilities.count}
+              </div>
               <div className="text-sm text-gray-600">24시간 운영시설</div>
             </div>
           </div>
@@ -151,5 +184,5 @@ export default function ConvenienceCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

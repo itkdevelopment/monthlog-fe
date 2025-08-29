@@ -1,12 +1,29 @@
 import axios from "axios";
 
 const apiHandler = axios.create({
-  baseURL: "https://dev-api.monthler.kr",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true, // ✅ 쿠키 자동 포함 설정
   headers: {
     "Content-Type": "application/json", // 기본 설정
   },
 });
+
+apiHandler.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const userString = sessionStorage.getItem("user");
+      if (userString) {
+        const user = JSON.parse(userString);
+        config.headers["Content-Type"] = "application/json";
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -44,7 +61,7 @@ apiHandler.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axios.post(`https://dev-api.monthler.kr/refresh`, null, {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/refresh`, null, {
           headers: {
             // "x-refresh-token": `${refreshToken}`,
             // provider: provider,

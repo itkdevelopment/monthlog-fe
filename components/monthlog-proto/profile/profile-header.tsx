@@ -1,71 +1,79 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState, useRef } from "react"
-import { Card, CardContent } from "@/components/monthlog-proto/ui/card"
-import { Badge } from "@/components/monthlog-proto/ui/badge"
-import { Progress } from "@/components/monthlog-proto/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/monthlog-proto/ui/avatar"
-import { Edit, Camera } from "lucide-react"
+import { useState, useRef } from 'react';
+import { Card, CardContent } from '@/components/monthlog-proto/ui/card';
+import { Badge } from '@/components/monthlog-proto/ui/badge';
+import { Progress } from '@/components/monthlog-proto/ui/progress';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/monthlog-proto/ui/avatar';
+import { Edit, Camera } from 'lucide-react';
 
 interface ProfileHeaderProps {
   userProfile: {
-    id: string
-    username: string
-    avatar: string
-    level: number
-    currentExp: number
-    nextLevelExp: number
-    totalExp: number
-    title: string
-    bio: string
+    id: string;
+    username: string;
+    avatar: string;
+    level: number;
+    currentExp: number;
+    nextLevelExp: number;
+    totalExp: number;
+    title: string;
+    bio: string;
     stats: {
-      totalContributions: number
-      citiesContributed: number
-      dataPointsAdded: number
-      badgesEarned: number
-      helpfulVotes: number
-      photoShared: number
-    }
-  }
-  onProfileUpdate: (field: string, value: string) => void
+      totalContributions: number;
+      citiesContributed: number;
+      dataPointsAdded: number;
+      badgesEarned: number;
+      helpfulVotes: number;
+      photoShared: number;
+    };
+  };
+  onProfileUpdate: (field: string, value: string) => void;
 }
 
-export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderProps) {
-  const [isEditingUsername, setIsEditingUsername] = useState(false)
-  const [isEditingBio, setIsEditingBio] = useState(false)
-  const [tempUsername, setTempUsername] = useState(userProfile.username)
-  const [tempBio, setTempBio] = useState(userProfile.bio)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export function ProfileHeader({
+  userProfile,
+  onProfileUpdate,
+}: ProfileHeaderProps) {
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [tempUsername, setTempUsername] = useState(userProfile.username);
+  const [tempBio, setTempBio] = useState(userProfile.bio);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const expPercentage = (userProfile.currentExp / userProfile.nextLevelExp) * 100
+  const expPercentage =
+    (userProfile.currentExp / userProfile.nextLevelExp) * 100;
 
   const handleUsernameEdit = () => {
     if (isEditingUsername) {
-      onProfileUpdate("username", tempUsername)
+      onProfileUpdate('username', tempUsername);
     }
-    setIsEditingUsername(!isEditingUsername)
-  }
+    setIsEditingUsername(!isEditingUsername);
+  };
 
   const handleBioEdit = () => {
     if (isEditingBio) {
-      onProfileUpdate("bio", tempBio)
+      onProfileUpdate('bio', tempBio);
     }
-    setIsEditingBio(!isEditingBio)
-  }
+    setIsEditingBio(!isEditingBio);
+  };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        onProfileUpdate("avatar", result)
-      }
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.onload = e => {
+        const result = e.target?.result as string;
+        onProfileUpdate('avatar', result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
     <Card className="bg-white border-0 shadow-sm rounded-2xl overflow-hidden mb-8">
@@ -75,7 +83,7 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
           {/* Avatar with edit functionality */}
           <div className="relative">
             <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-              <AvatarImage src="/images/new-profile-avatar.jpg" />
+              <AvatarImage src="https://v0-b5-six.vercel.app/images/new-profile-avatar.jpg" />
               <AvatarFallback className="text-2xl bg-slate-100 text-slate-600">
                 {userProfile.username[0]}
               </AvatarFallback>
@@ -86,7 +94,13 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
             >
               <Camera className="h-4 w-4" />
             </button>
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
           </div>
 
           <div className="flex-1 md:mt-16">
@@ -97,13 +111,15 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
                   {isEditingUsername ? (
                     <input
                       value={tempUsername}
-                      onChange={(e) => setTempUsername(e.target.value)}
+                      onChange={e => setTempUsername(e.target.value)}
                       className="text-2xl font-bold text-slate-800 bg-transparent border-b-2 border-blue-500 outline-none"
-                      onKeyDown={(e) => e.key === "Enter" && handleUsernameEdit()}
+                      onKeyDown={e => e.key === 'Enter' && handleUsernameEdit()}
                       autoFocus
                     />
                   ) : (
-                    <h2 className="text-2xl font-bold text-slate-800">{userProfile.username}</h2>
+                    <h2 className="text-2xl font-bold text-slate-800">
+                      {userProfile.username}
+                    </h2>
                   )}
                   <button
                     onClick={handleUsernameEdit}
@@ -117,7 +133,9 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
                 </Badge>
               </div>
               <div className="text-right mt-4 md:mt-0">
-                <div className="text-2xl font-bold text-blue-600">{userProfile.stats.totalContributions}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {userProfile.stats.totalContributions}
+                </div>
                 <div className="text-sm text-slate-600">총 기여</div>
               </div>
             </div>
@@ -128,14 +146,18 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
                 {isEditingBio ? (
                   <textarea
                     value={tempBio}
-                    onChange={(e) => setTempBio(e.target.value)}
+                    onChange={e => setTempBio(e.target.value)}
                     className="flex-1 text-slate-600 leading-relaxed bg-transparent border-2 border-blue-500 rounded-lg p-2 outline-none resize-none"
                     rows={3}
-                    onKeyDown={(e) => e.key === "Enter" && e.ctrlKey && handleBioEdit()}
+                    onKeyDown={e =>
+                      e.key === 'Enter' && e.ctrlKey && handleBioEdit()
+                    }
                     autoFocus
                   />
                 ) : (
-                  <p className="flex-1 text-slate-600 leading-relaxed">{userProfile.bio}</p>
+                  <p className="flex-1 text-slate-600 leading-relaxed">
+                    {userProfile.bio}
+                  </p>
                 )}
                 <button
                   onClick={handleBioEdit}
@@ -156,12 +178,13 @@ export function ProfileHeader({ userProfile, onProfileUpdate }: ProfileHeaderPro
               </div>
               <Progress value={expPercentage} className="h-3 rounded-full" />
               <p className="text-xs text-slate-500">
-                다음 레벨까지 {userProfile.nextLevelExp - userProfile.currentExp} EXP 남음
+                다음 레벨까지{' '}
+                {userProfile.nextLevelExp - userProfile.currentExp} EXP 남음
               </p>
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
