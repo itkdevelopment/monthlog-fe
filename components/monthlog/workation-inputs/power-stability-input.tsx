@@ -10,13 +10,15 @@ interface PowerStabilityInputProps {
   name: string;
 }
 
-export default function PowerStabilityInput({ name }: PowerStabilityInputProps) {
+export default function PowerStabilityInput({
+  name,
+}: PowerStabilityInputProps) {
   const { control, setValue, watch } = useFormContext();
   const [newTag, setNewTag] = useState("");
 
-  const selectedScore: number | null = watch(`${name}.score`);
+  const selectedScore: number | null = watch(`${name}.rating`);
   const selectedTags: string[] = watch(`${name}.tags`) || [];
-  const newTags: string[] = watch(`${name}.newTags`) || [];
+  const newTags: string[] = watch(`${name}.tags`) || [];
 
   const existingTags = [
     { text: "정전 거의 없음", votes: 45 },
@@ -29,7 +31,7 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
 
   // 점수 선택
   const handleScoreChange = (score: number) => {
-    setValue(`${name}.score`, score);
+    setValue(`${name}.rating`, score);
   };
 
   // 태그 토글
@@ -43,14 +45,14 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
   // 새 태그 추가
   const addNewTag = () => {
     if (newTag.trim() && !newTags.includes(newTag.trim())) {
-      setValue(`${name}.newTags`, [...newTags, newTag.trim()]);
+      setValue(`${name}.tags`, [...newTags, newTag.trim()]);
       setNewTag("");
     }
   };
 
   const removeNewTag = (tagToRemove: string) => {
     setValue(
-      `${name}.newTags`,
+      `${name}.tags`,
       newTags.filter((t) => t !== tagToRemove)
     );
   };
@@ -59,7 +61,9 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
     <div className="space-y-12">
       {/* 만족도 */}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">전력 안정성 만족도</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          전력 안정성 만족도
+        </h3>
         <p className="text-sm text-gray-600 mb-6">
           전력 안정성에 대한 만족도를 1~10점으로 평가해주세요
         </p>
@@ -80,7 +84,7 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
             </Button>
           ))}
         </div>
-        {selectedScore && (
+        {!!selectedScore && (
           <p className="text-sm text-blue-600 font-medium mt-3">
             선택한 점수: {selectedScore}점
           </p>

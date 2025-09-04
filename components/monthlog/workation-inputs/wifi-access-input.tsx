@@ -14,7 +14,7 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
   const { watch, setValue } = useFormContext();
   const [newTag, setNewTag] = useState("");
 
-  const selectedScore: number | null = watch(`${name}.score`);
+  const selectedScore: number | null = watch(`${name}.rating`);
   const selectedTags: string[] = watch(`${name}.tags`) || [];
   const newTags: string[] = watch(`${name}.newTags`) || [];
 
@@ -29,7 +29,7 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
 
   // 점수 선택
   const handleScoreChange = (score: number) => {
-    setValue(`${name}.score`, score);
+    setValue(`${name}.rating`, score);
   };
 
   // 태그 선택/해제
@@ -82,7 +82,7 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
             </Button>
           ))}
         </div>
-        {selectedScore && (
+        {!!selectedScore && (
           <p className="text-sm text-blue-600 font-medium mt-3">
             선택한 점수: {selectedScore}점
           </p>

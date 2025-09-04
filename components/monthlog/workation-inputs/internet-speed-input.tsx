@@ -24,7 +24,7 @@ export default function InternetSpeedInput({ name }: InternetSpeedInputProps) {
 
         <Controller
           control={control}
-          name={`${name}.satisfactionScore`}
+          name={`${name}.internet_speed_score`}
           render={({ field }) => (
             <div className="space-y-3">
               <div className="grid grid-cols-10 gap-2">
@@ -43,7 +43,7 @@ export default function InternetSpeedInput({ name }: InternetSpeedInputProps) {
                   </Button>
                 ))}
               </div>
-              {field.value && (
+              {!!field.value && (
                 <p className="text-sm text-blue-600 font-medium">
                   선택한 점수: {field.value}점
                 </p>
@@ -62,7 +62,7 @@ export default function InternetSpeedInput({ name }: InternetSpeedInputProps) {
 
         <Controller
           control={control}
-          name={`${name}.speed`}
+          name={`${name}.internet_speed_mbps`}
           render={({ field }) => (
             <>
               <div className="flex space-x-3">
@@ -77,7 +77,7 @@ export default function InternetSpeedInput({ name }: InternetSpeedInputProps) {
                 </span>
               </div>
 
-              {field.value && (
+              {!!field.value && (
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <p className="text-blue-800">
                     입력한 속도: <strong>{field.value}Mbps</strong>
