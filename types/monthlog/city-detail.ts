@@ -287,7 +287,8 @@ export interface SeasonComment {
 
 export interface CityContributionPayload {
   cityDetail?: CityDetail;
-  seasonComment: SeasonComment | null;
+  seasonComment?: SeasonComment;
+  costSatisfactionScore?: number;
   cityCost: {
     totalCost?: {
       startDate?: string;
@@ -318,7 +319,7 @@ export interface CityContributionPayload {
       }[];
     };
     communicationCost?: {
-      communicationMethod: { id?: number; name: string };
+      communicationMethod: { id?: number; name?: string };
       telecomAgency?: { id?: number; name?: string };
       communicationPlan?: { id?: number; name?: string };
       simPurchaseCost?: number;

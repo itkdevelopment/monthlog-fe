@@ -15,15 +15,25 @@ import CityDigitalSection from "@/components/monthlog/city-digital-section";
 import CitySafetySection from "@/components/monthlog/city-safety-section";
 import CitySeasonChart from "@/components/monthlog/city-season-chart";
 import CityAtmosphereGallery from "@/components/monthlog/city-atmosphere-gallery";
-import { useCityDetail } from "./_hook";
+import { useHomeCities, useCityDetail } from "@/lib/monthlog/query/city";
 
 export default function CityDetailPage() {
   const params = useParams();
   const citySlug = params.slug as string;
-  // Get city data based on cityId
-  const { data: cityData, cityId } = useCityDetail(citySlug);
-
-  if (!cityData) {
+  
+  // Get all home cities to find cityId by slug
+  const { data: homeCities } = useHomeCities();
+  
+  // Find cityId from slug
+  const cityFromList = homeCities?.cities.find(
+    (city) => city.slug.toLowerCase() === decodeURIComponent(citySlug).toLowerCase()
+  );
+  const cityId = cityFromList?.city_id;
+  
+  // Get city detail by cityId
+  const { data: cityData } = useCityDetail(String(cityId || ''));
+  
+  if (!cityData || !cityId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -37,7 +47,6 @@ export default function CityDetailPage() {
       </div>
     );
   }
-  console.log(cityData);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -77,7 +86,7 @@ export default function CityDetailPage() {
             /> */}
 
             {/* Cost Section */}
-            <CityCostSection data={cityData.cost} cityId={cityId} />
+            <CityCostSection data={cityData.cost} cityId={cityId} citySlug={citySlug} />
 
             {/* Digital/Work Environment */}
             <CityDigitalSection data={cityData.digital} />

@@ -1,12 +1,13 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { QueryProvider } from "@/lib/query-provider";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: '도시별 먼슬로그',
-  description: '함께 만드는 한달살기 아카이브',
+  title: "도시별 먼슬로그",
+  description: "함께 만드는 한달살기 아카이브",
 };
 
 export default function RootLayout({
@@ -16,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className}`}>
+        <QueryProvider>
+          {children}
+        </QueryProvider>
+      </body>
     </html>
   );
 }
