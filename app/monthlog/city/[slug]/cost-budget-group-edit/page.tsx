@@ -1,41 +1,34 @@
 // app/monthlog/cost-budget-group-edit/page.tsx
 "use client";
-import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Star,
   House,
   DollarSign,
-  Zap,
-  Car,
-  Smartphone,
-  UtensilsCrossed,
-  MapPin,
-  ShoppingCart,
   Calculator,
   Plus,
   Trash2,
-  X,
 } from "lucide-react";
-import Link from "next/link";
-import { CostData } from "@/types/monthlog/city-detail";
+import {
+  CostData,
+  CityContributionPayload,
+  Month,
+} from "@/types/monthlog/city-detail";
 import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Form, FormCompose } from "@/components/monthlog-proto/ui/form";
+import { useContributeCity } from "@/lib/monthlog/query/city";
+import { Button } from "@/components/monthlog/ui/button";
+import { Input } from "@/components/monthlog/ui/input";
+import { Label } from "@/components/monthlog/ui/label";
 
-interface Item {
-  id: string;
-  name: string;
-  price: string;
-}
-
-interface Activity {
-  id: string;
-  name: string;
-  price: string;
-  link?: string;
-  companions: string[];
-  categories: string[];
-}
+import { Select } from "@/components/monthlog/ui/select";
+import {
+  accommodationTypeOptions,
+  roomLayoutOptions,
+  amenityOptions,
+} from "@/constants/tags";
 
 interface AccommodationRecommendation {
   id: string;
@@ -49,152 +42,155 @@ interface AccommodationRecommendation {
 interface CostEditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  cityName: string;
+  citySlug: string;
   initialData?: CostData | null;
-  cityId: number | null;
-  onSave?: (data: CostData) => void;
+  targetSection?: string | null;
 }
+
+const costFormSchema = z.object({
+  costSatisfactionScore: z.number().min(1).max(10),
+  cityCost: z.object({
+    totalCost: z.object({
+      startDate: z.string().min(1, "시작일을 선택해주세요"),
+      endDate: z.string().min(1, "종료일을 선택해주세요"),
+      totalCost: z.number().min(0, "총 비용을 입력해주세요"),
+    }),
+    monthlyRent: z.object({
+      monthlyRent: z.number().min(0, "월세를 입력해주세요"),
+      month: z.enum([
+        "JANUARY",
+        "FEBRUARY",
+        "MARCH",
+        "APRIL",
+        "MAY",
+        "JUNE",
+        "JULY",
+        "AUGUST",
+        "SEPTEMBER",
+        "OCTOBER",
+        "NOVEMBER",
+        "DECEMBER",
+      ]),
+      numberOfPeople: z.number().min(1, "인원수를 입력해주세요"),
+      walkable: z.boolean().optional(),
+      accommodationType: z
+        .object({
+          id: z.number().optional(),
+          name: z.string().optional(),
+        })
+        .optional(),
+      roomCount: z
+        .object({
+          id: z.number().optional(),
+          name: z.string().optional(),
+        })
+        .optional(),
+      accommodationFeatures: z
+        .array(
+          z.object({
+            id: z.number().optional(),
+            name: z.string(),
+          })
+        )
+        .optional(),
+    }),
+    initialSettlement: z.object({
+      securityFee: z.number().min(0).optional(),
+      brokerageFee: z.number().min(0).optional(),
+      initialSupplyItems: z
+        .array(
+          z.object({
+            id: z.number().optional(),
+            name: z.string(),
+            price: z.number().min(0).optional(),
+          })
+        )
+        .optional(),
+    }),
+  }),
+});
+
+type CostFormData = z.infer<typeof costFormSchema>;
 
 export default function CostBudgetGroupEditPage({
   isOpen,
   onClose,
-  cityName,
-  initialData,
-  cityId,
-  onSave,
+  citySlug,
+  targetSection,
 }: CostEditModalProps) {
-  // Static data for selections
-  const accommodationTypes = [
-    "아파트",
-    "단독주택",
-    "호텔",
-    "게스트하우스",
-    "에어비앤비",
-  ];
-  const roomCounts = ["원룸", "투룸", "쓰리룸", "스튜디오"];
-  const accommodationFeatures = [
-    "#수영장",
-    "#주방있음",
-    "#세탁기",
-    "#주차가능",
-    "#바다뷰",
-    "#산뷰",
-    "#도심위치",
-  ];
-  const transportMethods = [
-    "대중교통",
-    "렌터카",
-    "택시",
-    "도보/자전거",
-    "기타",
-  ];
-  const communicationMethods = [
-    "현지유심구매",
-    "공항유심구매",
-    "한국에서유심구매",
-    "로밍",
-    "이심",
-    "국내통신사",
-  ];
-  const telecomCompanies = ["제주텔레콤", "KT", "SKT", "LG U+"];
-  const planNames = ["7일 9GB", "15일 5GB", "30일 무제한"];
-  const mealStyles = ["요리", "외식"];
-  const activityCompanions = ["혼자서", "아이랑", "연인과", "친구와", "가족과"];
-  const activityCategories = [
-    "박물관/미술관",
-    "서핑/하이킹",
-    "쿠킹클래스",
-    "카페투어",
-    "공연관람",
-    "무료체험",
-  ];
-  const commonItems = [
-    "커피",
-    "맥주",
-    "상수",
-    "라면",
-    "김밥",
-    "치킨",
-    "피자",
-    "버스요금",
-    "택시기본요금",
+  // Month options
+  const monthOptions = [
+    { value: "JANUARY", label: "1월" },
+    { value: "FEBRUARY", label: "2월" },
+    { value: "MARCH", label: "3월" },
+    { value: "APRIL", label: "4월" },
+    { value: "MAY", label: "5월" },
+    { value: "JUNE", label: "6월" },
+    { value: "JULY", label: "7월" },
+    { value: "AUGUST", label: "8월" },
+    { value: "SEPTEMBER", label: "9월" },
+    { value: "OCTOBER", label: "10월" },
+    { value: "NOVEMBER", label: "11월" },
+    { value: "DECEMBER", label: "12월" },
   ];
 
-  const [accommodationRecommendations] = useState<
-    AccommodationRecommendation[]
-  >([
-    {
-      id: "1",
-      name: "[제주 오션뷰 아파트] 바다가 보이는 깨끗한 숙소",
-      likes: 24,
-      isSelected: true,
-      comment: "",
-      link: "",
-    },
-    {
-      id: "2",
-      name: "[한라산 근처 게스트하우스] 등산하기 좋은 위치",
-      likes: 18,
-      isSelected: true,
-      comment: "",
-      link: "",
-    },
-    {
-      id: "3",
-      name: "[제주시 중심가 원룸] 교통이 편리하고 시설 좋음",
-      likes: 32,
-      isSelected: false,
-      comment: "",
-      link: "",
-    },
-  ]);
+  const walkableOptions = [
+    { value: "true", label: "가능" },
+    { value: "false", label: "불가능" },
+  ];
 
   // Initialize form
-  const form = useForm({
+  const form = useForm<CostFormData>({
+    resolver: zodResolver(costFormSchema),
     defaultValues: {
-      priceStatisfaction: 8,
-      stayPeriod: "",
-      peopleCount: 1,
-      cookingAvailable: "",
-      accommodationType: "",
-      customAccommodationType: "",
-      roomCount: "",
-      customRoomCount: "",
-      accommodationFeatures: [] as string[],
-      customAccommodationFeature: "",
-      monthlyRent: "",
-      deposit: "",
-      brokerFee: "",
-      essentialItems: [] as Item[],
-      newItemName: "",
-      newItemPrice: "",
-      electricity: "",
-      gas: "",
-      water: "",
-      other: "",
-      transportMethods: [] as string[],
-      transportCosts: {} as Record<string, string>,
-      communicationMethod: "",
-      telecomCompany: "",
-      customTelecomCompany: "",
-      planName: "",
-      customPlanName: "",
-      purchaseCost: "",
-      monthlyCommunicationCost: "",
-      mealStyles: [] as string[],
-      menuItems: [] as Item[],
-      newMenuName: "",
-      newMenuPrice: "",
-      monthlyFoodCost: "",
-      activities: [] as Activity[],
-      monthlyActivityCost: "",
-      selectedItems: [] as string[],
-      localPriceItems: {} as Record<string, Item[]>,
-      startDate: "",
-      endDate: "",
-      totalBudget: "",
+      costSatisfactionScore: 8,
+      cityCost: {
+        totalCost: {
+          startDate: "",
+          endDate: "",
+          totalCost: 0,
+        },
+        monthlyRent: {
+          monthlyRent: 0,
+          month: "JANUARY",
+          numberOfPeople: 1,
+          walkable: false,
+          accommodationType: {
+            name: "",
+          },
+          roomCount: {
+            name: "",
+          },
+          accommodationFeatures: [],
+        },
+        initialSettlement: {
+          securityFee: 0,
+          brokerageFee: 0,
+          initialSupplyItems: [],
+        },
+      },
     },
   });
+
+
+  // Mutation hook for API call
+  const contributeCity = useContributeCity();
+
+  // Watch form values for UI reactivity
+  const costSatisfactionScore = form.watch("costSatisfactionScore");
+  const accommodationType = form.watch(
+    "cityCost.monthlyRent.accommodationType"
+  );
+  const roomCount = form.watch("cityCost.monthlyRent.roomCount");
+  const selectedAccommodationFeatures = form.watch(
+    "cityCost.monthlyRent.accommodationFeatures"
+  );
+  const monthlyRent = form.watch("cityCost.monthlyRent.monthlyRent");
+  const securityFee = form.watch("cityCost.initialSettlement.securityFee");
+  const brokerageFee = form.watch("cityCost.initialSettlement.brokerageFee");
+  const startDate = form.watch("cityCost.totalCost.startDate");
+  const endDate = form.watch("cityCost.totalCost.endDate");
+  const totalCost = form.watch("cityCost.totalCost.totalCost");
 
   const {
     fields: essentialItemsFields,
@@ -202,85 +198,76 @@ export default function CostBudgetGroupEditPage({
     remove: removeEssentialItem,
   } = useFieldArray({
     control: form.control,
-    name: "essentialItems",
+    name: "cityCost.initialSettlement.initialSupplyItems",
   });
 
-  // Initialize form data when initialData changes
-  useEffect(() => {
-    if (initialData) {
-      form.reset({
-        ...form.getValues(),
-        priceStatisfaction: initialData.costSatisfactionScore || 8,
-        monthlyRent: initialData.monthlyRent || "",
-        deposit: initialData.housingDeposit || "",
-        totalBudget: initialData.totalEstimatedCost || "",
-      });
-    }
-  }, [initialData, form]);
-
-  // Handle form submission
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: CostFormData) => {
     console.log("Form data:", data);
-    // Calculate EXP based on filled fields
-    let exp = 0;
-    if (data.priceStatisfaction) exp += 50;
-    if (data.monthlyRent) exp += 30;
-    if (data.accommodationType) exp += 20;
-    if (data.deposit || data.brokerFee) exp += 40;
-    if (data.electricity || data.gas || data.water) exp += 30;
-    if (data.transportMethods.length > 0) exp += 40;
-    if (data.communicationMethod) exp += 30;
-    if (data.mealStyles.length > 0) exp += 30;
-    if (data.monthlyFoodCost) exp += 20;
-    if (data.selectedItems.length > 0) exp += 50;
-    if (data.totalBudget) exp += 50;
-    if (data.startDate && data.endDate) exp += 40;
-    alert(`한번에 개척하기 완료! (+${exp} EXP)`);
-    onClose(); // Close modal after submission
-  };
 
-  // Handle multi-select toggle
-  const handleMultiSelectToggle = (fieldName: string, value: string) => {
-    const currentValues = form.getValues(fieldName) as string[];
-    const newValues = currentValues.includes(value)
-      ? currentValues.filter((item) => item !== value)
-      : [...currentValues, value];
-    form.setValue(fieldName, newValues);
-  };
+    // Transform to CityContributionPayload format
+    const payload: CityContributionPayload = {
+      costSatisfactionScore: data.costSatisfactionScore,
+      cityCost: data.cityCost,
+    };
 
-  // Handle adding item to a list
-  const handleAddItem = (
-    listField: string,
-    nameField: string,
-    priceField: string
-  ) => {
-    const name = form.getValues(nameField) as string;
-    const price = form.getValues(priceField) as string;
-    if (name.trim() && price.trim()) {
-      const newItem: Item = {
-        id: Date.now().toString(),
-        name: name.trim(),
-        price: price.trim(),
-      };
-      const currentItems = form.getValues(listField) as Item[];
-      form.setValue(listField, [...currentItems, newItem]);
-      form.setValue(nameField, "");
-      form.setValue(priceField, "");
-    }
-  };
+    // Call the mutation
+    contributeCity.mutate(
+      {
+        citySlug,
+        data: payload,
+      },
+      {
+        onSuccess: () => {
+          // Calculate EXP based on filled fields
+          let exp = 0;
+          if (data.costSatisfactionScore) exp += 50;
+          if (data.cityCost.monthlyRent?.monthlyRent) exp += 30;
+          if (data.cityCost.monthlyRent?.accommodationType?.name) exp += 20;
+          if (
+            data.cityCost.initialSettlement?.securityFee ||
+            data.cityCost.initialSettlement?.brokerageFee
+          )
+            exp += 40;
+          if (data.cityCost.totalCost?.totalCost) exp += 50;
+          if (
+            data.cityCost.totalCost?.startDate &&
+            data.cityCost.totalCost?.endDate
+          )
+            exp += 40;
 
-  // Handle removing item from a list
-  const handleRemoveItem = (listField: string, itemId: string) => {
-    const currentItems = form.getValues(listField) as Item[];
-    form.setValue(
-      listField,
-      currentItems.filter((item) => item.id !== itemId)
+          alert(`한번에 개척하기 완료! (+${exp} EXP)`);
+          onClose();
+        },
+        onError: (error) => {
+          console.error("Submission error:", error);
+        },
+      }
     );
   };
 
-  // Handle adding activity
-  const handleAddActivity = () => {
-    console.log("Add activity");
+  // Handle accommodation feature toggle
+  const handleAccommodationFeatureToggle = (feature: string) => {
+    const currentFeatures =
+      form.getValues("cityCost.monthlyRent.accommodationFeatures") || [];
+    const featureObj = { name: feature };
+    const exists = currentFeatures.some((f) => f.name === feature);
+
+    const newFeatures = exists
+      ? currentFeatures.filter((f) => f.name !== feature)
+      : [...currentFeatures, featureObj];
+
+    form.setValue("cityCost.monthlyRent.accommodationFeatures", newFeatures);
+  };
+
+  // Handle adding essential item
+  const handleAddEssentialItem = (name: string, price: number) => {
+    if (name.trim() && !isNaN(price)) {
+      const newItem = {
+        name: name.trim(),
+        price,
+      };
+      appendEssentialItem(newItem);
+    }
   };
 
   // Handle overlay click to close modal
@@ -290,14 +277,17 @@ export default function CostBudgetGroupEditPage({
     }
   };
 
+  // Helper function to determine which sections to show
+  const shouldShowSection = (section: string) => {
+    if (!targetSection) return true; // Show all sections if no target specified
+    return targetSection === section;
+  };
+
   // Return null if modal is not open
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-white"
-      onClick={handleOverlayClick}
-    >
+    <div className="fixed inset-0 z-50 bg-white" onClick={handleOverlayClick}>
       <div
         className="relative w-full h-screen flex flex-col bg-white"
         onClick={(e) => e.stopPropagation()}
@@ -311,14 +301,15 @@ export default function CostBudgetGroupEditPage({
             <header className="bg-white/80 border-b border-gray-100 backdrop-blur-sm sticky top-0 z-40">
               <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
                     onClick={onClose}
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent h-10 px-4 py-2 text-gray-600 hover:text-gray-800"
+                    className="text-gray-600 hover:text-gray-800"
                   >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     상세페이지로
-                  </button>
+                  </Button>
                   <h1 className="text-lg font-bold text-gray-900 absolute left-1/2 transform -translate-x-1/2">
                     한달살기 비용 한번에 개척하기
                   </h1>
@@ -331,6 +322,7 @@ export default function CostBudgetGroupEditPage({
               <main className="max-w-4xl mx-auto px-4 py-8 pb-32">
                 <div className="space-y-8">
                   {/* Price Satisfaction */}
+                  {shouldShowSection('satisfaction') && (
                   <div className="rounded-lg bg-card text-card-foreground border-0 shadow-lg pb-8">
                     <div className="flex flex-col space-y-1.5 p-6 pb-4">
                       <div className="flex items-center gap-3">
@@ -350,36 +342,42 @@ export default function CostBudgetGroupEditPage({
                         </p>
                         <div className="grid grid-cols-5 gap-3">
                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
-                            <button
+                            <Button
                               key={score}
                               type="button"
-                              onClick={() =>
-                                form.setValue("priceStatisfaction", score)
+                              variant={
+                                costSatisfactionScore === score
+                                  ? "default"
+                                  : "outline"
                               }
-                              className={`h-16 rounded-lg font-bold text-lg transition-colors ${
-                                form.watch("priceStatisfaction") === score
-                                  ? "bg-black text-white"
-                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }`}
+                              color={
+                                costSatisfactionScore === score
+                                  ? "neutral"
+                                  : "grayscale"
+                              }
+                              onClick={() =>
+                                form.setValue("costSatisfactionScore", score)
+                              }
+                              className="h-16 rounded-lg font-bold text-lg"
                             >
                               {score}점
-                            </button>
+                            </Button>
                           ))}
                         </div>
-                        {form.watch("priceStatisfaction") && (
+                        {costSatisfactionScore && (
                           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                             <p className="text-blue-800">
                               선택한 점수:{" "}
-                              <strong>
-                                {form.watch("priceStatisfaction")}점
-                              </strong>
+                              <strong>{costSatisfactionScore}점</strong>
                             </p>
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
+                  )}
                   {/* Accommodation Monthly Rent */}
+                  {shouldShowSection('monthlyRent') && (
                   <div className="rounded-lg bg-card text-card-foreground border-0 shadow-lg pb-8">
                     <div className="flex flex-col space-y-1.5 p-6 pb-4">
                       <div className="flex items-center gap-3">
@@ -394,54 +392,62 @@ export default function CostBudgetGroupEditPage({
                       <div className="grid grid-cols-3 gap-6">
                         <div>
                           <FormCompose
-                            name="stayPeriod"
+                            name="cityCost.monthlyRent.month"
                             label="체류 시기"
                             control={form.control}
-                            render={(field) => (
-                              <select
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                {...field}
-                              >
-                                <option value="">선택하세요</option>
-                                {Array.from({ length: 12 }, (_, i) => (
-                                  <option key={i + 1} value={`${i + 1}월`}>
-                                    {i + 1}월
-                                  </option>
-                                ))}
-                              </select>
-                            )}
+                            render={(field) => {
+                              return (
+                                <Select
+                                  placeholder="선택하세요"
+                                  className="w-full"
+                                  options={monthOptions}
+                                  value={field.value || ""}
+                                  onChange={(value) => field.onChange(value)}
+                                />
+                              );
+                            }}
                           />
                         </div>
                         <div>
                           <FormCompose
-                            name="peopleCount"
+                            name="cityCost.monthlyRent.numberOfPeople"
                             label="머문 인원 수"
                             control={form.control}
-                            render={({ field }) => (
-                              <input
-                                type="number"
-                                min="1"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                {...field}
-                              />
-                            )}
+                            render={(field) => {
+                              return (
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  className="w-full"
+                                  {...field}
+                                  onChange={(e) =>
+                                    field.onChange(
+                                      parseInt(e.target.value) || 1
+                                    )
+                                  }
+                                />
+                              );
+                            }}
                           />
                         </div>
                         <div>
                           <FormCompose
-                            name="cookingAvailable"
+                            name="cityCost.monthlyRent.walkable"
                             label="발품가능여부"
                             control={form.control}
-                            render={(field) => (
-                              <select
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                {...field}
-                              >
-                                <option value="">선택하세요</option>
-                                <option value="가능">가능</option>
-                                <option value="불가능">불가능</option>
-                              </select>
-                            )}
+                            render={(field) => {
+                              return (
+                                <Select
+                                  placeholder="선택하세요"
+                                  className="w-full"
+                                  options={walkableOptions}
+                                  value={field.value ? "true" : "false"}
+                                  onChange={(value) =>
+                                    field.onChange(value === "true")
+                                  }
+                                />
+                              );
+                            }}
                           />
                         </div>
                       </div>
@@ -454,58 +460,48 @@ export default function CostBudgetGroupEditPage({
                           머물렀던 숙소 타입을 선택하거나 직접 입력해주세요
                         </p>
                         <div className="flex flex-wrap gap-3 mb-4">
-                          {accommodationTypes.map((type) => (
-                            <button
-                              key={type}
+                          {accommodationTypeOptions.map((option) => (
+                            <Button
+                              key={option.value}
                               type="button"
-                              onClick={() =>
-                                form.setValue("accommodationType", type)
+                              variant={
+                                accommodationType?.id === option.value
+                                  ? "default"
+                                  : "outline"
                               }
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                form.watch("accommodationType") === type
-                                  ? "bg-black text-white"
-                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }`}
+                              color={
+                                accommodationType?.id === option.value
+                                  ? "neutral"
+                                  : "grayscale"
+                              }
+                              size="sm"
+                              onClick={() => {
+                                form.setValue(
+                                  "cityCost.monthlyRent.accommodationType",
+                                  { id: option.value }
+                                );
+                              }}
+                              className="rounded-full"
                             >
-                              {type}
-                            </button>
+                              {option.label}
+                            </Button>
                           ))}
                         </div>
-                        <div className="flex gap-2">
-                          <FormCompose
-                            name="customAccommodationType"
-                            label=""
-                            control={form.control}
-                            render={({ field }) => (
-                              <input
+                        <FormCompose
+                          name="cityCost.monthlyRent.accommodationType.name"
+                          label=""
+                          control={form.control}
+                          render={(field) => (
+                            <div className="flex gap-2">
+                              <Input
                                 type="text"
                                 placeholder="직접 입력"
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="flex-1"
                                 {...field}
                               />
-                            )}
-                          />
-                          <button
-                            type="button"
-                            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            disabled={
-                              !form.watch("customAccommodationType").trim()
-                            }
-                            onClick={() => {
-                              if (
-                                form.watch("customAccommodationType").trim()
-                              ) {
-                                form.setValue(
-                                  "accommodationType",
-                                  form.watch("customAccommodationType")
-                                );
-                                form.setValue("customAccommodationType", "");
-                              }
-                            }}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </button>
-                        </div>
+                            </div>
+                          )}
+                        />
                       </div>
                       {/* Room Count */}
                       <div>
@@ -516,52 +512,48 @@ export default function CostBudgetGroupEditPage({
                           머물렀던 숙소의 방 개수를 선택하거나 직접 입력해주세요
                         </p>
                         <div className="flex flex-wrap gap-3 mb-4">
-                          {roomCounts.map((count) => (
-                            <button
-                              key={count}
+                          {roomLayoutOptions.map((option) => (
+                            <Button
+                              key={option.value}
                               type="button"
-                              onClick={() => form.setValue("roomCount", count)}
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                form.watch("roomCount") === count
-                                  ? "bg-black text-white"
-                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }`}
+                              variant={
+                                roomCount?.id === option.value
+                                  ? "default"
+                                  : "outline"
+                              }
+                              color={
+                                roomCount?.id === option.value
+                                  ? "neutral"
+                                  : "grayscale"
+                              }
+                              size="sm"
+                              onClick={() => {
+                                form.setValue(
+                                  "cityCost.monthlyRent.roomCount",
+                                  { id: option.value }
+                                );
+                              }}
+                              className="rounded-full"
                             >
-                              {count}
-                            </button>
+                              {option.label}
+                            </Button>
                           ))}
                         </div>
-                        <div className="flex gap-2">
-                          <FormCompose
-                            name="customRoomCount"
-                            label=""
-                            control={form.control}
-                            render={({ field }) => (
-                              <input
+                        <FormCompose
+                          name="cityCost.monthlyRent.roomCount.name"
+                          label=""
+                          control={form.control}
+                          render={(field) => (
+                            <div className="flex gap-2">
+                              <Input
                                 type="text"
                                 placeholder="직접 입력"
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="flex-1"
                                 {...field}
                               />
-                            )}
-                          />
-                          <button
-                            type="button"
-                            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            disabled={!form.watch("customRoomCount").trim()}
-                            onClick={() => {
-                              if (form.watch("customRoomCount").trim()) {
-                                form.setValue(
-                                  "roomCount",
-                                  form.watch("customRoomCount")
-                                );
-                                form.setValue("customRoomCount", "");
-                              }
-                            }}
-                          >
-                            <Plus className="h-4 w-4" />
-                          </button>
-                        </div>
+                            </div>
+                          )}
+                        />
                       </div>
                       {/* Accommodation Features */}
                       <div>
@@ -573,72 +565,56 @@ export default function CostBudgetGroupEditPage({
                           가능)
                         </p>
                         <div className="flex flex-wrap gap-3 mb-4">
-                          {accommodationFeatures.map((feature) => (
-                            <button
-                              key={feature}
+                          {amenityOptions.map((option) => (
+                            <Button
+                              key={option.value}
                               type="button"
-                              onClick={() =>
-                                handleMultiSelectToggle(
-                                  "accommodationFeatures",
-                                  feature
+                              variant={
+                                selectedAccommodationFeatures?.some(
+                                  (f) => f.name === option.label
                                 )
+                                  ? "default"
+                                  : "outline"
                               }
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                form
-                                  .watch("accommodationFeatures")
-                                  .includes(feature)
-                                  ? "bg-black text-white"
-                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                              }`}
+                              color={
+                                selectedAccommodationFeatures?.some(
+                                  (f) => f.name === option.label
+                                )
+                                  ? "neutral"
+                                  : "grayscale"
+                              }
+                              size="sm"
+                              onClick={() =>
+                                handleAccommodationFeatureToggle(option.label)
+                              }
+                              className="rounded-full"
                             >
-                              {feature}
-                            </button>
+                              {option.label}
+                            </Button>
                           ))}
                         </div>
                         <div className="flex gap-2">
-                          <FormCompose
-                            name="customAccommodationFeature"
-                            label=""
-                            control={form.control}
-                            render={({ field }) => (
-                              <input
-                                type="text"
-                                placeholder="직접 입력 (예: #와이파이)"
-                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                {...field}
-                              />
-                            )}
+                          <Input
+                            type="text"
+                            placeholder="직접 입력 (예: #와이파이)"
+                            className="flex-1"
+                            id="customFeatureInput"
                           />
-                          <button
+                          <Button
                             type="button"
-                            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            disabled={
-                              !form.watch("customAccommodationFeature").trim()
-                            }
+                            variant="outline"
                             onClick={() => {
-                              if (
-                                form.watch("customAccommodationFeature").trim()
-                              ) {
-                                const feature = form
-                                  .watch("customAccommodationFeature")
-                                  .startsWith("#")
-                                  ? form.watch("customAccommodationFeature")
-                                  : `#${form.watch(
-                                      "customAccommodationFeature"
-                                    )}`;
-                                const currentFeatures = form.watch(
-                                  "accommodationFeatures"
-                                );
-                                form.setValue("accommodationFeatures", [
-                                  ...currentFeatures,
-                                  feature,
-                                ]);
-                                form.setValue("customAccommodationFeature", "");
+                              const input = document.getElementById('customFeatureInput') as HTMLInputElement;
+                              const value = input.value.trim();
+                              if (value) {
+                                const feature = value.startsWith("#") ? value : `#${value}`;
+                                handleAccommodationFeatureToggle(feature);
+                                input.value = "";
                               }
                             }}
                           >
                             <Plus className="h-4 w-4" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                       {/* Monthly Rent */}
@@ -651,15 +627,20 @@ export default function CostBudgetGroupEditPage({
                         </p>
                         <div className="flex items-center gap-3">
                           <FormCompose
-                            name="monthlyRent"
+                            name="cityCost.monthlyRent.monthlyRent"
                             label=""
                             control={form.control}
-                            render={({ field }) => (
-                              <input
+                            render={(field) => (
+                              <Input
                                 type="number"
                                 placeholder="예: 150"
-                                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="flex-1"
                                 {...field}
+                                onChange={(e) =>
+                                  field.onChange(
+                                    parseFloat(e.target.value) || 0
+                                  )
+                                }
                               />
                             )}
                           />
@@ -668,7 +649,9 @@ export default function CostBudgetGroupEditPage({
                       </div>
                     </div>
                   </div>
+                  )}
                   {/* Initial Settlement Costs */}
+                  {shouldShowSection('initialSettlement') && (
                   <div className="rounded-lg bg-card text-card-foreground border-0 shadow-lg pb-8">
                     <div className="flex flex-col space-y-1.5 p-6 pb-4">
                       <div className="flex items-center gap-3">
@@ -690,16 +673,21 @@ export default function CostBudgetGroupEditPage({
                         <div className="space-y-6">
                           <div>
                             <FormCompose
-                              name="deposit"
+                              name="cityCost.initialSettlement.securityFee"
                               label="보증금"
                               control={form.control}
-                              render={({ field }) => (
+                              render={(field) => (
                                 <div className="flex items-center gap-3">
-                                  <input
+                                  <Input
                                     type="number"
                                     placeholder="예: 50"
-                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="flex-1"
                                     {...field}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        parseFloat(e.target.value) || 0
+                                      )
+                                    }
                                   />
                                   <span className="text-gray-600">만원</span>
                                 </div>
@@ -708,16 +696,21 @@ export default function CostBudgetGroupEditPage({
                           </div>
                           <div>
                             <FormCompose
-                              name="brokerFee"
+                              name="cityCost.initialSettlement.brokerageFee"
                               label="중개수수료"
                               control={form.control}
-                              render={({ field }) => (
+                              render={(field) => (
                                 <div className="flex items-center gap-3">
-                                  <input
+                                  <Input
                                     type="number"
                                     placeholder="예: 15"
-                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="flex-1"
                                     {...field}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        parseFloat(e.target.value) || 0
+                                      )
+                                    }
                                   />
                                   <span className="text-gray-600">만원</span>
                                 </div>
@@ -725,57 +718,44 @@ export default function CostBudgetGroupEditPage({
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <Label className="block mb-2">
                               필수 비품 구매비
-                            </label>
+                            </Label>
                             <div className="bg-gray-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center gap-2">
-                                <FormCompose
-                                  name="newItemName"
-                                  label=""
-                                  control={form.control}
-                                  render={({ field }) => (
-                                    <input
-                                      type="text"
-                                      placeholder="비품명"
-                                      className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                      {...field}
-                                    />
-                                  )}
+                                <Input
+                                  type="text"
+                                  placeholder="품목명"
+                                  className="flex-1"
+                                  id="itemNameInput"
                                 />
-                                <FormCompose
-                                  name="newItemPrice"
-                                  label=""
-                                  control={form.control}
-                                  render={({ field }) => (
-                                    <input
-                                      type="text"
-                                      placeholder="가격"
-                                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                      {...field}
-                                    />
-                                  )}
+                                <Input
+                                  type="number"
+                                  placeholder="가격"
+                                  className="w-24"
+                                  id="itemPriceInput"
                                 />
                                 <span className="text-gray-600 text-sm">
                                   원
                                 </span>
-                                <button
+                                <Button
                                   type="button"
-                                  className="w-8 h-8 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 flex items-center justify-center"
-                                  disabled={
-                                    !form.watch("newItemName").trim() ||
-                                    !form.watch("newItemPrice").trim()
-                                  }
-                                  onClick={() =>
-                                    handleAddItem(
-                                      "essentialItems",
-                                      "newItemName",
-                                      "newItemPrice"
-                                    )
-                                  }
-                                >
-                                  <Plus className="w-4 h-4" />
-                                </button>
+                                  color="primary"
+                                  size="icon"
+                                  onClick={() => {
+                                    const nameInput = document.getElementById('itemNameInput') as HTMLInputElement;
+                                    const priceInput = document.getElementById('itemPriceInput') as HTMLInputElement;
+                                    const name = nameInput.value.trim();
+                                    const price = parseFloat(priceInput.value);
+                                    if (name && !isNaN(price)) {
+                                      handleAddEssentialItem(name, price);
+                                      nameInput.value = "";
+                                      priceInput.value = "";
+                                    }
+                                  }}
+                                  className="w-8 h-8"
+                                  icon={<Plus />}
+                                ></Button>
                               </div>
                             </div>
                             <div className="space-y-2">
@@ -792,13 +772,15 @@ export default function CostBudgetGroupEditPage({
                                       {field.price}원
                                     </span>
                                   </div>
-                                  <button
+                                  <Button
                                     type="button"
-                                    className="text-red-500 hover:text-red-700"
+                                    variant="ghost"
+                                    color="destructive"
+                                    size="icon"
                                     onClick={() => removeEssentialItem(index)}
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
+                                    className="w-8 h-8"
+                                    icon={<Trash2 />}
+                                  ></Button>
                                 </div>
                               ))}
                             </div>
@@ -807,7 +789,9 @@ export default function CostBudgetGroupEditPage({
                       </div>
                     </div>
                   </div>
+                  )}
                   {/* Total Budget */}
+                  {shouldShowSection('totalCost') && (
                   <div className="rounded-lg bg-card text-card-foreground border-0 shadow-lg pb-8">
                     <div className="flex flex-col space-y-1.5 p-6 pb-4">
                       <div className="flex items-center gap-3">
@@ -828,13 +812,13 @@ export default function CostBudgetGroupEditPage({
                         <div className="grid grid-cols-2 gap-4 mb-4">
                           <div>
                             <FormCompose
-                              name="startDate"
+                              name="cityCost.totalCost.startDate"
                               label="시작일"
                               control={form.control}
-                              render={({ field }) => (
-                                <input
+                              render={(field) => (
+                                <Input
                                   type="date"
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  className="w-full"
                                   {...field}
                                 />
                               )}
@@ -842,13 +826,13 @@ export default function CostBudgetGroupEditPage({
                           </div>
                           <div>
                             <FormCompose
-                              name="endDate"
+                              name="cityCost.totalCost.endDate"
                               label="종료일"
                               control={form.control}
-                              render={({ field }) => (
-                                <input
+                              render={(field) => (
+                                <Input
                                   type="date"
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  className="w-full"
                                   {...field}
                                 />
                               )}
@@ -866,15 +850,20 @@ export default function CostBudgetGroupEditPage({
                         </p>
                         <div className="flex items-center gap-3">
                           <FormCompose
-                            name="totalBudget"
+                            name="cityCost.totalCost.totalCost"
                             label=""
                             control={form.control}
-                            render={({ field }) => (
-                              <input
-                                type="text"
-                                placeholder="예: 2,000,000"
-                                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            render={(field) => (
+                              <Input
+                                type="number"
+                                placeholder="예: 2000000"
+                                className="flex-1"
                                 {...field}
+                                onChange={(e) =>
+                                  field.onChange(
+                                    parseFloat(e.target.value) || 0
+                                  )
+                                }
                               />
                             )}
                           />
@@ -883,36 +872,36 @@ export default function CostBudgetGroupEditPage({
                       </div>
                     </div>
                   </div>
+                  )}
                 </div>
               </main>
             </div>
             {/* Fixed Bottom Submit Button */}
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent">
               <div className="max-w-md mx-auto">
-                <button
+                <Button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-full py-4 text-lg font-semibold transition-colors hover:opacity-90"
+                  size="lg"
+                  loading={contributeCity.isPending}
+                  className="w-full py-4 text-lg font-semibold rounded-full"
                   style={{
                     backgroundColor: "rgb(11, 36, 251)",
                     color: "white",
-                    borderRadius: "9999px",
                   }}
                 >
                   한번에 개척하기 (+
                   {(() => {
                     let exp = 0;
-                    if (form.watch("priceStatisfaction")) exp += 50;
-                    if (form.watch("monthlyRent")) exp += 30;
-                    if (form.watch("accommodationType")) exp += 20;
-                    if (form.watch("deposit") || form.watch("brokerFee"))
-                      exp += 40;
-                    if (form.watch("startDate") && form.watch("endDate"))
-                      exp += 40;
-                    if (form.watch("totalBudget")) exp += 50;
+                    if (costSatisfactionScore) exp += 50;
+                    if (monthlyRent) exp += 30;
+                    if (accommodationType?.name) exp += 20;
+                    if (securityFee || brokerageFee) exp += 40;
+                    if (startDate && endDate) exp += 40;
+                    if (totalCost) exp += 50;
                     return exp;
                   })()}{" "}
                   EXP)
-                </button>
+                </Button>
               </div>
             </div>
           </form>

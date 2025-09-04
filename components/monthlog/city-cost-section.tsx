@@ -23,12 +23,12 @@ interface CityCostSectionProps {
   data?: CostData;
   cityName?: string;
   cityId: number | null;
+  citySlug: string;
 }
 
 export default function CityCostSection({
   data,
-  cityName = "",
-  cityId,
+  citySlug,
 }: CityCostSectionProps) {
   const [budgetInputs, setBudgetInputs] = useState({
     people: 1,
@@ -36,6 +36,7 @@ export default function CityCostSection({
     season: "4월",
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [targetSection, setTargetSection] = useState<string | null>(null);
   const [costData, setCostData] = useState<CostData | null>(data || null);
 
   const handleInputChange = (field: string, value: string | number) => {
@@ -46,11 +47,18 @@ export default function CityCostSection({
   };
 
   const handleEditClick = () => {
+    setTargetSection(null); // Full form edit
+    setIsEditModalOpen(true);
+  };
+
+  const handleSectionEdit = (section: string) => {
+    setTargetSection(section);
     setIsEditModalOpen(true);
   };
 
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
+    setTargetSection(null);
   };
 
   const handleSaveCostData = (updatedData: CostData) => {
@@ -120,16 +128,19 @@ export default function CityCostSection({
             icon={<Star className="h-4 w-4 text-gray-600" />}
             label="물가 만족도"
             value={`${data?.costSatisfactionScore ?? 0}/10점`}
+            onEdit={() => handleSectionEdit('satisfaction')}
           />
           <StatItem
             icon={<House className="h-4 w-4 text-gray-600" />}
             label="숙소 월세"
             value={data?.monthlyRent ?? "-"}
+            onEdit={() => handleSectionEdit('monthlyRent')}
           />
           <StatItem
             icon={<House className="h-4 w-4 text-gray-600" />}
             label="초기 정착 비용"
             value={data?.housingDeposit ?? "-"}
+            onEdit={() => handleSectionEdit('initialSettlement')}
           />
           <StatItem
             icon={<DollarSign className="h-4 w-4 text-gray-600" />}
@@ -175,6 +186,7 @@ export default function CityCostSection({
             value={`${data?.monthlyCostRangeMin ?? "-"}, ${
               data?.monthlyCostRangeMax ?? "-"
             }`}
+            onEdit={() => handleSectionEdit('totalCost')}
           />
         </div>
         {/* Budget Calculator */}
@@ -240,10 +252,9 @@ export default function CityCostSection({
       <CostBudgetGroupEditPage
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
-        cityName={cityName}
         initialData={costData ?? undefined}
-        cityId={cityId}
-        onSave={handleSaveCostData}
+        citySlug={citySlug}
+        targetSection={targetSection}
       />
     </>
   );

@@ -23,7 +23,7 @@ export default function CitySafetySection({ data }: CitySafetySectionProps) {
   }
 
   return (
-    <SectionCard title="안전 및 의료" subtitle="15명이 기여한 정보" emoji="🛡️">
+    <SectionCard title="안전 및 의료" subtitle="15명이 기여한 정보" emoji="🏥">
       {/* Top Stats Grid */}
       <div className="grid grid-cols-5 gap-8 pt-0 pb-6">
         <div className="col-span-2 flex justify-center">

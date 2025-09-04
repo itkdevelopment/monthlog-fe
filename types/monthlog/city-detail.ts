@@ -287,7 +287,8 @@ export interface SeasonComment {
 
 export interface CityContributionPayload {
   cityDetail?: CityDetail;
-  seasonComment?: SeasonComment | null;
+  seasonComment?: SeasonComment;
+  costSatisfactionScore?: number;
   cityCost?: {
     totalCost?: {
       startDate?: string;
@@ -318,7 +319,7 @@ export interface CityContributionPayload {
       }[];
     };
     communicationCost?: {
-      communicationMethod: { id?: number; name: string };
+      communicationMethod: { id?: number; name?: string };
       telecomAgency?: { id?: number; name?: string };
       communicationPlan?: { id?: number; name?: string };
       simPurchaseCost?: number;
@@ -355,7 +356,46 @@ export interface CityContributionPayload {
       price?: number;
       localItem: { id?: number; name: string };
     };
-  } | null;
+  };
+  cityDigital?: {
+    digital_satisfaction_score?: number;
+    internet_speed_mbps?: number;
+    internet_speed_score?: number;
+    power_stability?: {
+      rating?: number;
+      tags?: string[];
+    };
+    coworking_space?: {
+      name?: string;
+      is_open_24h?: boolean;
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+    };
+    short_term_membership?: {
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+      tags?: string[];
+    };
+    free_wifi_access?: {
+      rating?: number;
+      tags?: string[];
+    };
+    cafe?: {
+      name?: string;
+      order_menu?: string;
+      price?: number;
+      is_open_24h?: boolean;
+      comment?: string;
+      link?: string;
+      rating?: number;
+    };
+  };
   cityProfile?: TContributeHeroSectionPayload;
 }
 
@@ -437,7 +477,46 @@ export interface CityDetailFormData {
       price?: number;
       localItem: { id?: number; name: string };
     };
-  } | null;
+  };
+  cityDigital?: {
+    digital_satisfaction_score?: number;
+    internet_speed_mbps?: number;
+    internet_speed_score?: number;
+    power_stability?: {
+      rating?: number;
+      tags?: string[];
+    };
+    coworking_space?: {
+      name?: string;
+      is_open_24h?: boolean;
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+    };
+    short_term_membership?: {
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+      tags?: string[];
+    };
+    free_wifi_access?: {
+      rating?: number;
+      tags?: string[];
+    };
+    cafe?: {
+      name?: string;
+      order_menu?: string;
+      price?: number;
+      is_open_24h?: boolean;
+      comment?: string;
+      link?: string;
+      rating?: number;
+    };
+  };
 }
 
 export type TContributeHeroSectionPayload = {

@@ -28,7 +28,8 @@ export function useCityDetail(city: string | number | null) {
     electricalPlugType: null,
     mainReligions: null,
     seasonComment: null,
-    cityCost: null,
+    cityCost: {},
+    cityDigital: {},
   });
 
   const getCityDetailTags = useCallback(async () => {
@@ -90,7 +91,7 @@ export function useCityDetail(city: string | number | null) {
 
   const handleSubmit = async () => {
     if (!cityId) return;
-    console.log("ưewewe", cityId);
+    console.log("📌 Submitting city:", cityId);
 
     const payload: CityContributionPayload = {
       cityDetail: {
@@ -102,15 +103,16 @@ export function useCityDetail(city: string | number | null) {
         electricalPlugType: formData.electricalPlugType ?? "",
         mainReligions: formData.mainReligions ?? "",
       },
-      seasonComment: formData.seasonComment ?? null,
-      cityCost: formData.cityCost ?? null,
+      seasonComment: formData.seasonComment ?? undefined,
+      cityCost: formData.cityCost ?? undefined,
+      cityDigital: formData.cityDigital ?? undefined,
     };
 
     try {
       await contributeCity(String(cityId), payload);
-      console.log("Contribute success");
+      console.log("✅ Contribute success:", payload);
     } catch (error) {
-      console.error("Contribute failed:", error);
+      console.error("❌ Contribute failed:", error);
     }
   };
 

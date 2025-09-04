@@ -15,15 +15,28 @@ import CityDigitalSection from "@/components/monthlog/city-digital-section";
 import CitySafetySection from "@/components/monthlog/city-safety-section";
 import CitySeasonChart from "@/components/monthlog/city-season-chart";
 import CityAtmosphereGallery from "@/components/monthlog/city-atmosphere-gallery";
-import { useCityDetail } from "./_hook";
+import { useHomeCities, useCityDetail } from "@/lib/monthlog/query/city";
+// import { useCityDetail } from "./_hook";
+import CityRadarChart from "@/components/monthlog/city-radar-chart";
 
 export default function CityDetailPage() {
   const params = useParams();
   const citySlug = params.slug as string;
-  // Get city data based on cityId
-  const { data: cityData, cityId } = useCityDetail(citySlug);
 
-  if (!cityData) {
+  // Get all home cities to find cityId by slug
+  const { data: homeCities } = useHomeCities();
+
+  // Find cityId from slug
+  const cityFromList = homeCities?.cities.find(
+    (city) =>
+      city.slug.toLowerCase() === decodeURIComponent(citySlug).toLowerCase()
+  );
+  const cityId = cityFromList?.city_id;
+
+  // Get city detail by cityId
+  const { data: cityData } = useCityDetail(String(cityId || ""));
+
+  if (!cityData || !cityId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -37,7 +50,6 @@ export default function CityDetailPage() {
       </div>
     );
   }
-  console.log(cityData);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -72,17 +84,42 @@ export default function CityDetailPage() {
           {/* Main Content Sections */}
           <div className="space-y-8">
             {/* Radar Chart Section */}
-            {/* <CityRadarChart
-              data={9}
-              tags={cityData.popularTags ?? []}
-              comments={8}
-            /> */}
+            <CityRadarChart
+              data={{
+                soloHealing: 8,
+                digitalNomad: 7,
+                withKids: 6,
+                budgetTravel: 9,
+                specialExperience: 8,
+              }}
+              tags={[
+                { name: "자연", count: 42 },
+                { name: "맛집", count: 38 },
+                { name: "액티비티", count: 31 },
+                { name: "힐링", count: 27 },
+                { name: "가족여행", count: 24 },
+              ]}
+              comments={[
+                "자연이 아름답고 공기가 맑아서 힐링하기 좋아요",
+                "가족과 함께 가기 좋은 곳이에요",
+                "다양한 액티비티가 있어서 지루할 틈이 없어요",
+                "맛집이 정말 많아서 먹방 여행하기 좋아요",
+              ]}
+            />
 
             {/* Cost Section */}
-            <CityCostSection data={cityData.cost} cityId={cityId} />
+            <CityCostSection
+              data={cityData.cost}
+              cityId={cityId}
+              citySlug={citySlug}
+            />
 
             {/* Digital/Work Environment */}
-            <CityDigitalSection data={cityData.digital} />
+            <CityDigitalSection
+              data={cityData.digital}
+              cityId={cityId}
+              citySlug={citySlug}
+            />
 
             {/* Safety & Medical */}
             <CitySafetySection data={cityData.safety} />
