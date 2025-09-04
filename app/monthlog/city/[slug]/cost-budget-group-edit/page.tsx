@@ -5,18 +5,10 @@ import {
   Star,
   House,
   DollarSign,
-  Zap,
-  Car,
-  Smartphone,
-  UtensilsCrossed,
-  MapPin,
-  ShoppingCart,
   Calculator,
   Plus,
   Trash2,
-  X,
 } from "lucide-react";
-import Link from "next/link";
 import {
   CostData,
   CityContributionPayload,

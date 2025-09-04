@@ -1,51 +1,66 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Trash2, ExternalLink } from "lucide-react"
-import { Badge } from "@/components/monthlog-proto/ui/badge"
+import { Plus, Trash2, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/monthlog-proto/ui/badge";
+import { Controller, useFormContext } from "react-hook-form";
+import { Input } from "@/components/monthlog/ui/input";
+import { Button } from "@/components/monthlog/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/monthlog/ui/select";
 
 interface CoworkingSpace {
-  name: string
-  plan: string
-  price: string
-  comment: string
-  is24Hour: boolean
-  link: string
+  name: string;
+  plan: string;
+  price: string;
+  comment: string;
+  is24Hour: boolean;
+  link: string;
 }
 
 interface SelectedRecommendation {
-  spaceId: string
-  comment: string
+  spaceId: string;
+  comment: string;
 }
 
 interface CoworkingSpaceInputProps {
-  onScoreChange: (score: number | null) => void
-  onSpacesChange: (spaces: CoworkingSpace[]) => void
-  onRecommendationsChange: (recommendations: SelectedRecommendation[]) => void
-  selectedScore: number | null
-  coworkingSpaces: CoworkingSpace[]
-  selectedRecommendations: SelectedRecommendation[]
+  name: string;
 }
 
 export default function CoworkingSpaceInput({
-  onScoreChange,
-  onSpacesChange,
-  onRecommendationsChange,
-  selectedScore,
-  coworkingSpaces,
-  selectedRecommendations,
+  name,
 }: CoworkingSpaceInputProps) {
-  const [newSpaceName, setNewSpaceName] = useState("")
-  const [selectedPlan, setSelectedPlan] = useState("")
-  const [newSpacePrice, setNewSpacePrice] = useState("")
-  const [newSpaceComment, setNewSpaceComment] = useState("")
-  const [newSpaceIs24Hour, setNewSpaceIs24Hour] = useState(false)
-  const [newSpaceLink, setNewSpaceLink] = useState("")
+  const { watch, setValue, control } = useFormContext();
 
-  // 세부 플랜 옵션
-  const planOptions = ["1시간", "1일권", "7일권", "10일권", "15일권", "한달플랜", "3개월 플랜", "6개월 플랜", "1년플랜"]
+  const selectedScore: number | null = watch(`${name}.score`);
+  const coworkingSpaces: CoworkingSpace[] = watch(`${name}.spaces`) || [];
+  const selectedRecommendations: SelectedRecommendation[] =
+    watch(`${name}.recommendations`) || [];
+  const newSpace: CoworkingSpace = watch(`${name}.newSpace`) || {
+    name: "",
+    plan: "",
+    price: "",
+    comment: "",
+    is24Hour: false,
+    link: "",
+  };
 
-  // 모든 코워킹 스페이스
+  const planOptions = [
+    "1시간",
+    "1일권",
+    "7일권",
+    "10일권",
+    "15일권",
+    "한달플랜",
+    "3개월 플랜",
+    "6개월 플랜",
+    "1년플랜",
+  ];
+
   const allSpaces = [
     {
       id: "wework-gangnam",
@@ -77,97 +92,122 @@ export default function CoworkingSpaceInput({
       is24Hour: true,
       link: "https://sparkplus.co.kr/yeoksam",
     },
-  ]
+  ];
 
-  const formatPrice = (value: string) => {
-    const number = value.replace(/[^\d]/g, "")
-    return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
-  const handlePriceChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, "")
-    setNewSpacePrice(numericValue)
-  }
+  const handleScoreChange = (score: number) => {
+    setValue(`${name}.score`, score);
+  };
 
   const addCoworkingSpace = () => {
-    if (newSpaceName && selectedPlan && newSpacePrice && newSpaceComment && newSpaceLink) {
-      const newSpace: CoworkingSpace = {
-        name: newSpaceName,
-        plan: selectedPlan,
-        price: newSpacePrice,
-        comment: newSpaceComment,
-        is24Hour: newSpaceIs24Hour,
-        link: newSpaceLink,
-      }
-      onSpacesChange([...coworkingSpaces, newSpace])
-
-      // 입력 필드 초기화
-      setNewSpaceName("")
-      setSelectedPlan("")
-      setNewSpacePrice("")
-      setNewSpaceComment("")
-      setNewSpaceIs24Hour(false)
-      setNewSpaceLink("")
+    if (
+      newSpace.name &&
+      newSpace.plan &&
+      newSpace.price &&
+      newSpace.comment &&
+      newSpace.link
+    ) {
+      setValue(`${name}.spaces`, [...coworkingSpaces, newSpace]);
+      setValue(`${name}.newSpace`, {
+        name: "",
+        plan: "",
+        price: "",
+        comment: "",
+        is24Hour: false,
+        link: "",
+      });
     }
-  }
+  };
 
   const removeCoworkingSpace = (index: number) => {
-    onSpacesChange(coworkingSpaces.filter((_, i) => i !== index))
-  }
+    setValue(
+      `${name}.spaces`,
+      coworkingSpaces.filter((_, i) => i !== index)
+    );
+  };
 
   const handleRecommendationSelect = (spaceId: string) => {
-    const existingIndex = selectedRecommendations.findIndex((r) => r.spaceId === spaceId)
-    if (existingIndex >= 0) {
-      onRecommendationsChange(selectedRecommendations.filter((_, i) => i !== existingIndex))
+    const exists = selectedRecommendations.find((r) => r.spaceId === spaceId);
+    if (exists) {
+      setValue(
+        `${name}.recommendations`,
+        selectedRecommendations.filter((r) => r.spaceId !== spaceId)
+      );
     } else {
-      onRecommendationsChange([...selectedRecommendations, { spaceId, comment: "" }])
+      setValue(`${name}.recommendations`, [
+        ...selectedRecommendations,
+        { spaceId, comment: "" },
+      ]);
     }
-  }
+  };
 
   const updateRecommendationComment = (spaceId: string, comment: string) => {
-    onRecommendationsChange(selectedRecommendations.map((r) => (r.spaceId === spaceId ? { ...r, comment } : r)))
-  }
+    setValue(
+      `${name}.recommendations`,
+      selectedRecommendations.map((r) =>
+        r.spaceId === spaceId ? { ...r, comment } : r
+      )
+    );
+  };
 
   return (
     <div className="space-y-12">
-      {/* 코워킹스페이스 확보 용이성 */}
+      {/* 점수 */}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">코워킹스페이스 확보 용이성</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          코워킹스페이스 확보 용이성
+        </h3>
         <p className="text-sm text-gray-600 mb-6">
-          코워킹스페이스를 찾고 예약하는 것이 얼마나 쉬운지 1~10점으로 평가해주세요
+          코워킹스페이스를 찾고 예약하는 것이 얼마나 쉬운지 1~10점으로
+          평가해주세요
         </p>
         <div className="grid grid-cols-10 gap-2">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
-            <button
+            <Button
               key={score}
-              onClick={() => onScoreChange(score)}
+              type="button"
+              onClick={() => handleScoreChange(score)}
               className={`aspect-square text-lg font-semibold rounded-lg transition-colors ${
-                selectedScore === score ? "bg-black text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                selectedScore === score
+                  ? "bg-black text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               {score}
-            </button>
+            </Button>
           ))}
         </div>
-        {selectedScore && <p className="text-sm text-blue-600 font-medium mt-3">선택한 점수: {selectedScore}점</p>}
+        {selectedScore && (
+          <p className="text-sm text-blue-600 font-medium mt-3">
+            선택한 점수: {selectedScore}점
+          </p>
+        )}
       </div>
 
-      {/* 마음에 드는 장소 */}
+      {/* 추천 */}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">마음에 드는 장소</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          마음에 드는 장소
+        </h3>
         <p className="text-sm text-gray-600 mb-6">
           다른 사람들이 추천한 코워킹스페이스 중 마음에 드는 곳을 선택해주세요
         </p>
         <div className="space-y-2">
-          {allSpaces.map((space, index) => {
-            const isSelected = selectedRecommendations.some((r) => r.spaceId === space.id)
-            const selectedRec = selectedRecommendations.find((r) => r.spaceId === space.id)
+          {allSpaces.map((space) => {
+            const isSelected = selectedRecommendations.some(
+              (r) => r.spaceId === space.id
+            );
+            const selectedRec = selectedRecommendations.find(
+              (r) => r.spaceId === space.id
+            );
             return (
-              <div key={index} className="space-y-2">
-                <button
+              <div key={space.id} className="space-y-2">
+                <Button
+                  type="button"
                   onClick={() => handleRecommendationSelect(space.id)}
                   className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
-                    isSelected ? "bg-black text-white" : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                    isSelected
+                      ? "bg-black text-white"
+                      : "bg-gray-50 text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <div className="text-left flex-1">
@@ -176,117 +216,136 @@ export default function CoworkingSpaceInput({
                         [{space.name}] {space.comment}
                       </span>
                       {space.is24Hour && (
-                        <Badge className="bg-green-100 text-green-700 text-xs pointer-events-none">24시</Badge>
+                        <Badge className="bg-green-100 text-green-700 text-xs pointer-events-none">
+                          24시
+                        </Badge>
                       )}
                     </div>
                     <div className="text-sm opacity-70 mt-1">
                       {space.plan} • {space.price}
                     </div>
                   </div>
-                  <div className="text-sm opacity-70 ml-4 whitespace-nowrap">{space.likes}명이 공감</div>
-                </button>
+                  <div className="text-sm opacity-70 ml-4 whitespace-nowrap">
+                    {space.likes}명이 공감
+                  </div>
+                </Button>
                 {isSelected && (
                   <div className="ml-4">
-                    <input
+                    <Input
                       type="text"
                       value={selectedRec?.comment || ""}
-                      onChange={(e) => updateRecommendationComment(space.id, e.target.value)}
+                      onChange={(e) =>
+                        updateRecommendationComment(space.id, e.target.value)
+                      }
                       placeholder="이 장소에 대한 한줄 코멘트를 입력해주세요"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      className="w-full"
                     />
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </div>
       </div>
 
-      {/* 코워킹스페이스 추가 */}
+      {/* 새 스페이스 추가 */}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">코워킹스페이스 추가</h3>
-        <p className="text-sm text-gray-600 mb-6">이용한 코워킹스페이스 정보를 입력해주세요</p>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          코워킹스페이스 추가
+        </h3>
+        <p className="text-sm text-gray-600 mb-6">
+          이용한 코워킹스페이스 정보를 입력해주세요
+        </p>
 
-        {/* 새 항목 추가 */}
-        <div className="bg-gray-50 p-4 rounded-lg mb-4">
-          <div className="grid grid-cols-4 gap-2 mb-4">
-            <input
-              type="text"
-              value={newSpaceName}
-              onChange={(e) => setNewSpaceName(e.target.value)}
-              placeholder="장소명"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <select
-              value={selectedPlan}
-              onChange={(e) => setSelectedPlan(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white"
-            >
-              <option value="">플랜 선택</option>
-              {planOptions.map((plan) => (
-                <option key={plan} value={plan}>
-                  {plan}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              value={newSpacePrice ? formatPrice(newSpacePrice) : ""}
-              onChange={(e) => handlePriceChange(e.target.value)}
-              placeholder="가격"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <label className="flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg bg-white cursor-pointer">
-              <input
-                type="checkbox"
-                checked={newSpaceIs24Hour}
-                onChange={(e) => setNewSpaceIs24Hour(e.target.checked)}
-                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        <div className="bg-gray-50 p-4 rounded-lg mb-4 space-y-2">
+          <Input
+            value={newSpace.name}
+            onChange={(e) => setValue(`${name}.newSpace.name`, e.target.value)}
+            placeholder="장소명"
+          />
+
+          {/* Select với Controller */}
+          <Controller
+            name={`${name}.newSpace.plan`}
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={field.value}
+                onChange={field.onChange}
+                options={planOptions.map((plan) => ({
+                  label: plan,
+                  value: plan,
+                }))}
               />
-              <span className="text-sm text-gray-700">24시간 오픈</span>
-            </label>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mb-4">
+            )}
+          />
+
+          <Input
+            type="number"
+            value={newSpace.price}
+            onChange={(e) => setValue(`${name}.newSpace.price`, e.target.value)}
+            placeholder="가격 (숫자만)"
+          />
+          <Input
+            value={newSpace.comment}
+            onChange={(e) =>
+              setValue(`${name}.newSpace.comment`, e.target.value)
+            }
+            placeholder="한줄코멘트"
+          />
+          <Input
+            value={newSpace.link}
+            onChange={(e) => setValue(`${name}.newSpace.link`, e.target.value)}
+            placeholder="코워킹스페이스 링크"
+          />
+
+          <div className="flex items-center gap-2">
             <input
-              type="text"
-              value={newSpaceComment}
-              onChange={(e) => setNewSpaceComment(e.target.value)}
-              placeholder="한줄코멘트"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              type="checkbox"
+              checked={newSpace.is24Hour}
+              onChange={(e) =>
+                setValue(`${name}.newSpace.is24Hour`, e.target.checked)
+              }
             />
-            <input
-              type="url"
-              value={newSpaceLink}
-              onChange={(e) => setNewSpaceLink(e.target.value)}
-              placeholder="코워킹스페이스 링크"
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
+            <span className="text-sm">24시간 오픈</span>
           </div>
 
-          <button
+          <Button
+            type="button"
             onClick={addCoworkingSpace}
-            disabled={!newSpaceName || !selectedPlan || !newSpacePrice || !newSpaceComment || !newSpaceLink}
-            className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm transition-colors rounded-md border ${
-              newSpaceName && selectedPlan && newSpacePrice && newSpaceComment && newSpaceLink
-                ? "bg-gray-100 border-gray-300 text-gray-800 hover:bg-gray-200 hover:border-gray-400"
-                : "bg-gray-50 border-gray-200 text-gray-400 hover:text-gray-500"
-            }`}
+            disabled={
+              !newSpace.name ||
+              !newSpace.plan ||
+              !newSpace.price ||
+              !newSpace.comment ||
+              !newSpace.link
+            }
+            variant="outline"
+            className="gap-1"
           >
             <Plus className="w-3 h-3" />
             코워킹스페이스 추가
-          </button>
+          </Button>
         </div>
 
-        {/* 추가된 코워킹스페이스 목록 */}
         {coworkingSpaces.length > 0 && (
           <div className="space-y-2">
             {coworkingSpaces.map((space, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              >
                 <div className="flex items-center gap-3 flex-1">
-                  <span className="text-sm font-medium text-gray-700">{space.name}</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {space.name}
+                  </span>
                   <span className="text-sm text-gray-500">{space.plan}</span>
-                  <span className="text-sm text-gray-500">{formatPrice(space.price)}원</span>
-                  {space.is24Hour && <Badge className="bg-green-100 text-green-700 text-xs">24시</Badge>}
+                  <span className="text-sm text-gray-500">{space.price}원</span>
+                  {space.is24Hour && (
+                    <Badge className="bg-green-100 text-green-700 text-xs">
+                      24시
+                    </Badge>
+                  )}
                   <span className="text-sm text-gray-500">{space.comment}</span>
                   <a
                     href={space.link}
@@ -297,14 +356,18 @@ export default function CoworkingSpaceInput({
                     링크 <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
-                <button onClick={() => removeCoworkingSpace(index)} className="text-red-500 hover:text-red-700">
+                <Button
+                  type="button"
+                  onClick={() => removeCoworkingSpace(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
                   <Trash2 className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             ))}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
