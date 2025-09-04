@@ -1,4 +1,3 @@
-
 export interface City {
   city_id: number;
   city_name: string;
@@ -45,4 +44,11 @@ export interface MonthlogStats {
   totalUsers: number;
   todayRecords: number;
   totalArchives: number;
+}
+
+export interface HomeStats {
+  pioneeredCities: number;
+  pioneers: number;
+  todayRecords: number;
+  cumulativeArchives: number;
 }

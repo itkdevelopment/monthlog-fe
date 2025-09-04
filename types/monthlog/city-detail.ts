@@ -287,8 +287,9 @@ export interface SeasonComment {
 
 export interface CityContributionPayload {
   cityDetail?: CityDetail;
-  seasonComment: SeasonComment | null;
-  cityCost: {
+  seasonComment?: SeasonComment;
+  costSatisfactionScore?: number;
+  cityCost?: {
     totalCost?: {
       startDate?: string;
       endDate?: string;
@@ -318,7 +319,7 @@ export interface CityContributionPayload {
       }[];
     };
     communicationCost?: {
-      communicationMethod: { id?: number; name: string };
+      communicationMethod: { id?: number; name?: string };
       telecomAgency?: { id?: number; name?: string };
       communicationPlan?: { id?: number; name?: string };
       simPurchaseCost?: number;
@@ -355,7 +356,47 @@ export interface CityContributionPayload {
       price?: number;
       localItem: { id?: number; name: string };
     };
-  } | null;
+  };
+  cityDigital?: {
+    digital_satisfaction_score?: number;
+    internet_speed_mbps?: number;
+    internet_speed_score?: number;
+    power_stability?: {
+      rating?: number;
+      tags?: string[];
+    };
+    coworking_space?: {
+      name?: string;
+      is_open_24h?: boolean;
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+    };
+    short_term_membership?: {
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+      tags?: string[];
+    };
+    free_wifi_access?: {
+      rating?: number;
+      tags?: string[];
+    };
+    cafe?: {
+      name?: string;
+      order_menu?: string;
+      price?: number;
+      is_open_24h?: boolean;
+      comment?: string;
+      link?: string;
+      rating?: number;
+    };
+  };
+  cityProfile?: TContributeHeroSectionPayload;
 }
 
 export interface CityDetailFormData {
@@ -365,7 +406,7 @@ export interface CityDetailFormData {
   timezone: string | null;
   electricalVoltage: string | null;
   electricalPlugType: string | null;
-  mainReligions: string| null;
+  mainReligions: string | null;
 
   seasonComment: SeasonComment | null;
 
@@ -436,5 +477,83 @@ export interface CityDetailFormData {
       price?: number;
       localItem: { id?: number; name: string };
     };
-  } | null;
+  };
+  cityDigital?: {
+    digital_satisfaction_score?: number;
+    internet_speed_mbps?: number;
+    internet_speed_score?: number;
+    power_stability?: {
+      rating?: number;
+      tags?: string[];
+    };
+    coworking_space?: {
+      name?: string;
+      is_open_24h?: boolean;
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+    };
+    short_term_membership?: {
+      ease_score?: number;
+      plans?: {
+        plan?: string;
+        price?: number;
+      }[];
+      tags?: string[];
+    };
+    free_wifi_access?: {
+      rating?: number;
+      tags?: string[];
+    };
+    cafe?: {
+      name?: string;
+      order_menu?: string;
+      price?: number;
+      is_open_24h?: boolean;
+      comment?: string;
+      link?: string;
+      rating?: number;
+    };
+  };
 }
+
+export type TContributeHeroSectionPayload = {
+  companion: {
+    companionCode?: String;
+    companionId?: Number;
+  };
+
+  travelStyle: {
+    travelStyleCodes?: String[];
+    travelStyleIds?: Number[];
+  };
+
+  cityRepresentation: {
+    cityRepCodes?: String[];
+    cityRepIds?: Number[];
+    cityRepSubCodes?: String[];
+    cityRepSubIds?: Number[];
+    freeTextTags?: String[];
+  };
+
+  startDate?: String;
+  endDate?: String;
+  totalPeople?: Number;
+  comment?: String;
+};
+
+export type TTag = {
+  id: number;
+  name: string;
+  code: string;
+  category: string;
+};
+
+export type TTagData = {
+  COMPANION: TTag[];
+  TRAVEL_STYLE: TTag[];
+  CITY_REP_SUB: TTag[];
+  CITY_REP: TTag[];
+};

@@ -1,0 +1,166 @@
+"use client";
+
+import { useState } from "react";
+import { X, Plus } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/monthlog/ui/button";
+import { Input } from "@/components/monthlog/ui/input";
+
+interface WifiAccessInputProps {
+  name: string;
+}
+
+export default function WifiAccessInput({ name }: WifiAccessInputProps) {
+  const { watch, setValue } = useFormContext();
+  const [newTag, setNewTag] = useState("");
+
+  const selectedScore: number | null = watch(`${name}.rating`);
+  const selectedTags: string[] = watch(`${name}.tags`) || [];
+  const newTags: string[] = watch(`${name}.newTags`) || [];
+
+  const existingTags = [
+    { text: "카페에서 매우 용이", votes: 52 },
+    { text: "공공장소 WiFi 좋음", votes: 41 },
+    { text: "호텔 WiFi 빠름", votes: 38 },
+    { text: "무료 WiFi 많음", votes: 35 },
+    { text: "WiFi 속도 느림", votes: 12 },
+    { text: "연결 불안정", votes: 8 },
+  ];
+
+  // 점수 선택
+  const handleScoreChange = (score: number) => {
+    setValue(`${name}.rating`, score);
+  };
+
+  // 태그 선택/해제
+  const toggleTag = (tagText: string) => {
+    const updated = selectedTags.includes(tagText)
+      ? selectedTags.filter((t) => t !== tagText)
+      : [...selectedTags, tagText];
+    setValue(`${name}.tags`, updated);
+  };
+
+  // 새 태그 추가
+  const addNewTag = () => {
+    if (newTag.trim() && !newTags.includes(newTag.trim())) {
+      setValue(`${name}.newTags`, [...newTags, newTag.trim()]);
+      setNewTag("");
+    }
+  };
+
+  const removeNewTag = (tagToRemove: string) => {
+    setValue(
+      `${name}.newTags`,
+      newTags.filter((t) => t !== tagToRemove)
+    );
+  };
+
+  return (
+    <div className="space-y-12">
+      {/* 만족도 */}
+      <div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          무료 Wi-Fi 접근성 만족도
+        </h3>
+        <p className="text-sm text-gray-600 mb-6">
+          무료 Wi-Fi 접근성에 대한 만족도를 1~10점으로 평가해주세요
+        </p>
+
+        <div className="grid grid-cols-10 gap-2">
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
+            <Button
+              key={score}
+              type="button"
+              onClick={() => handleScoreChange(score)}
+              className={`aspect-square rounded-lg font-semibold text-lg transition-colors ${
+                selectedScore === score
+                  ? "bg-black text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              {score}
+            </Button>
+          ))}
+        </div>
+        {!!selectedScore && (
+          <p className="text-sm text-blue-600 font-medium mt-3">
+            선택한 점수: {selectedScore}점
+          </p>
+        )}
+      </div>
+
+      {/* 태그 */}
+      <div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">관련 태그</h3>
+        <p className="text-sm text-gray-600 mb-6">
+          해당하는 태그를 선택하거나 새로운 태그를 추가해주세요
+        </p>
+
+        {/* 기존 태그 */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {existingTags.map((tag) => (
+            <Button
+              key={tag.text}
+              type="button"
+              onClick={() => toggleTag(tag.text)}
+              className={`px-3 py-2 border rounded-lg transition-colors ${
+                selectedTags.includes(tag.text)
+                  ? "bg-black text-white border-black"
+                  : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+              }`}
+            >
+              #{tag.text} ({tag.votes})
+            </Button>
+          ))}
+        </div>
+
+        {/* 새 태그 추가 */}
+        <div className="space-y-3">
+          <div className="flex gap-3">
+            <Input
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="새로운 태그 입력"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addNewTag();
+                }
+              }}
+            />
+            <Button
+              type="button"
+              onClick={addNewTag}
+              disabled={!newTag.trim()}
+              variant="outline"
+              className="px-3"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* 추가된 태그 */}
+          {newTags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {newTags.map((tag) => (
+                <div
+                  key={tag}
+                  className="px-3 py-2 bg-green-100 text-green-800 border border-green-200 rounded-lg flex items-center gap-2"
+                >
+                  #{tag}
+                  <Button
+                    type="button"
+                    onClick={() => removeNewTag(tag)}
+                    className="text-green-600 hover:text-green-800"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

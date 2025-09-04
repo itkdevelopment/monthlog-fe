@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { City, UserProfile } from "@/types/monthlog";
+import { City, HomeStats, UserProfile } from "@/types/monthlog";
 import { fetchHomeCities, HomeCityApi } from "@/lib/monthlog/city-home.api";
 
 export function useHomeCities() {
   const [cities, setCities] = useState<City[]>([]);
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<HomeStats | null>(null);
 
   const listHomeCities = async () => {
     const data = await fetchHomeCities();
@@ -33,14 +34,21 @@ export function useHomeCities() {
       maxExp: data.user_info.required_exp,
       percentage: data.user_info.progress_percentage,
     };
+    const mappedStats: HomeStats = {
+      pioneeredCities: data.stats.pioneered_cities,
+      pioneers: data.stats.pioneers,
+      todayRecords: data.stats.today_records,
+      cumulativeArchives: data.stats.cumulative_archives,
+    };
 
     setCities(mappedCities);
     setUserInfo(mappedUser);
+    setStats(mappedStats);
   };
 
   useEffect(() => {
     listHomeCities();
   }, []);
 
-  return { cities, userInfo, reload: listHomeCities };
+  return { cities, userInfo, stats, reload: listHomeCities };
 }
