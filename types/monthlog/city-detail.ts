@@ -396,6 +396,7 @@ export interface CityContributionPayload {
       rating?: number;
     };
   };
+  cityProfile?: TContributeHeroSectionPayload;
 }
 
 export interface CityDetailFormData {
@@ -517,3 +518,42 @@ export interface CityDetailFormData {
     };
   };
 }
+
+export type TContributeHeroSectionPayload = {
+  companion: {
+    companionCode?: String;
+    companionId?: Number;
+  };
+
+  travelStyle: {
+    travelStyleCodes?: String[];
+    travelStyleIds?: Number[];
+  };
+
+  cityRepresentation: {
+    cityRepCodes?: String[];
+    cityRepIds?: Number[];
+    cityRepSubCodes?: String[];
+    cityRepSubIds?: Number[];
+    freeTextTags?: String[];
+  };
+
+  startDate?: String;
+  endDate?: String;
+  totalPeople?: Number;
+  comment?: String;
+};
+
+export type TTag = {
+  id: number;
+  name: string;
+  code: string;
+  category: string;
+};
+
+export type TTagData = {
+  COMPANION: TTag[];
+  TRAVEL_STYLE: TTag[];
+  CITY_REP_SUB: TTag[];
+  CITY_REP: TTag[];
+};

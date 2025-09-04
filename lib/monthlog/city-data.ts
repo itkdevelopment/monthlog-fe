@@ -28,3 +28,8 @@ export async function contributeCity(
   );
   return res.data;
 }
+
+export async function fetchTagsCityDetail() {
+  const res = await apiHandler.get(`/explorer/cities/tags`);
+  return res.data;
+}
