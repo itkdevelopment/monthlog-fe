@@ -464,3 +464,17 @@ export type TContributeHeroSectionPayload = {
   totalPeople?: Number;
   comment?: String;
 };
+
+export type TTag = {
+  id: number;
+  name: string;
+  code: string;
+  category: string;
+};
+
+export type TTagData = {
+  COMPANION: TTag[];
+  TRAVEL_STYLE: TTag[];
+  CITY_REP_SUB: TTag[];
+  CITY_REP: TTag[];
+};

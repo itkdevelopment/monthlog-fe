@@ -12,7 +12,11 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useCityDetail } from "@/app/monthlog/city/[slug]/_hook";
-import { TContributeHeroSectionPayload } from "@/types/monthlog/city-detail";
+import {
+  TContributeHeroSectionPayload,
+  TTag,
+  TTagData,
+} from "@/types/monthlog/city-detail";
 
 interface CityExperienceModalProps {
   isOpen: boolean;
@@ -22,13 +26,6 @@ interface CityExperienceModalProps {
   initialData?: any;
   cityId: number | null;
 }
-
-type TTag = {
-  id: number;
-  name: string;
-  code: string;
-  category: string;
-};
 
 interface FormData {
   startDate: string;
@@ -137,7 +134,10 @@ export default function CityExperienceModal({
   ];
 
   const getTagByCate = (category: string) => {
-    return tags[category]?.map((item: TTag) => ({ ...item, label: item.name }));
+    return tags![category as keyof TTagData].map((item: TTag) => ({
+      ...item,
+      label: item.name,
+    }));
   };
 
   const companions = getTagByCate("COMPANION");
@@ -205,7 +205,6 @@ export default function CityExperienceModal({
   };
 
   const handleSubmit = () => {
-    console.log("Form data:", formData);
     const payload: TContributeHeroSectionPayload =
       {} as TContributeHeroSectionPayload;
     if (formData.companion)

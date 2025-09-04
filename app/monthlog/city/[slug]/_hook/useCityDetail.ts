@@ -9,12 +9,13 @@ import {
   CityDetailData,
   CityDetailFormData,
   TContributeHeroSectionPayload,
+  TTagData,
 } from "@/types/monthlog/city-detail";
 import { fetchHomeCities } from "@/lib/monthlog/city-home.api";
 
 export function useCityDetail(city: string | number | null) {
   const [data, setData] = useState<CityDetailData | null>(null);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<TTagData>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
