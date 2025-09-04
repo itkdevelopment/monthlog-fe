@@ -287,8 +287,8 @@ export interface SeasonComment {
 
 export interface CityContributionPayload {
   cityDetail?: CityDetail;
-  seasonComment: SeasonComment | null;
-  cityCost: {
+  seasonComment?: SeasonComment | null;
+  cityCost?: {
     totalCost?: {
       startDate?: string;
       endDate?: string;
@@ -356,6 +356,7 @@ export interface CityContributionPayload {
       localItem: { id?: number; name: string };
     };
   } | null;
+  cityProfile?: TContributeHeroSectionPayload;
 }
 
 export interface CityDetailFormData {
@@ -365,7 +366,7 @@ export interface CityDetailFormData {
   timezone: string | null;
   electricalVoltage: string | null;
   electricalPlugType: string | null;
-  mainReligions: string| null;
+  mainReligions: string | null;
 
   seasonComment: SeasonComment | null;
 
@@ -438,3 +439,42 @@ export interface CityDetailFormData {
     };
   } | null;
 }
+
+export type TContributeHeroSectionPayload = {
+  companion: {
+    companionCode?: String;
+    companionId?: Number;
+  };
+
+  travelStyle: {
+    travelStyleCodes?: String[];
+    travelStyleIds?: Number[];
+  };
+
+  cityRepresentation: {
+    cityRepCodes?: String[];
+    cityRepIds?: Number[];
+    cityRepSubCodes?: String[];
+    cityRepSubIds?: Number[];
+    freeTextTags?: String[];
+  };
+
+  startDate?: String;
+  endDate?: String;
+  totalPeople?: Number;
+  comment?: String;
+};
+
+export type TTag = {
+  id: number;
+  name: string;
+  code: string;
+  category: string;
+};
+
+export type TTagData = {
+  COMPANION: TTag[];
+  TRAVEL_STYLE: TTag[];
+  CITY_REP_SUB: TTag[];
+  CITY_REP: TTag[];
+};

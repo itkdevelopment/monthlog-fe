@@ -2,12 +2,18 @@
 "use client";
 
 import { Pen } from "lucide-react";
+import { useState } from "react";
+import CityExperienceModal from "./modals/city-experience-modal";
+import { CostData } from "@/types/monthlog/city-detail";
 
 interface CityHeroSectionProps {
   city: string;
   description: string;
   image: string;
   // tags: string[];
+  data?: CostData;
+  cityName?: string;
+  cityId: number | null;
 }
 
 export default function CityHeroSection({
@@ -15,7 +21,20 @@ export default function CityHeroSection({
   description,
   image,
   // tags,
+  data,
+  cityName = "",
+  cityId,
 }: CityHeroSectionProps) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
   return (
     <div className="relative bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border border-gray-100 mb-6 sm:mb-8">
       <div className="relative h-48 sm:h-64">
@@ -27,7 +46,10 @@ export default function CityHeroSection({
         <div className="absolute inset-0 bg-black/20"></div>
 
         {/* Edit Button - Responsive */}
-        <button className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20 cursor-pointer z-10">
+        <button
+          onClick={handleEditClick}
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20 cursor-pointer z-10"
+        >
           <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
         </button>
 
@@ -53,6 +75,14 @@ export default function CityHeroSection({
           </div>
         </div>
       </div>
+
+      <CityExperienceModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        cityName={cityName}
+        initialData={data}
+        cityId={cityId}
+      />
     </div>
   );
 }
