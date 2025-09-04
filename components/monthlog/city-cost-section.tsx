@@ -1,5 +1,5 @@
+// app/monthlog/city/components/city-cost-section.tsx
 "use client";
-
 import {
   Star,
   House,
@@ -17,7 +17,7 @@ import CircularProgress from "./shared/circular-progress";
 import StatItem from "./shared/stat-item";
 import { CostData } from "@/types/monthlog/city-detail";
 import { useState } from "react";
-import CityExperienceModal from "./modals/city-experience-modal";
+import CostBudgetGroupEditPage from "@/app/monthlog/city/[slug]/cost-budget-group-edit/page";
 
 interface CityCostSectionProps {
   data?: CostData;
@@ -35,8 +35,8 @@ export default function CityCostSection({
     days: 30,
     season: "4월",
   });
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [costData, setCostData] = useState<CostData | null>(data || null);
 
   const handleInputChange = (field: string, value: string | number) => {
     setBudgetInputs((prev) => ({
@@ -53,6 +53,10 @@ export default function CityCostSection({
     setIsEditModalOpen(false);
   };
 
+  const handleSaveCostData = (updatedData: CostData) => {
+    setCostData(updatedData);
+  };
+
   if (!data) {
     return null;
   }
@@ -60,7 +64,7 @@ export default function CityCostSection({
   return (
     <>
       <SectionCard
-        title="한달살기 비용"
+        title="한달살이 비용"
         subtitle="23명이 기여한 정보"
         emoji="💰"
         onEdit={
@@ -109,9 +113,7 @@ export default function CityCostSection({
             </div>
           </div>
         </div>
-
         <hr className="border-gray-200" />
-
         {/* Detailed Breakdown */}
         <div className="space-y-1">
           <StatItem
@@ -119,25 +121,21 @@ export default function CityCostSection({
             label="물가 만족도"
             value={`${data?.costSatisfactionScore ?? 0}/10점`}
           />
-
           <StatItem
             icon={<House className="h-4 w-4 text-gray-600" />}
             label="숙소 월세"
             value={data?.monthlyRent ?? "-"}
           />
-
           <StatItem
             icon={<House className="h-4 w-4 text-gray-600" />}
             label="초기 정착 비용"
             value={data?.housingDeposit ?? "-"}
           />
-
           <StatItem
             icon={<DollarSign className="h-4 w-4 text-gray-600" />}
             label="공과금 (월평균)"
             value={data?.utilitiesCost ?? "-"}
           />
-
           <StatItem
             icon={<Car className="h-4 w-4 text-gray-600" />}
             label="교통비 (월평균)"
@@ -145,7 +143,6 @@ export default function CityCostSection({
               data?.transportationPreference ?? "-"
             }`}
           />
-
           <StatItem
             icon={<Wifi className="h-4 w-4 text-gray-600" />}
             label="통신비 (월평균)"
@@ -153,13 +150,11 @@ export default function CityCostSection({
               data?.communicationPreference ?? "-"
             }`}
           />
-
           <StatItem
             icon={<Utensils className="h-4 w-4 text-gray-600" />}
             label="식비 (월평균)"
             value={`${data?.foodCost ?? "-"}, ${data?.avgMealCost ?? "-"}`}
           />
-
           <StatItem
             icon={<MapPin className="h-4 w-4 text-gray-600" />}
             label="여가/액티비티"
@@ -167,7 +162,6 @@ export default function CityCostSection({
               data?.popularActivities ?? "-"
             }`}
           />
-
           <StatItem
             icon={<ShoppingCart className="h-4 w-4 text-gray-600" />}
             label="현지물가 수준"
@@ -175,7 +169,6 @@ export default function CityCostSection({
               data?.referencePrice ?? "-"
             }`}
           />
-
           <StatItem
             icon={<Calculator className="h-4 w-4 text-gray-600" />}
             label="총 예상 비용 (월)"
@@ -184,7 +177,6 @@ export default function CityCostSection({
             }`}
           />
         </div>
-
         {/* Budget Calculator */}
         <div className="border-t border-gray-200 pt-4 sm:pt-6 mt-4 sm:mt-6">
           <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
@@ -238,7 +230,6 @@ export default function CityCostSection({
               </select>
             </div>
           </div>
-
           <button className="w-full py-2.5 sm:py-3 rounded-lg font-semibold transition-colors bg-[#0B24FB] hover:bg-blue-700 text-white text-sm sm:text-base">
             내 예산 확인하기
           </button>
@@ -246,12 +237,13 @@ export default function CityCostSection({
       </SectionCard>
 
       {/* Edit Modal */}
-      <CityExperienceModal
+      <CostBudgetGroupEditPage
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
         cityName={cityName}
-        initialData={data}
+        initialData={costData ?? undefined}
         cityId={cityId}
+        onSave={handleSaveCostData}
       />
     </>
   );

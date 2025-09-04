@@ -6,9 +6,8 @@ import { useRouter } from "next/navigation";
 import { useHomeCities } from "./_hook";
 
 export default function MonthlogHomePage() {
-  const { cities, userInfo } = useHomeCities();
+  const { cities, userInfo, stats } = useHomeCities();
   const router = useRouter();
-
 
   return (
     <main className="min-h-dvh digital-garden-bg">
@@ -70,6 +69,30 @@ export default function MonthlogHomePage() {
             ))}
           </div>
         </section>
+        <div className="text-center py-8 pb-32">
+          <div className="flex items-center justify-center space-x-8 text-sm minimal-stats">
+            <div>
+              <span className="stat-number">{stats?.pioneeredCities}</span>{" "}
+              개척된도시
+            </div>
+            <div>
+              <span className="stat-number">
+                {stats?.pioneers.toLocaleString()}
+              </span>
+              개척자
+            </div>
+            <div>
+              <span className="stat-number">{stats?.todayRecords}</span> 오늘의
+              기록
+            </div>
+            <div>
+              <span className="stat-number">
+                {stats?.cumulativeArchives.toLocaleString()}
+              </span>
+              누적 아카이브
+            </div>
+          </div>
+        </div>
 
         <div className="h-8 sm:h-10" />
       </div>
