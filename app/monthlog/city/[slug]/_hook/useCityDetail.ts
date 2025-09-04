@@ -1,6 +1,7 @@
 import {
   contributeCity,
   fetchCityDetail,
+  fetchStaticCityDetail,
   fetchTagsCityDetail,
 } from "@/lib/monthlog/city-data";
 import { useState, useEffect, useCallback } from "react";
@@ -12,10 +13,12 @@ import {
   TTagData,
 } from "@/types/monthlog/city-detail";
 import { fetchHomeCities } from "@/lib/monthlog/city-home.api";
+import { set } from "zod";
 
 export function useCityDetail(city: string | number | null) {
   const [data, setData] = useState<CityDetailData | null>(null);
   const [tags, setTags] = useState<TTagData>();
+  const [staticData, setStaticData] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
@@ -68,11 +71,17 @@ export function useCityDetail(city: string | number | null) {
 
           setCityId(foundCity.city_id);
           const detail = await fetchCityDetail(String(foundCity.city_id));
+          const staticDetail = await fetchStaticCityDetail(
+            String(foundCity.city_id)
+          );
           setData(detail);
+          setStaticData(staticDetail);
         } else {
           setCityId(city);
           const detail = await fetchCityDetail(String(city));
+          const staticDetail = await fetchStaticCityDetail(String(city));
           setData(detail);
+          setStaticData(staticDetail);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -91,7 +100,6 @@ export function useCityDetail(city: string | number | null) {
 
   const handleSubmit = async () => {
     if (!cityId) return;
-    console.log("📌 Submitting city:", cityId);
 
     const payload: CityContributionPayload = {
       cityDetail: {
@@ -109,8 +117,7 @@ export function useCityDetail(city: string | number | null) {
     };
 
     try {
-      await contributeCity(String(cityId), payload);
-      console.log("✅ Contribute success:", payload);
+      await contributeCity(cityId, payload);
     } catch (error) {
       console.error("❌ Contribute failed:", error);
     }
@@ -125,8 +132,7 @@ export function useCityDetail(city: string | number | null) {
       cityProfile: formData,
     };
     try {
-      await contributeCity(String(cityId), payload);
-      console.log("Contribute success");
+      await contributeCity(cityId, payload);
     } catch (error) {
       console.error("Contribute failed:", error);
     }
@@ -143,5 +149,6 @@ export function useCityDetail(city: string | number | null) {
     getCityDetailTags,
     tags,
     handleContributeHeroSection,
+    staticData,
   };
 }

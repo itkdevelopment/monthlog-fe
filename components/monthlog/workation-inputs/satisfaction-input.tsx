@@ -41,7 +41,7 @@ export default function SatisfactionInput({ name }: SatisfactionInputProps) {
               ))}
             </div>
 
-            {field.value && (
+            {!!field.value && (
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <p className="text-blue-800">
                   선택한 점수: <strong>{field.value}점</strong>
