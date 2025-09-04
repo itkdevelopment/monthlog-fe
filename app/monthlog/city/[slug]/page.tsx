@@ -54,6 +54,8 @@ export default function CityDetailPage() {
             description={cityData.basic.cityDesc ?? ""}
             image={cityData.basic.cityProfileUrl ?? ""}
             // tags={cityData.tags??[]}
+            data={cityData.cost}
+            cityId={cityId}
           />
 
           {/* Overview Stats */}
