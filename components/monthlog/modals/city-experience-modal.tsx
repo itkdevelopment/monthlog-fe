@@ -218,8 +218,25 @@ export default function CityExperienceModal({
     if (!!formData.selectedComment) payload.comment = formData.selectedComment;
     if (!!formData.customComment) payload.comment = formData.customComment;
 
+    if (formData.cityTags.length > 0)
+      payload.cityRepresentation = { cityRepIds: formData.cityTags };
+
+    if (formData.citySubTags.length > 0)
+      payload.cityRepresentation = {
+        ...payload.cityRepresentation,
+        cityRepSubIds: formData.citySubTags,
+      };
+
+    if (formData.customTags.length > 0)
+      payload.cityRepresentation = {
+        ...payload.cityRepresentation,
+        freeTextTags: formData.customTags,
+      };
+
+    if (formData.travelStyles.length > 0)
+      payload.travelStyle = { travelStyleIds: formData.travelStyles };
     handleContributeHeroSection(payload);
-    // onClose();
+    onClose();
   };
 
   const toggleSection = (section: string) => {
@@ -799,7 +816,7 @@ export default function CityExperienceModal({
                           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                             formData.customTags.includes("힐링 스팟")
                               ? "bg-blue-600 text-white"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
                           }`}
                         >
                           힐링 스팟
@@ -809,7 +826,7 @@ export default function CityExperienceModal({
                           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                             formData.customTags.includes("자연 경관")
                               ? "bg-blue-600 text-white"
-                              : "bg-blue-600 text-white hover:bg-blue-700"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
                           }`}
                         >
                           자연 경관
@@ -818,7 +835,11 @@ export default function CityExperienceModal({
                           onClick={() =>
                             handleToggleTag("여유로운 분위기", "custom")
                           }
-                          className="px-3 py-1 rounded-full text-xs font-medium transition-colors bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            formData.customTags.includes("여유로운 분위기")
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          }`}
                         >
                           여유로운 분위기
                         </button>
@@ -826,19 +847,31 @@ export default function CityExperienceModal({
                           onClick={() =>
                             handleToggleTag("재방문 추천", "custom")
                           }
-                          className="px-3 py-1 rounded-full text-xs font-medium transition-colors bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            formData.customTags.includes("재방문 추천")
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          }`}
                         >
                           재방문 추천
                         </button>
                         <button
                           onClick={() => handleToggleTag("휴식 최적", "custom")}
-                          className="px-3 py-1 rounded-full text-xs font-medium transition-colors bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            formData.customTags.includes("휴식 최적")
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          }`}
                         >
                           휴식 최적
                         </button>
                         <button
                           onClick={() => handleToggleTag("경치 좋은", "custom")}
-                          className="px-3 py-1 rounded-full text-xs font-medium transition-colors bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            formData.customTags.includes("경치 좋은")
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-blue-700 border border-blue-300 hover:bg-blue-100"
+                          }`}
                         >
                           경치 좋은
                         </button>
