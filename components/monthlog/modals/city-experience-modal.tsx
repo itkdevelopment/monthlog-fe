@@ -55,7 +55,8 @@ export default function CityExperienceModal({
   cityId,
   totalContributors = 155,
 }: CityExperienceModalProps) {
-  const { tags, handleContributeHeroSection } = useCityDetail(cityId);
+  const { tags, handleContributeHeroSection, staticData } =
+    useCityDetail(cityId);
   const [activeFilter, setActiveFilter] = useState<
     "period" | "companion" | "style" | "tag" | "comment" | "all"
   >("all");
@@ -84,54 +85,44 @@ export default function CityExperienceModal({
 
   if (!isOpen) return null;
 
-  const periodStats = [
-    { label: "짧은여행 (6박 미만)", count: 25, percentage: 28 },
-    { label: "일주일살기 (6박~13박)", count: 30, percentage: 34 },
-    { label: "2-3주 살기 (14박~21박)", count: 20, percentage: 23 },
-    { label: "한달살기 (22박~30박)", count: 10, percentage: 11 },
-    { label: "1개월 이상 (31박 이상)", count: 3, percentage: 4 },
-  ];
+  const periodStats = (staticData?.travelPeriodStats || []).map(
+    (stat: any) => ({
+      label: stat.period,
+      count: stat.count,
+      percentage: Math.round((stat.count / totalContributors) * 100),
+    })
+  );
 
-  const companionStats = [
-    { label: "혼자", count: 35, percentage: 32 },
-    { label: "친구", count: 25, percentage: 23 },
-    { label: "연인", count: 20, percentage: 18 },
-    { label: "가족", count: 12, percentage: 11 },
-    { label: "동료", count: 8, percentage: 7 },
-    { label: "가족(아이랑)", count: 6, percentage: 5 },
-    { label: "가족(부모님이랑)", count: 4, percentage: 4 },
-  ];
+  const companionStats = (staticData?.companionTypeStats || []).map(
+    (stat: any) => ({
+      label: stat.companionType,
+      count: stat.count,
+      percentage: Math.round((stat.count / totalContributors) * 100),
+    })
+  );
 
-  const travelStyleStats = [
-    { label: "#나혼자힐링", count: 42, percentage: 38 },
-    { label: "#디지털노마드&워케이션", count: 50, percentage: 45 },
-    { label: "#가성비여행", count: 15, percentage: 14 },
-    { label: "#아이와함께", count: 8, percentage: 7 },
-    { label: "#특별한 경험", count: 5, percentage: 4 },
-    { label: "#커플여행", count: 12, percentage: 11 },
-    { label: "#친구여행", count: 18, percentage: 16 },
-    { label: "#가족여행", count: 14, percentage: 13 },
-    { label: "#비즈니스", count: 6, percentage: 5 },
-  ];
+  const travelStyleStats = (staticData?.travelStyleStats || []).map(
+    (stat: any) => ({
+      label: stat.travelStyle,
+      count: stat.count,
+      percentage: Math.round((stat.count / totalContributors) * 100),
+    })
+  );
 
-  const cityTagStats = [
-    { label: "조용한 힐링", count: 45, percentage: 35 },
-    { label: "자연 친화적", count: 38, percentage: 30 },
-    { label: "해변 도시", count: 32, percentage: 25 },
-    { label: "카페 문화", count: 25, percentage: 20 },
-    { label: "맛집 천국", count: 20, percentage: 15 },
-  ];
+  const cityTagStats = (staticData?.cityRepresentativeStats || []).map(
+    (stat: any) => ({
+      label: stat.cityRepresentative,
+      count: stat.count,
+      percentage: Math.round((stat.count / totalContributors) * 100),
+    })
+  );
 
-  const popularComments = [
-    {
-      text: "제주도는 정말 힐링하기 좋은 곳이에요. 바다를 보며 산책하는 것만으로도 마음이 편안해집니다.",
-      count: 28,
-    },
-    {
-      text: "자연이 아름다운 도시라는 말이 딱 맞아요. 한라산과 바다가 어우러진 �경이 정말 인상적이었습니다.",
-      count: 21,
-    },
-  ];
+  const popularComments = (staticData?.oneLineCommentStats || []).map(
+    (comment: any) => ({
+      text: comment.comment,
+      count: comment.count,
+    })
+  );
 
   const getTagByCate = (category: string) => {
     return tags![category as keyof TTagData].map((item: TTag) => ({

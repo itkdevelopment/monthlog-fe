@@ -133,6 +133,8 @@ export function useCityDetail(city: string | number | null) {
     };
     try {
       await contributeCity(cityId, payload);
+      const staticDetail = await fetchStaticCityDetail(String(city));
+      setStaticData(staticDetail);
     } catch (error) {
       console.error("Contribute failed:", error);
     }
