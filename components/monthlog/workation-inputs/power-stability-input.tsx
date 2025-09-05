@@ -18,7 +18,7 @@ export default function PowerStabilityInput({
 
   const selectedScore: number | null = watch(`${name}.rating`);
   const selectedTags: string[] = watch(`${name}.tags`) || [];
-  const newTags: string[] = watch(`${name}.tags`) || [];
+  const [newTags, setNewTags] = useState<string[]>([]);
 
   const existingTags = [
     { text: "정전 거의 없음", votes: 45 },
@@ -45,15 +45,17 @@ export default function PowerStabilityInput({
   // 새 태그 추가
   const addNewTag = () => {
     if (newTag.trim() && !newTags.includes(newTag.trim())) {
-      setValue(`${name}.tags`, [...newTags, newTag.trim()]);
+      setNewTags([...newTags, newTag.trim()]);
       setNewTag("");
+      setValue(`${name}.tags`, [...selectedTags, newTag.trim()]);
     }
   };
 
   const removeNewTag = (tagToRemove: string) => {
+    setNewTags(newTags.filter((t) => t !== tagToRemove));
     setValue(
       `${name}.tags`,
-      newTags.filter((t) => t !== tagToRemove)
+      selectedTags.filter((t) => t !== tagToRemove)
     );
   };
 
@@ -142,27 +144,26 @@ export default function PowerStabilityInput({
           </div>
 
           {/* 추가된 태그 */}
-          {/* {newTags.length > 0 && (
+          {newTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {newTags.map((tag) => (
+              {newTags.map((tag, index) => (
                 <div
-                  key={tag}
+                  key={index}
                   className="px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-lg flex items-center gap-2"
                 >
                   #{tag}
-                  <Button
-                    type="button"
+                  <button
                     onClick={() => removeNewTag(tag)}
                     className="text-green-500 hover:text-green-700"
                   >
                     <X className="w-3 h-3" />
-                  </Button>
+                  </button>
                 </div>
               ))}
             </div>
-          )} */}
+          )}
 
-          {(!!selectedScore || newTags.length > 0) && (
+          {(!!selectedScore || selectedTags.length > 0) && (
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-blue-800">
                 {selectedScore && (
@@ -171,10 +172,10 @@ export default function PowerStabilityInput({
                   </span>
                 )}
 
-                {newTags.length > 0 && (
+                {selectedTags.length > 0 && (
                   <span>
                     {(selectedScore || selectedTags.length > 0) && ", "}새 태그:{" "}
-                    <strong>{newTags.join(", ")}</strong>
+                    <strong>{selectedTags.join(", ")}</strong>
                   </span>
                 )}
               </p>
