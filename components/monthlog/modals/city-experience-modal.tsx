@@ -83,6 +83,8 @@ export default function CityExperienceModal({
     comment: true,
   });
 
+  const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+
   if (!isOpen) return null;
 
   const periodStats = (staticData?.travelPeriodStats || []).map(
@@ -196,6 +198,19 @@ export default function CityExperienceModal({
   };
 
   const handleSubmit = () => {
+    if (
+      (formData.startDate && !formData.endDate) ||
+      (!formData.startDate && formData.endDate)
+    ) {
+      alert("시작일과 종료일은 모두 선택해야 합니다.");
+      return;
+    }
+
+    if (formData.startDate > today || formData.endDate > today) {
+      alert("미래 날짜는 선택할 수 없습니다.");
+      return;
+    }
+
     const payload: TContributeHeroSectionPayload =
       {} as TContributeHeroSectionPayload;
     if (formData.companion)
@@ -532,6 +547,7 @@ export default function CityExperienceModal({
                         type="date"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={formData.startDate}
+                        max={today}
                         onChange={(e) =>
                           setFormData((prev) => ({
                             ...prev,
@@ -549,6 +565,7 @@ export default function CityExperienceModal({
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={formData.endDate}
                         min={formData.startDate}
+                        max={today}
                         onChange={(e) =>
                           setFormData((prev) => ({
                             ...prev,
@@ -708,7 +725,9 @@ export default function CityExperienceModal({
                           key={tag}
                           className="px-3 py-1 bg-blue-50 text-blue-700 border border-blue-300 text-sm rounded-full"
                         >
-                          #{tag}
+                          {[...cityTags, ...recommendedTags].find(
+                            (t) => t.id === tag
+                          )?.name || tag}
                         </span>
                       ))}
                     </div>
