@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Calculator,
   Edit,
+  Zap,
 } from "lucide-react";
 import SectionCard from "./shared/section-card";
 import CircularProgress from "./shared/circular-progress";
@@ -29,6 +30,7 @@ interface CityCostSectionProps {
 export default function CityCostSection({
   data,
   citySlug,
+  cityId,
 }: CityCostSectionProps) {
   const [budgetInputs, setBudgetInputs] = useState({
     people: 1,
@@ -128,24 +130,25 @@ export default function CityCostSection({
             icon={<Star className="h-4 w-4 text-gray-600" />}
             label="물가 만족도"
             value={`${data?.costSatisfactionScore ?? 0}/10점`}
-            onEdit={() => handleSectionEdit('satisfaction')}
+            onEdit={() => handleSectionEdit("satisfaction")}
           />
           <StatItem
             icon={<House className="h-4 w-4 text-gray-600" />}
             label="숙소 월세"
             value={data?.monthlyRent ?? "-"}
-            onEdit={() => handleSectionEdit('monthlyRent')}
-          />
-          <StatItem
-            icon={<House className="h-4 w-4 text-gray-600" />}
-            label="초기 정착 비용"
-            value={data?.housingDeposit ?? "-"}
-            onEdit={() => handleSectionEdit('initialSettlement')}
+            onEdit={() => handleSectionEdit("monthlyRent")}
           />
           <StatItem
             icon={<DollarSign className="h-4 w-4 text-gray-600" />}
+            label="초기 정착 비용"
+            value={data?.housingDeposit ?? "-"}
+            onEdit={() => handleSectionEdit("initialSettlement")}
+          />
+          <StatItem
+            icon={<Zap className="h-4 w-4 text-gray-600" />}
             label="공과금 (월평균)"
             value={data?.utilitiesCost ?? "-"}
+            onEdit={() => handleSectionEdit("utilityBills")}
           />
           <StatItem
             icon={<Car className="h-4 w-4 text-gray-600" />}
@@ -153,6 +156,7 @@ export default function CityCostSection({
             value={`${data?.transportationCost ?? "-"}, ${
               data?.transportationPreference ?? "-"
             }`}
+            onEdit={() => handleSectionEdit("transportationExpenses")}
           />
           <StatItem
             icon={<Wifi className="h-4 w-4 text-gray-600" />}
@@ -160,11 +164,13 @@ export default function CityCostSection({
             value={`${data?.communicationCost ?? "-"}, ${
               data?.communicationPreference ?? "-"
             }`}
+            onEdit={() => handleSectionEdit("communicationCost")}
           />
           <StatItem
             icon={<Utensils className="h-4 w-4 text-gray-600" />}
             label="식비 (월평균)"
             value={`${data?.foodCost ?? "-"}, ${data?.avgMealCost ?? "-"}`}
+            onEdit={() => handleSectionEdit("foodCost")}
           />
           <StatItem
             icon={<MapPin className="h-4 w-4 text-gray-600" />}
@@ -186,7 +192,7 @@ export default function CityCostSection({
             value={`${data?.monthlyCostRangeMin ?? "-"}, ${
               data?.monthlyCostRangeMax ?? "-"
             }`}
-            onEdit={() => handleSectionEdit('totalCost')}
+            onEdit={() => handleSectionEdit("totalCost")}
           />
         </div>
         {/* Budget Calculator */}
@@ -254,6 +260,7 @@ export default function CityCostSection({
         onClose={handleCloseEditModal}
         initialData={costData ?? undefined}
         citySlug={citySlug}
+        cityId={cityId}
         targetSection={targetSection}
       />
     </>

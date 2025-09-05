@@ -106,12 +106,6 @@ export default function MonthlogHomePage() {
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-0">
         {/* Test Form Toggle Button */}
         <section className="mb-6 sm:mb-8 text-center">
-          <Button 
-            onClick={() => setShowTestForm(!showTestForm)}
-            className="mb-4"
-          >
-            {showTestForm ? "폼 숨기기" : "테스트 폼 보기"}
-          </Button>
           
           {/* Test Form */}
           {showTestForm && (
