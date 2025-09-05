@@ -1,6 +1,7 @@
 // components/monthlog/shared/stat-item.tsx
-import { ReactNode } from 'react';
-import EditButton from './edit-button';
+import { ReactNode } from "react";
+import EditButton from "./edit-button";
+import { Edit } from "lucide-react";
 
 interface StatItemProps {
   icon: ReactNode;
@@ -26,9 +27,12 @@ export default function StatItem({
           {value}
         </span>
         {onEdit && (
-          <div className="w-7 h-7">
-            <EditButton onClick={onEdit} />
-          </div>
+          <button
+            onClick={onEdit}
+            className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-100 flex items-center justify-center transition-colors"
+          >
+            <Edit className="h-4 w-4 text-gray-600" />
+          </button>
         )}
       </div>
     </div>

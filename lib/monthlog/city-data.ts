@@ -2,6 +2,7 @@
 import {
   CityContributionPayload,
   CityDetailData,
+  TagsResponse,
 } from "@/types/monthlog/city-detail";
 import apiHandler from "../api-handler";
 
@@ -26,6 +27,11 @@ export async function contributeCity(
     `/explorer/cities/${id}/contribute`,
     payload
   );
+  return res.data;
+}
+
+export async function fetchTags(): Promise<TagsResponse> {
+  const res = await apiHandler.get<TagsResponse>(`/explorer/cities/tags`);
   return res.data;
 }
 

@@ -16,7 +16,6 @@ import CitySafetySection from "@/components/monthlog/city-safety-section";
 import CitySeasonChart from "@/components/monthlog/city-season-chart";
 import CityAtmosphereGallery from "@/components/monthlog/city-atmosphere-gallery";
 import { useHomeCities, useCityDetail } from "@/lib/monthlog/query/city";
-// import { useCityDetail } from "./_hook";
 import CityRadarChart from "@/components/monthlog/city-radar-chart";
 
 export default function CityDetailPage() {
@@ -34,7 +33,7 @@ export default function CityDetailPage() {
   const cityId = cityFromList?.city_id;
 
   // Get city detail by cityId
-  const { data: cityData } = useCityDetail(String(cityId || ""));
+  const { data: cityData, } = useCityDetail(String(cityId || ""));
 
   if (!cityData || !cityId) {
     return (

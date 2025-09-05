@@ -13,7 +13,7 @@ interface PowerStabilityInputProps {
 export default function PowerStabilityInput({
   name,
 }: PowerStabilityInputProps) {
-  const { control, setValue, watch } = useFormContext();
+  const { setValue, watch } = useFormContext();
   const [newTag, setNewTag] = useState("");
 
   const selectedScore: number | null = watch(`${name}.rating`);

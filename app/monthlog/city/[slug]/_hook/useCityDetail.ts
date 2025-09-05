@@ -3,6 +3,7 @@ import {
   fetchCityDetail,
   fetchStaticCityDetail,
   fetchTagsCityDetail,
+  fetchTags,
 } from "@/lib/monthlog/city-data";
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   CityDetailFormData,
   TContributeHeroSectionPayload,
   TTagData,
+  TagsResponse,
 } from "@/types/monthlog/city-detail";
 import { fetchHomeCities } from "@/lib/monthlog/city-home.api";
 import { set } from "zod";
@@ -22,6 +24,9 @@ export function useCityDetail(city: string | number | null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
+  const [tagsLoading, setTagsLoading] = useState(false);
+  const [tagsError, setTagsError] = useState<string | null>(null);
+  const [tagss, setTagss] = useState<TagsResponse | null>(null);
   const [formData, setFormData] = useState<CityDetailFormData>({
     primaryLanguage: null,
     visaRequirement: null,
@@ -34,6 +39,22 @@ export function useCityDetail(city: string | number | null) {
     cityCost: {},
     cityDigital: {},
   });
+
+  const fetchTagsData = useCallback(async () => {
+    try {
+      setTagsLoading(true);
+      const tagsData = await fetchTags();
+      setTagss(tagsData);
+      setFormData((prev) => ({
+        ...prev,
+        tags: tagsData,
+      }));
+    } catch (err) {
+      setTagsError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setTagsLoading(false);
+    }
+  }, []);
 
   const getCityDetailTags = useCallback(async () => {
     if (!city) return;
@@ -56,11 +77,9 @@ export function useCityDetail(city: string | number | null) {
 
   const getListCityDetail = useCallback(async () => {
     if (!city) return;
-
     const load = async () => {
       try {
         setLoading(true);
-
         if (typeof city === "string") {
           const decodedSlug = decodeURIComponent(city).toLowerCase();
           const homeData = await fetchHomeCities();
@@ -68,7 +87,6 @@ export function useCityDetail(city: string | number | null) {
             (c) => c.slug.toLowerCase() === decodedSlug
           );
           if (!foundCity) throw new Error("City not found");
-
           setCityId(foundCity.city_id);
           const detail = await fetchCityDetail(String(foundCity.city_id));
           const staticDetail = await fetchStaticCityDetail(
@@ -89,14 +107,14 @@ export function useCityDetail(city: string | number | null) {
         setLoading(false);
       }
     };
-
     load();
   }, [city]);
 
   useEffect(() => {
     getListCityDetail();
     getCityDetailTags();
-  }, [getListCityDetail, getCityDetailTags]);
+    fetchTagsData();
+  }, [getListCityDetail, getCityDetailTags, fetchTagsData]);
 
   const handleSubmit = async () => {
     if (!cityId) return;
@@ -112,7 +130,7 @@ export function useCityDetail(city: string | number | null) {
         mainReligions: formData.mainReligions ?? "",
       },
       seasonComment: formData.seasonComment ?? undefined,
-      cityCost: formData.cityCost ?? undefined,
+      // cityCost: formData.cityCost ?? undefined,
       cityDigital: formData.cityDigital ?? undefined,
     };
 
@@ -140,6 +158,29 @@ export function useCityDetail(city: string | number | null) {
     }
   };
 
+   const getTagsByCategory = useCallback(
+    (category: keyof TagsResponse["data"]) => {
+      return tagss?.data[category] || [];
+    },
+    [tagss]
+  );
+
+  const getTagById = useCallback(
+    (tagId: number) => {
+      if (!tagss) return null;
+
+      for (const category of Object.keys(tagss.data)) {
+        const tag = tagss.data[category as keyof TagsResponse["data"]].find(
+          (t) => t.id === tagId
+        );
+        if (tag) return tag;
+      }
+
+      return null;
+    },
+    [tags]
+  );
+
   return {
     data,
     loading,
@@ -150,7 +191,12 @@ export function useCityDetail(city: string | number | null) {
     cityId,
     getCityDetailTags,
     tags,
+    tagss,
     handleContributeHeroSection,
     staticData,
+    tagsLoading,
+    tagsError,
+    getTagsByCategory,
+    getTagById,
   };
 }
