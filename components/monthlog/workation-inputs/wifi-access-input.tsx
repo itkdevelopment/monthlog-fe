@@ -16,7 +16,7 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
 
   const selectedScore: number | null = watch(`${name}.rating`);
   const selectedTags: string[] = watch(`${name}.tags`) || [];
-  const newTags: string[] = watch(`${name}.newTags`) || [];
+  const [newTags, setNewTags] = useState<string[]>([]);
 
   const existingTags = [
     { text: "카페에서 매우 용이", votes: 52 },
@@ -43,15 +43,17 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
   // 새 태그 추가
   const addNewTag = () => {
     if (newTag.trim() && !newTags.includes(newTag.trim())) {
-      setValue(`${name}.newTags`, [...newTags, newTag.trim()]);
+      setNewTags([...newTags, newTag.trim()]);
       setNewTag("");
+      setValue(`${name}.tags`, [...selectedTags, newTag.trim()]);
     }
   };
 
   const removeNewTag = (tagToRemove: string) => {
+    setNewTags(newTags.filter((t) => t !== tagToRemove));
     setValue(
-      `${name}.newTags`,
-      newTags.filter((t) => t !== tagToRemove)
+      `${name}.tags`,
+      selectedTags.filter((t) => t !== tagToRemove)
     );
   };
 
@@ -139,25 +141,28 @@ export default function WifiAccessInput({ name }: WifiAccessInputProps) {
             </Button>
           </div>
           {/* 추가된 태그 */}
-          {/* {newTags.length > 0 && (
+          {newTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {newTags.map((tag) => (
-                <div
-                  key={tag}
-                  className="px-3 py-2 bg-green-100 text-green-800 border border-green-200 rounded-lg flex items-center gap-2"
-                >
-                  #{tag}
-                  <Button
-                    type="button"
-                    onClick={() => removeNewTag(tag)}
-                    className="text-green-600 hover:text-green-800"
-                  >
-                    <X className="w-3 h-3" />
-                  </Button>
+              {newTags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {newTags.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="px-3 py-2 bg-green-100 text-green-800 border border-green-200 rounded-lg flex items-center gap-2"
+                    >
+                      #{tag}
+                      <button
+                        onClick={() => removeNewTag(tag)}
+                        className="w-4 h-4 text-green-600 hover:text-green-800"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )} */}
+          )}
           {(!!selectedScore || selectedTags.length > 0) && (
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-blue-800">

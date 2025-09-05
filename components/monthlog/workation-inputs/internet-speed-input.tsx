@@ -68,7 +68,9 @@ export default function InternetSpeedInput({ name }: InternetSpeedInputProps) {
               <div className="flex space-x-3">
                 <Input
                   type="number"
-                  {...field}
+                  value={field.value || ""}
+                  name={`${name}.internet_speed_mbps`}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                   placeholder="속도를 입력하세요"
                   className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
                 />
