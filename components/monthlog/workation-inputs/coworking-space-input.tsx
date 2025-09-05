@@ -36,8 +36,8 @@ export default function CoworkingSpaceInput({
 }: CoworkingSpaceInputProps) {
   const { watch, setValue, control } = useFormContext();
 
-  const selectedScore: number | null = watch(`${name}.score`);
-  const coworkingSpaces: CoworkingSpace[] = watch(`${name}.spaces`) || [];
+  const selectedScore: number | null = watch(`${name}.ease_score`);
+  const coworkingSpaces: CoworkingSpace[] = watch(`${name}.plans`) || [];
   const selectedRecommendations: SelectedRecommendation[] =
     watch(`${name}.recommendations`) || [];
   const newSpace: CoworkingSpace = watch(`${name}.newSpace`) || {
@@ -95,7 +95,7 @@ export default function CoworkingSpaceInput({
   ];
 
   const handleScoreChange = (score: number) => {
-    setValue(`${name}.score`, score);
+    setValue(`${name}.ease_score`, score);
   };
 
   const addCoworkingSpace = () => {
@@ -106,7 +106,7 @@ export default function CoworkingSpaceInput({
       newSpace.comment &&
       newSpace.link
     ) {
-      setValue(`${name}.spaces`, [...coworkingSpaces, newSpace]);
+      setValue(`${name}.plans`, [...coworkingSpaces, newSpace]);
       setValue(`${name}.newSpace`, {
         name: "",
         plan: "",
@@ -120,7 +120,7 @@ export default function CoworkingSpaceInput({
 
   const removeCoworkingSpace = (index: number) => {
     setValue(
-      `${name}.spaces`,
+      `${name}.plans`,
       coworkingSpaces.filter((_, i) => i !== index)
     );
   };
@@ -176,7 +176,7 @@ export default function CoworkingSpaceInput({
             </Button>
           ))}
         </div>
-        {selectedScore && (
+        {!!selectedScore && (
           <p className="text-sm text-blue-600 font-medium mt-3">
             선택한 점수: {selectedScore}점
           </p>
@@ -204,7 +204,7 @@ export default function CoworkingSpaceInput({
                 <Button
                   type="button"
                   onClick={() => handleRecommendationSelect(space.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center justify-between rounded-lg transition-colors ${
                     isSelected
                       ? "bg-black text-white"
                       : "bg-gray-50 text-gray-700 hover:bg-gray-100"

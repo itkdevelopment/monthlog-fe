@@ -10,13 +10,15 @@ interface PowerStabilityInputProps {
   name: string;
 }
 
-export default function PowerStabilityInput({ name }: PowerStabilityInputProps) {
-  const { control, setValue, watch } = useFormContext();
+export default function PowerStabilityInput({
+  name,
+}: PowerStabilityInputProps) {
+  const { setValue, watch } = useFormContext();
   const [newTag, setNewTag] = useState("");
 
-  const selectedScore: number | null = watch(`${name}.score`);
+  const selectedScore: number | null = watch(`${name}.rating`);
   const selectedTags: string[] = watch(`${name}.tags`) || [];
-  const newTags: string[] = watch(`${name}.newTags`) || [];
+  const [newTags, setNewTags] = useState<string[]>([]);
 
   const existingTags = [
     { text: "정전 거의 없음", votes: 45 },
@@ -29,7 +31,7 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
 
   // 점수 선택
   const handleScoreChange = (score: number) => {
-    setValue(`${name}.score`, score);
+    setValue(`${name}.rating`, score);
   };
 
   // 태그 토글
@@ -43,15 +45,17 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
   // 새 태그 추가
   const addNewTag = () => {
     if (newTag.trim() && !newTags.includes(newTag.trim())) {
-      setValue(`${name}.newTags`, [...newTags, newTag.trim()]);
+      setNewTags([...newTags, newTag.trim()]);
       setNewTag("");
+      setValue(`${name}.tags`, [...selectedTags, newTag.trim()]);
     }
   };
 
   const removeNewTag = (tagToRemove: string) => {
+    setNewTags(newTags.filter((t) => t !== tagToRemove));
     setValue(
-      `${name}.newTags`,
-      newTags.filter((t) => t !== tagToRemove)
+      `${name}.tags`,
+      selectedTags.filter((t) => t !== tagToRemove)
     );
   };
 
@@ -59,7 +63,9 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
     <div className="space-y-12">
       {/* 만족도 */}
       <div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">전력 안정성 만족도</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          전력 안정성 만족도
+        </h3>
         <p className="text-sm text-gray-600 mb-6">
           전력 안정성에 대한 만족도를 1~10점으로 평가해주세요
         </p>
@@ -80,7 +86,7 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
             </Button>
           ))}
         </div>
-        {selectedScore && (
+        {!!selectedScore && (
           <p className="text-sm text-blue-600 font-medium mt-3">
             선택한 점수: {selectedScore}점
           </p>
@@ -140,21 +146,39 @@ export default function PowerStabilityInput({ name }: PowerStabilityInputProps) 
           {/* 추가된 태그 */}
           {newTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {newTags.map((tag) => (
+              {newTags.map((tag, index) => (
                 <div
-                  key={tag}
+                  key={index}
                   className="px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-lg flex items-center gap-2"
                 >
                   #{tag}
-                  <Button
-                    type="button"
+                  <button
                     onClick={() => removeNewTag(tag)}
                     className="text-green-500 hover:text-green-700"
                   >
                     <X className="w-3 h-3" />
-                  </Button>
+                  </button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {(!!selectedScore || selectedTags.length > 0) && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <p className="text-blue-800">
+                {selectedScore && (
+                  <span>
+                    선택한 점수: <strong>{selectedScore}점</strong>
+                  </span>
+                )}
+
+                {selectedTags.length > 0 && (
+                  <span>
+                    {(selectedScore || selectedTags.length > 0) && ", "}새 태그:{" "}
+                    <strong>{selectedTags.join(", ")}</strong>
+                  </span>
+                )}
+              </p>
             </div>
           )}
         </div>

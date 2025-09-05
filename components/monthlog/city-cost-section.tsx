@@ -30,6 +30,7 @@ interface CityCostSectionProps {
 export default function CityCostSection({
   data,
   citySlug,
+  cityId,
 }: CityCostSectionProps) {
   const [budgetInputs, setBudgetInputs] = useState({
     people: 1,
@@ -259,6 +260,7 @@ export default function CityCostSection({
         onClose={handleCloseEditModal}
         initialData={costData ?? undefined}
         citySlug={citySlug}
+        cityId={cityId}
         targetSection={targetSection}
       />
     </>

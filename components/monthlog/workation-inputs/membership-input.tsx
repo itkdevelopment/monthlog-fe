@@ -70,12 +70,12 @@ export default function MembershipInput(props: MembershipInputProps) {
   // helpers to read/write either from form or from props/local
   const readSelectedScore = (): number | null =>
     usingForm
-      ? (form!.watch(`${name}.score`) as number | null) ?? null
+      ? (form!.watch(`${name}.ease_score`) as number | null) ?? null
       : selectedScoreProp ?? null;
 
   const readSelectedTags = (): string[] =>
     usingForm
-      ? (form!.watch(`${name}.selectedTags`) as string[]) ?? []
+      ? (form!.watch(`${name}.tags`) as string[]) ?? []
       : localSelectedTags;
 
   const readNewTags = (): string[] =>
@@ -85,13 +85,13 @@ export default function MembershipInput(props: MembershipInputProps) {
 
   const readPricePlans = (): PricePlan[] =>
     usingForm
-      ? (form!.watch(`${name}.pricePlans`) as PricePlan[]) ?? []
+      ? (form!.watch(`${name}.plans`) as PricePlan[]) ?? []
       : localPricePlans;
 
   // write helpers
   const writeScore = (score: number | null) => {
     if (usingForm) {
-      form!.setValue(`${name}.score`, score);
+      form!.setValue(`${name}.ease_score`, score);
     } else {
       onScoreChange?.(score ?? null);
     }
@@ -99,7 +99,7 @@ export default function MembershipInput(props: MembershipInputProps) {
 
   const writeTags = (selectedTags: string[], newTags: string[]) => {
     if (usingForm) {
-      form!.setValue(`${name}.selectedTags`, selectedTags);
+      form!.setValue(`${name}.tags`, selectedTags);
       form!.setValue(`${name}.newTags`, newTags);
     } else {
       setLocalSelectedTags(selectedTags);
@@ -110,7 +110,7 @@ export default function MembershipInput(props: MembershipInputProps) {
 
   const writePricePlans = (plans: PricePlan[]) => {
     if (usingForm) {
-      form!.setValue(`${name}.pricePlans`, plans);
+      form!.setValue(`${name}.plans`, plans);
     } else {
       setLocalPricePlans(plans);
       onPricePlansChange?.(plans);
@@ -227,7 +227,7 @@ export default function MembershipInput(props: MembershipInputProps) {
             </Button>
           ))}
         </div>
-        {selectedScore && (
+        {!!selectedScore && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
             <p className="text-blue-800">
               선택한 점수: <strong>{selectedScore}점</strong>

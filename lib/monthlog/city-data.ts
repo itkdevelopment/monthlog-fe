@@ -20,7 +20,7 @@ export async function fetchCityDetail(id: string): Promise<CityDetailData> {
 }
 
 export async function contributeCity(
-  id: string,
+  id: number,
   payload: CityContributionPayload
 ): Promise<CityDetailData> {
   const res = await apiHandler.post<CityDetailData>(
@@ -33,4 +33,16 @@ export async function contributeCity(
 export async function fetchTags(): Promise<TagsResponse> {
   const res = await apiHandler.get<TagsResponse>(`/explorer/cities/tags`);
   return res.data;
+}
+
+export async function fetchTagsCityDetail() {
+  const res = await apiHandler.get(`/explorer/cities/tags`);
+  return res.data;
+}
+
+export async function fetchStaticCityDetail(id: string) {
+  const res = await apiHandler.get(
+    `/explorer/cities/${id}/profile/static-data`
+  );
+  return res.data.data;
 }

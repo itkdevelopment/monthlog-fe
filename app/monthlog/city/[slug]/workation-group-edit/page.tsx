@@ -1,15 +1,5 @@
 "use client";
 
-import React from "react";
-import {
-  TrendingUp,
-  Wifi,
-  Zap,
-  Building,
-  Coffee,
-  CreditCard,
-  ArrowLeft,
-} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -20,20 +10,30 @@ import {
   CityContributionPayload,
   DigitalData,
 } from "@/types/monthlog/city-detail";
+import {
+  ArrowLeft,
+  Building,
+  Coffee,
+  CreditCard,
+  TrendingUp,
+  Wifi,
+  Zap,
+} from "lucide-react";
+import React from "react";
 
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 // Input components
-import SatisfactionInput from "@/components/monthlog/workation-inputs/satisfaction-input";
-import InternetSpeedInput from "@/components/monthlog/workation-inputs/internet-speed-input";
-import PowerStabilityInput from "@/components/monthlog/workation-inputs/power-stability-input";
-import WifiAccessInput from "@/components/monthlog/workation-inputs/wifi-access-input";
-import CoworkingSpaceInput from "@/components/monthlog/workation-inputs/coworking-space-input";
 import CafeInput from "@/components/monthlog/workation-inputs/cafe-input";
+import CoworkingSpaceInput from "@/components/monthlog/workation-inputs/coworking-space-input";
+import InternetSpeedInput from "@/components/monthlog/workation-inputs/internet-speed-input";
 import MembershipInput from "@/components/monthlog/workation-inputs/membership-input";
-import { contributeCity } from "@/lib/monthlog/city-data";
+import PowerStabilityInput from "@/components/monthlog/workation-inputs/power-stability-input";
+import SatisfactionInput from "@/components/monthlog/workation-inputs/satisfaction-input";
+import WifiAccessInput from "@/components/monthlog/workation-inputs/wifi-access-input";
+import { fetchHomeCities } from "@/lib/monthlog/city-home.api";
 import { useContributeCity } from "@/lib/monthlog/query/city";
 
 const workationFormSchema = z.object({
@@ -61,12 +61,14 @@ const workationFormSchema = z.object({
       .object({
         name: z.string().optional(),
         is_open_24h: z.boolean().optional(),
+        comment: z.string().optional(),
+        link: z.string().optional(),
         ease_score: z.number().min(0).max(10).optional(),
         plans: z
           .array(
             z.object({
               plan: z.string(),
-              price: z.number().min(0),
+              price: z.number().min(0).optional(),
             })
           )
           .optional(),
@@ -111,6 +113,71 @@ interface WorkationGroupEditPageProps {
   citySlug: string;
 }
 
+function removeDefaults<T extends Record<string, any>>(
+  obj: T,
+  defaults: T
+): Partial<T> {
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    const defaultValue = defaults[key as keyof T];
+
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      const cleaned = removeDefaults(value, defaultValue || {});
+      if (Object.keys(cleaned).length > 0) {
+        acc[key] = cleaned;
+      }
+    } else if (Array.isArray(value)) {
+      if (value.length > 0) {
+        acc[key] = value;
+      }
+    } else {
+      // chỉ giữ nếu khác default
+      if (value !== defaultValue) {
+        acc[key] = value;
+      }
+    }
+
+    return acc;
+  }, {} as Partial<T>);
+}
+
+const initValue: DigitalFormData = {
+  cityDigital: {
+    digital_satisfaction_score: 0,
+    internet_speed_mbps: 0,
+    internet_speed_score: 0,
+    power_stability: {
+      rating: 0,
+      tags: [],
+    },
+    free_wifi_access: {
+      rating: 0,
+      tags: [],
+    },
+    coworking_space: {
+      name: "",
+      is_open_24h: false,
+      comment: "",
+      link: "",
+      ease_score: 0,
+      plans: [],
+    },
+
+    short_term_membership: {
+      ease_score: 0,
+      plans: [],
+      tags: [],
+    },
+    cafe: {
+      name: "",
+      order_menu: "",
+      price: 0,
+      is_open_24h: false,
+      comment: "",
+      link: "",
+      rating: 0,
+    },
+  },
+};
 export default function WorkationGroupEditPage({
   isOpen,
   onClose,
@@ -119,52 +186,47 @@ export default function WorkationGroupEditPage({
 }: WorkationGroupEditPageProps) {
   const form = useForm<z.infer<typeof workationFormSchema>>({
     resolver: zodResolver(workationFormSchema),
-    defaultValues: {
-      cityDigital: {
-        digital_satisfaction_score: 0,
-        internet_speed_mbps: 0,
-        internet_speed_score: 0,
-        power_stability: {
-          rating: 0,
-          tags: [],
-        },
-        free_wifi_access: {
-          rating: 0,
-          tags: [],
-        },
-        coworking_space: {
-          name: "",
-          is_open_24h: false,
-          ease_score: 0,
-          plans: [],
-        },
-        short_term_membership: {
-          ease_score: 0,
-          plans: [],
-          tags: [],
-        },
-        cafe: {
-          name: "",
-          order_menu: "",
-          price: 0,
-          is_open_24h: false,
-          comment: "",
-          link: "",
-          rating: 0,
-        },
-      },
-    },
+    defaultValues: initValue,
   });
   const contributeCity = useContributeCity();
 
-  const onSubmit = async (values: DigitalFormData) => {
-    console.log(" Workation form data:", values);
-    const payload: CityContributionPayload = {
-      cityDigital: values.cityDigital,
+  const [homeData, setHomeData] = React.useState<{ cities: any[] }>({
+    cities: [],
+  });
+
+  const foundCity = React.useMemo(() => {
+    const decodedSlug = decodeURIComponent(citySlug).toLowerCase();
+    return homeData.cities.find((c) => c.slug.toLowerCase() === decodedSlug);
+  }, [homeData, citySlug]);
+
+  React.useEffect(() => {
+    const loadHomeData = async () => {
+      try {
+        const data = await fetchHomeCities();
+        setHomeData(data);
+      } catch (error) {
+        console.error("Failed to fetch home cities:", error);
+      }
     };
+    loadHomeData();
+  }, []);
+
+  const onSubmit = async (values: DigitalFormData) => {
+    const cleanedCityDigital = removeDefaults(
+      values.cityDigital,
+      initValue.cityDigital
+    );
+
+    const payload: CityContributionPayload = {};
+    if (Object.keys(cleanedCityDigital).length > 0) {
+      payload.cityDigital = cleanedCityDigital;
+    }
+
+    if (!foundCity) throw new Error("City not found");
+
     contributeCity.mutate(
       {
-        citySlug,
+        cityId: foundCity.city_id,
         data: payload,
       },
       {
@@ -217,7 +279,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">워케이션 환경 만족도</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <SatisfactionInput name="satisfactionScore" />
+                  <SatisfactionInput name="cityDigital.digital_satisfaction_score" />
                 </CardContent>
               </Card>
 
@@ -228,7 +290,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">인터넷 평균 속도</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <InternetSpeedInput name="internet" />
+                  <InternetSpeedInput name="cityDigital" />
                 </CardContent>
               </Card>
 
@@ -239,7 +301,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">전력 안정성</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <PowerStabilityInput name="powerStability" />
+                  <PowerStabilityInput name="cityDigital.power_stability" />
                 </CardContent>
               </Card>
 
@@ -250,7 +312,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">무료 Wi-Fi 접근성</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <WifiAccessInput name="wifiAccess" />
+                  <WifiAccessInput name="cityDigital.free_wifi_access" />
                 </CardContent>
               </Card>
 
@@ -261,7 +323,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">코워킹 스페이스</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <CoworkingSpaceInput name="coworking" />
+                  <CoworkingSpaceInput name="cityDigital.coworking_space" />
                 </CardContent>
               </Card>
 
@@ -283,7 +345,7 @@ export default function WorkationGroupEditPage({
                   <h2 className="text-xl font-bold">단기 멤버십 정보</h2>
                 </CardHeader>
                 <CardContent className="px-16 py-6 pb-14">
-                  <MembershipInput name="membership" />
+                  <MembershipInput name="cityDigital.short_term_membership" />
                 </CardContent>
               </Card>
 

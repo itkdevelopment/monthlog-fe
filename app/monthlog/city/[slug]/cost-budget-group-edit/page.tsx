@@ -74,6 +74,7 @@ interface CostEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   citySlug: string;
+  cityId: number | null;
   initialData?: CostData | null;
   targetSection?: string | null;
 }
@@ -251,6 +252,7 @@ export default function CostBudgetGroupEditPage({
   isOpen,
   onClose,
   citySlug,
+  cityId,
   targetSection,
 }: CostEditModalProps) {
   const { data: tags } = useGetTags();
@@ -415,11 +417,11 @@ export default function CostBudgetGroupEditPage({
   const form = useForm<CostFormData>({
     resolver: zodResolver(costFormSchema),
     defaultValues: {
-      costSatisfactionScore: 8,
+      costSatisfactionScore: undefined,
       cityCost: {
         totalCost: {
-          startDate: "",
-          endDate: "",
+          startDate: undefined,
+          endDate: undefined,
           totalCost: undefined,
         },
         monthlyRent: {
@@ -428,37 +430,37 @@ export default function CostBudgetGroupEditPage({
           numberOfPeople: 1,
           walkable: false,
           accommodationTypeId: undefined,
-          accommodationTypeFreeText: "",
+          accommodationTypeFreeText: undefined,
           roomCountId: undefined,
-          roomCountFreeText: "",
-          accommodationFeatures: [],
+          roomCountFreeText: undefined,
+          accommodationFeatures: undefined,
           recommendedAccommodations: undefined,
         },
         foodCost: {
           avgMonthlyCost: undefined,
-          eatingStyles: [],
-          foodItemPrices: [],
+          eatingStyles: undefined,
+          foodItemPrices: undefined,
         },
         communicationCost: {
           communicationMethod: {
             id: undefined,
-            name: "",
+            name: undefined,
           },
           telecomAgency: {
             id: undefined,
-            name: "",
-            freeText: "",
+            name: undefined,
+            freeText: undefined,
           },
           communicationPlan: {
             id: undefined,
-            name: "",
-            freeText: "",
+            name: undefined,
+            freeText: undefined,
           },
           simPurchaseCost: undefined,
           avgMonthlyCost: undefined,
         },
         transportationExpenses: {
-          transportationExpenses: [],
+          transportationExpenses:undefined,
         },
         utilityBills: {
           electricityBill: undefined,
@@ -468,17 +470,17 @@ export default function CostBudgetGroupEditPage({
         },
         leisureActivityCost: {
           avgMonthlyCost: undefined,
-          leisureActivityDetails: [],
+          leisureActivityDetails: undefined,
         },
         localPrice: {
           price: undefined,
           localItem: undefined,
-          localItemFreeText: "",
+          localItemFreeText: undefined,
         },
         initialSettlement: {
           securityFee: undefined,
           brokerageFee: undefined,
-          initialSupplyItems: [],
+          initialSupplyItems: undefined,
         },
       },
     },
@@ -521,7 +523,7 @@ export default function CostBudgetGroupEditPage({
     // Call the mutation
     contributeCityMutation.mutate(
       {
-        citySlug,
+        cityId: Number(cityId),
         data: payload,
       },
       {
