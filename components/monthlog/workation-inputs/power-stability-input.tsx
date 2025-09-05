@@ -142,7 +142,7 @@ export default function PowerStabilityInput({
           </div>
 
           {/* 추가된 태그 */}
-          {newTags.length > 0 && (
+          {/* {newTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
               {newTags.map((tag) => (
                 <div
@@ -159,6 +159,25 @@ export default function PowerStabilityInput({
                   </Button>
                 </div>
               ))}
+            </div>
+          )} */}
+
+          {(selectedScore || newTags.length > 0) && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <p className="text-blue-800">
+                {selectedScore && (
+                  <span>
+                    선택한 점수: <strong>{selectedScore}점</strong>
+                  </span>
+                )}
+
+                {newTags.length > 0 && (
+                  <span>
+                    {(selectedScore || selectedTags.length > 0) && ", "}새 태그:{" "}
+                    <strong>{newTags.join(", ")}</strong>
+                  </span>
+                )}
+              </p>
             </div>
           )}
         </div>
