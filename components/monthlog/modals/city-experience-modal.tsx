@@ -133,13 +133,13 @@ export default function CityExperienceModal({
     }));
   };
 
-  const companions = getTagByCate("COMPANION");
+  const companions = tags ? getTagByCate("COMPANION") : [];
 
-  const travelStyles = getTagByCate("TRAVEL_STYLE");
+  const travelStyles = tags ? getTagByCate("TRAVEL_STYLE") : [];
 
-  const recommendedTags = getTagByCate("CITY_REP_SUB");
+  const recommendedTags = tags ? getTagByCate("CITY_REP_SUB") : [];
 
-  const cityTags = getTagByCate("CITY_REP");
+  const cityTags = tags ? getTagByCate("CITY_REP") : [];
 
   const recommendedTagIds = formData.travelStyles.flatMap(
     (styleId) => travelStyleToTags[styleId] || []
@@ -258,6 +258,9 @@ export default function CityExperienceModal({
     else setActiveFilter(filter);
   };
 
+  if (!tags) {
+    return <div className="p-4 text-gray-500">Loading...</div>;
+  }
   return (
     <div className="fixed inset-0 z-50">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
@@ -349,180 +352,190 @@ export default function CityExperienceModal({
           <div className="w-[30%] bg-gray-50 border-r-2 border-gray-300 overflow-y-auto">
             <div className="p-6 space-y-6">
               {/* Travel Period Distribution */}
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
-                  여행기간 분포
-                </h3>
-                <div className="space-y-4">
-                  {periodStats.map((stat, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-700 font-medium">
-                          {stat.label}
-                        </span>
-                        <span className="text-gray-500">{stat.count}명</span>
+              {["all", "period"].includes(activeFilter) && (
+                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
+                    여행기간 분포
+                  </h3>
+                  <div className="space-y-4">
+                    {periodStats.map((stat, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700 font-medium">
+                            {stat.label}
+                          </span>
+                          <span className="text-gray-500">{stat.count}명</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${stat.percentage}%`,
+                              backgroundColor: "rgb(11, 36, 251)",
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className="h-3 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${stat.percentage}%`,
-                            backgroundColor: "rgb(11, 36, 251)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Companion Distribution */}
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
-                  동행정보 분포
-                </h3>
-                <div className="space-y-4">
-                  {companionStats.map((stat, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-700 font-medium">
-                          {stat.label}
-                        </span>
-                        <span className="text-gray-500">{stat.count}명</span>
+              {["all", "companion"].includes(activeFilter) && (
+                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
+                    동행정보 분포
+                  </h3>
+                  <div className="space-y-4">
+                    {companionStats.map((stat, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700 font-medium">
+                            {stat.label}
+                          </span>
+                          <span className="text-gray-500">{stat.count}명</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${stat.percentage}%`,
+                              backgroundColor: "rgb(11, 36, 251)",
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className="h-3 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${stat.percentage}%`,
-                            backgroundColor: "rgb(11, 36, 251)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Travel Style Distribution */}
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
-                  <h3 className="text-lg font-bold text-gray-900">
-                    여행 스타일 분포
-                  </h3>
-                  <button
-                    onClick={() => toggleSection("travelStyle")}
-                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-                  >
-                    {expandedSections.travelStyle ? "접기" : "더보기"}
-                    <ChevronDown
-                      className={`h-4 w-4 ml-1 transition-transform ${
-                        expandedSections.travelStyle ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  {(expandedSections.travelStyle
-                    ? travelStyleStats
-                    : travelStyleStats.slice(0, 5)
-                  ).map((stat, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-700 font-medium">
-                          {stat.label}
-                        </span>
-                        <span className="text-gray-500">{stat.count}명</span>
+              {["all", "style"].includes(activeFilter) && (
+                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      여행 스타일 분포
+                    </h3>
+                    <button
+                      onClick={() => toggleSection("travelStyle")}
+                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                    >
+                      {expandedSections.travelStyle ? "접기" : "더보기"}
+                      <ChevronDown
+                        className={`h-4 w-4 ml-1 transition-transform ${
+                          expandedSections.travelStyle ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {(expandedSections.travelStyle
+                      ? travelStyleStats
+                      : travelStyleStats.slice(0, 5)
+                    ).map((stat, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700 font-medium">
+                            {stat.label}
+                          </span>
+                          <span className="text-gray-500">{stat.count}명</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${stat.percentage}%`,
+                              backgroundColor: "rgb(11, 36, 251)",
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className="h-3 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${stat.percentage}%`,
-                            backgroundColor: "rgb(11, 36, 251)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* City Tags Distribution */}
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
-                  <h3 className="text-lg font-bold text-gray-900">
-                    도시 태그 분포
-                  </h3>
-                  <button
-                    onClick={() => toggleSection("cityTag")}
-                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-                  >
-                    더보기
-                    <ChevronDown className="h-4 w-4 ml-1 transition-transform" />
-                  </button>
-                </div>
-                <div className="space-y-4">
-                  {cityTagStats.map((stat, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-700 font-medium">
-                          {stat.label}
-                        </span>
-                        <span className="text-gray-500">{stat.count}명</span>
+              {["all", "tag"].includes(activeFilter) && (
+                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      도시 태그 분포
+                    </h3>
+                    <button
+                      onClick={() => toggleSection("cityTag")}
+                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                    >
+                      더보기
+                      <ChevronDown className="h-4 w-4 ml-1 transition-transform" />
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {cityTagStats.map((stat, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700 font-medium">
+                            {stat.label}
+                          </span>
+                          <span className="text-gray-500">{stat.count}명</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${stat.percentage}%`,
+                              backgroundColor: "rgb(11, 36, 251)",
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className="h-3 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${stat.percentage}%`,
-                            backgroundColor: "rgb(11, 36, 251)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Comments Distribution */}
-              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
-                  <h3 className="text-lg font-bold text-gray-900">
-                    한줄 코멘트 분포
-                  </h3>
-                  <button
-                    onClick={() => toggleSection("comment")}
-                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-                  >
-                    더보기
-                    <ChevronDown className="h-4 w-4 ml-1 transition-transform" />
-                  </button>
-                </div>
-                <div className="space-y-5">
-                  {popularComments.map((comment, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 font-medium">
-                          {comment.count}명
-                        </span>
+              {["all", "comment"].includes(activeFilter) && (
+                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-3">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      한줄 코멘트 분포
+                    </h3>
+                    <button
+                      onClick={() => toggleSection("comment")}
+                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                    >
+                      더보기
+                      <ChevronDown className="h-4 w-4 ml-1 transition-transform" />
+                    </button>
+                  </div>
+                  <div className="space-y-5">
+                    {popularComments.map((comment, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500 font-medium">
+                            {comment.count}명
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed font-medium">
+                          {comment.text}
+                        </p>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div
+                            className="h-3 rounded-full transition-all duration-300"
+                            style={{
+                              width: `${(comment.count / 70) * 100}%`,
+                              backgroundColor: "rgb(11, 36, 251)",
+                            }}
+                          />
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-700 leading-relaxed font-medium">
-                        {comment.text}
-                      </p>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                          className="h-3 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${(comment.count / 70) * 100}%`,
-                            backgroundColor: "rgb(11, 36, 251)",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
