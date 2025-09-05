@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { fetchCityDetail, contributeCity } from '../city-data'
+import { fetchCityDetail, contributeCity, fetchTags } from '../city-data'
 import { fetchHomeCities } from '../city-home.api'
-import { CityDetailData, CityContributionPayload } from '@/types/monthlog/city-detail'
+import { CityDetailData, CityContributionPayload, TagsResponse } from '@/types/monthlog/city-detail'
 
 // Query to get all home cities
 export function useHomeCities() {
@@ -19,6 +19,15 @@ export function useCityDetail(cityId: string) {
     queryFn: () => fetchCityDetail(cityId),
     enabled: !!cityId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export function useGetTags() {
+  return useQuery<TagsResponse, Error, TagsResponse['data']>({
+    queryKey: ['tags'],
+    queryFn: fetchTags,
+    staleTime: 10 * 60 * 1000, // 10 minutes,
+    select: (data) => data.data
   })
 }
 

@@ -264,18 +264,18 @@ export interface CityDetail {
 }
 
 export type Month =
-  | "JANUARY"
-  | "FEBRUARY"
-  | "MARCH"
-  | "APRIL"
-  | "MAY"
-  | "JUNE"
-  | "JULY"
-  | "AUGUST"
-  | "SEPTEMBER"
-  | "OCTOBER"
-  | "NOVEMBER"
-  | "DECEMBER";
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "11"
+  | "12";
 
 export type CommentType = "WEATHER" | "LIFESTYLE";
 
@@ -297,12 +297,17 @@ export interface CityContributionPayload {
     };
     monthlyRent?: {
       monthlyRent?: number;
-      month: Month;
+      month: number;
       numberOfPeople?: number;
       walkable?: boolean;
-      accommodationType?: { id?: number; name?: string };
-      roomCount?: { id?: number; name?: string };
-      accommodationFeatures?: { id?: number; name?: string }[];
+      accommodationTypeId?: number;
+      accommodationTypeFreeText?: string;
+      roomCountId?: number;
+      accommodationFeatures?: Array<{
+        accommodationFeatureId?: number;
+        accommodationFeatureCode?: string;
+        freeTextAccommodationFeature?: string;
+      }>;
       recommendedAccommodations?: {
         id?: number;
         name: string;
@@ -312,24 +317,40 @@ export interface CityContributionPayload {
     };
     foodCost?: {
       avgMonthlyCost?: number;
-      eatingStyles?: { id?: number; name?: string }[];
-      foodItemPrices?: {
-        foodItem: { id?: number; name?: string; type?: "INGREDIENT" | "MENU" };
-        price: number;
-      }[];
+      eatingStyles?: Array<{
+        eatingStyleId?: number;
+      }>;
+      foodItemPrices?: Array<{
+        foodItem: {
+          id?: number;
+          name?: string;
+          type?: string;
+        };
+        price?: number;
+      }>;
     };
     communicationCost?: {
-      communicationMethod: { id?: number; name?: string };
-      telecomAgency?: { id?: number; name?: string };
-      communicationPlan?: { id?: number; name?: string };
+      communicationMethod: {
+        id?: number;
+      };
+      telecomAgency?: {
+        id?: number;
+        freeText?: string;
+      };
+      communicationPlan?: {
+        id?: number;
+        freeText?: string;
+      };
       simPurchaseCost?: number;
       avgMonthlyCost?: number;
     };
     transportationExpenses?: {
-      transportationExpenses: {
-        transportation: { id?: number; name: string };
+      transportationExpenses?: Array<{
+        transportation: {
+          id?: number;
+        };
         monthlyCost: number;
-      }[];
+      }>;
     };
     utilityBills?: {
       electricityBill?: number;
@@ -337,24 +358,36 @@ export interface CityContributionPayload {
       gasBill?: number;
       etc?: number;
     };
-    initialSettlement?: {
-      securityFee?: number;
-      brokerageFee?: number;
-      initialSupplyItems?: { id?: number; name?: string; price?: number }[];
-    };
     leisureActivityCost?: {
       avgMonthlyCost?: number;
-      leisureActivityDetails?: {
-        leisureActivity: { id?: number; name: string };
+      leisureActivityDetails?: Array<{
+        leisureActivity: {
+          id?: number;
+          name?: string;
+        };
         price?: number;
         url?: string;
-        companions?: { id?: number; name?: string }[];
-        categories?: { id?: number; name?: string }[];
-      }[];
+        companions?: Array<{
+          id?: number;
+        }>;
+        categories?: Array<{
+          id?: number;
+        }>;
+      }>;
     };
     localPrice?: {
       price?: number;
-      localItem: { id?: number; name: string };
+      localItem?: number;
+      localItemFreeText?: string;
+    };
+    initialSettlement?: {
+      securityFee?: number;
+      brokerageFee?: number;
+      initialSupplyItems?: Array<{
+        id?: number;
+        name?: string;
+        price?: number;
+      }>;
     };
   };
   cityDigital?: {
@@ -369,17 +402,17 @@ export interface CityContributionPayload {
       name?: string;
       is_open_24h?: boolean;
       ease_score?: number;
-      plans?: {
+      plans?: Array<{
         plan?: string;
         price?: number;
-      }[];
+      }>;
     };
     short_term_membership?: {
       ease_score?: number;
-      plans?: {
+      plans?: Array<{
         plan?: string;
         price?: number;
-      }[];
+      }>;
       tags?: string[];
     };
     free_wifi_access?: {
@@ -515,5 +548,63 @@ export interface CityDetailFormData {
       link?: string;
       rating?: number;
     };
+  };
+}
+
+export interface Tag {
+  id: number;
+  category: string;
+  code: string;
+  name: string;
+  createdAt: string;
+}
+
+export interface TagsResponse {
+  success: boolean;
+  data: {
+    COMPANION: Tag[];
+    TRAVEL_STYLE: Tag[];
+    CITY_REP: Tag[];
+    CITY_REP_SUB: Tag[];
+    COST_ACCOM: Tag[];
+    COST_ROOM_LAYOUT: Tag[];
+    COST_AMENITY: Tag[];
+    COST_TRANSPORT: Tag[];
+    COST_COMM_METHOD: Tag[];
+    COST_COMM_PROVIDER: Tag[];
+    COST_COMM_PLAN: Tag[];
+    COST_MEAL_STYLE: Tag[];
+    COST_ACTIVITY_COMPANION: Tag[];
+    COST_ACTIVITY_CATEGORY: Tag[];
+    COST_ITEM: Tag[];
+    DIGITAL_POWER: Tag[];
+    DIGITAL_WIFI: Tag[];
+    DIGITAL_MEMBERSHIP_PLAN: Tag[];
+    DIGITAL_MEMBERSHIP: Tag[];
+    SAFETY_WATER: Tag[];
+    SAFETY_DISASTER: Tag[];
+    SAFETY_CRIME: Tag[];
+    SAFETY_CONTACT: Tag[];
+    RESIDENTIAL_LAUNDRY: Tag[];
+    CONVENIENCE_DELIVERY_APP: Tag[];
+    CONVENIENCE_COMM_METHOD: Tag[];
+    CONVENIENCE_COMM_PROVIDER: Tag[];
+    CONVENIENCE_COMM_PLAN: Tag[];
+    CONVENIENCE_WASTE: Tag[];
+    CONVENIENCE_TIP: Tag[];
+    TRANSPORT_METHOD: Tag[];
+    TRANSPORT_APP: Tag[];
+    TRANSPORT_DISTANCE: Tag[];
+    TRANSPORT_AIRLINE: Tag[];
+    COMM_MEETING: Tag[];
+    COMM_PARTICIPANT: Tag[];
+    COMM_CLASS: Tag[];
+    COMM_CLASS_LANG: Tag[];
+    COMM_EXPERIENCE: Tag[];
+    COMM_VISITING_TIME: Tag[];
+    COMM_KIDS: Tag[];
+    COMM_KIDS_AGE: Tag[];
+    COMM_KIDS_PLACE: Tag[];
+    COMM_KIDS_RESERVATION: Tag[];
   };
 }
