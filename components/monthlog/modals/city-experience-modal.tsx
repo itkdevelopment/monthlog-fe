@@ -547,6 +547,7 @@ export default function CityExperienceModal({
                         type="date"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={formData.startDate}
+                        min={"2020-01-01"}
                         max={today}
                         onChange={(e) =>
                           setFormData((prev) => ({
@@ -610,7 +611,9 @@ export default function CityExperienceModal({
 
                   <div
                     className={`flex items-center gap-3 ${
-                      formData.companion === 1 ? "hidden" : ""
+                      formData.companion === 1 || !formData.companion
+                        ? "hidden"
+                        : ""
                     }`}
                   >
                     <label className="text-sm font-medium text-gray-700">

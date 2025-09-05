@@ -162,7 +162,7 @@ export default function PowerStabilityInput({
             </div>
           )} */}
 
-          {(selectedScore || newTags.length > 0) && (
+          {(!!selectedScore || newTags.length > 0) && (
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-blue-800">
                 {selectedScore && (
