@@ -3,46 +3,34 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import SatisfactionInput from "../workation-inputs/satisfaction-input";
+import InternetSpeedInput from "../workation-inputs/internet-speed-input";
 import { useFormContext } from "react-hook-form";
 
-interface SatisfactionPanelProps {
+interface InternetSpeedPanelProps {
   isOpen: boolean;
   onClose: () => void;
   name: string;
 }
 
-export default function SatisfactionPanel({
+export default function InternetSpeedPanel({
   isOpen,
   onClose,
   name,
-}: SatisfactionPanelProps) {
+}: InternetSpeedPanelProps) {
   const { watch } = useFormContext();
-  const selectedScore: number | null = watch(`${name}`);
+  const satisfactionScore: number | null = watch(
+    `${name}.internet_speed_score`
+  );
+  const inputSpeed: number | null = watch(`${name}.internet_speed_mbps`);
 
-  const scoreDistribution = [
-    { score: 1, count: 1, percentage: 1 },
-    { score: 2, count: 2, percentage: 2 },
-    { score: 3, count: 5, percentage: 5 },
-    { score: 4, count: 8, percentage: 8 },
-    { score: 5, count: 12, percentage: 12 },
-    { score: 6, count: 18, percentage: 18 },
-    { score: 7, count: 25, percentage: 25 },
-    { score: 8, count: 20, percentage: 20 },
-    { score: 9, count: 7, percentage: 7 },
-    { score: 10, count: 2, percentage: 2 },
+  const speedDistribution = [
+    { range: "0-10", count: 5, percentage: 5 },
+    { range: "10-30", count: 12, percentage: 12 },
+    { range: "30-50", count: 25, percentage: 25 },
+    { range: "50-100", count: 35, percentage: 35 },
+    { range: "100-200", count: 18, percentage: 18 },
+    { range: "200+", count: 5, percentage: 5 },
   ];
-
-  // 평균 점수 계산
-  const totalResponses = scoreDistribution.reduce(
-    (sum, item) => sum + item.count,
-    0
-  );
-  const weightedSum = scoreDistribution.reduce(
-    (sum, item) => sum + item.score * item.count,
-    0
-  );
-  const averageScore = Math.round(weightedSum / totalResponses);
 
   if (!isOpen) return null;
 
@@ -58,7 +46,7 @@ export default function SatisfactionPanel({
       >
         <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-2xl font-bold text-gray-900">
-            워케이션 환경 만족도 {averageScore}/10
+            인터넷 평균 속도 75Mbps
           </h2>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500">100명이 기여한 정보</span>
@@ -73,17 +61,50 @@ export default function SatisfactionPanel({
 
         <div className="flex-1 flex min-h-0">
           <div className="w-[30%] bg-gray-50 border-r-2 border-gray-300 overflow-y-auto">
-            <div className="p-6">
+            <div className="p-6 space-y-6">
               <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
                 <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
-                  점수별 분포
+                  와이파이 속도 만족도 7.2점
                 </h3>
                 <div className="space-y-4">
-                  {scoreDistribution.map((item) => (
-                    <div key={item.score} className="space-y-2">
+                  {[
+                    { range: "1-2점", count: 3, percentage: 3 },
+                    { range: "3-4점", count: 8, percentage: 8 },
+                    { range: "5-6점", count: 15, percentage: 15 },
+                    { range: "7-8점", count: 45, percentage: 45 },
+                    { range: "9-10점", count: 29, percentage: 29 },
+                  ].map((item, index) => (
+                    <div key={index} className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-700 font-medium">
-                          {item.score}점
+                          {item.range}
+                        </span>
+                        <span className="text-gray-500">{item.count}명</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div
+                          className="h-3 rounded-full transition-all duration-300"
+                          style={{
+                            width: `${item.percentage}%`,
+                            backgroundColor: "#0B24FB",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                <h3 className="text-lg font-bold mb-6 text-gray-900 border-b border-gray-200 pb-3">
+                  속도별 분포
+                </h3>
+                <div className="space-y-4">
+                  {speedDistribution.map((item, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700 font-medium">
+                          {item.range}Mbps
                         </span>
                         <span className="text-gray-500">{item.count}명</span>
                       </div>
@@ -105,11 +126,11 @@ export default function SatisfactionPanel({
 
           <div className="w-[70%] bg-white overflow-y-auto">
             <div className="px-16 py-6 space-y-8 pb-24">
-              <SatisfactionInput name={name} />
+              <InternetSpeedInput name={name} />
 
               <div className="pt-6">
                 <button
-                  disabled={!selectedScore}
+                  disabled={!inputSpeed || !satisfactionScore}
                   className="w-full bg-black hover:bg-gray-800 text-white disabled:bg-gray-400 py-3 font-medium rounded-lg transition-colors"
                 >
                   개척하기 (+10 EXP)

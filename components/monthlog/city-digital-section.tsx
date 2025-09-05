@@ -24,6 +24,9 @@ import { useContributeCity } from "@/lib/monthlog/query/city";
 import { fetchHomeCities } from "@/lib/monthlog/city-home.api";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import InternetSpeedPanel from "./modals/internet-speed-panel";
+import PowerStabilityPanel from "./modals/power-stability-panel";
+import WifiAccessPanel from "./modals/wifi-access-panel";
 
 interface CityDigitalSectionProps {
   data?: DigitalData;
@@ -309,6 +312,7 @@ export default function CityDigitalSection({
             value={`${data?.internetSpeedMbps ?? "-"}Mbps , ${
               data?.internetSpeedScore ?? "-"
             }`}
+            onEdit={() => openPanel("internetSpeed")}
           />
 
           <StatItem
@@ -317,6 +321,7 @@ export default function CityDigitalSection({
             value={`${data?.powerStability ?? "-"}  , ${
               data?.powerStabilityScore ?? "-"
             }`}
+            onEdit={() => openPanel("powerStability")}
           />
 
           <StatItem
@@ -325,6 +330,7 @@ export default function CityDigitalSection({
             value={`${data?.freeWifiAccess ?? "-"}  , ${
               data?.freeWifiScore ?? "-"
             }`}
+            onEdit={() => openPanel("wifiAccess")}
           />
 
           <StatItem
@@ -367,6 +373,22 @@ export default function CityDigitalSection({
             isOpen={activePanelType === "satisfaction"}
             onClose={closePanel}
             name="cityDigital.digital_satisfaction_score"
+          />
+
+          <InternetSpeedPanel
+            isOpen={activePanelType === "internetSpeed"}
+            onClose={closePanel}
+            name="cityDigital"
+          />
+          <PowerStabilityPanel
+            isOpen={activePanelType === "powerStability"}
+            onClose={closePanel}
+            name="cityDigital.power_stability"
+          />
+          <WifiAccessPanel
+            isOpen={activePanelType === "wifiAccess"}
+            onClose={closePanel}
+            name="cityDigital.free_wifi_access"
           />
         </form>
       </FormProvider>
