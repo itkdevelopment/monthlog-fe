@@ -248,6 +248,75 @@ const costFormSchema = z.object({
 
 type CostFormData = z.infer<typeof costFormSchema>;
 
+const initValue: CostFormData = {
+  costSatisfactionScore: undefined,
+  cityCost: {
+    totalCost: {
+      startDate: undefined,
+      endDate: undefined,
+      totalCost: undefined,
+    },
+    monthlyRent: {
+      monthlyRent: undefined,
+      month: 1,
+      numberOfPeople: 1,
+      walkable: false,
+      accommodationTypeId: undefined,
+      accommodationTypeFreeText: undefined,
+      roomCountId: undefined,
+      roomCountFreeText: undefined,
+      accommodationFeatures: undefined,
+      recommendedAccommodations: undefined,
+    },
+    foodCost: {
+      avgMonthlyCost: undefined,
+      eatingStyles: undefined,
+      foodItemPrices: undefined,
+    },
+    communicationCost: {
+      communicationMethod: {
+        id: undefined,
+        name: undefined,
+      },
+      telecomAgency: {
+        id: undefined,
+        name: undefined,
+        freeText: undefined,
+      },
+      communicationPlan: {
+        id: undefined,
+        name: undefined,
+        freeText: undefined,
+      },
+      simPurchaseCost: undefined,
+      avgMonthlyCost: undefined,
+    },
+    transportationExpenses: {
+      transportationExpenses: undefined,
+    },
+    utilityBills: {
+      electricityBill: undefined,
+      waterBill: undefined,
+      gasBill: undefined,
+      etc: undefined,
+    },
+    leisureActivityCost: {
+      avgMonthlyCost: undefined,
+      leisureActivityDetails: undefined,
+    },
+    localPrice: {
+      price: undefined,
+      localItem: undefined,
+      localItemFreeText: undefined,
+    },
+    initialSettlement: {
+      securityFee: undefined,
+      brokerageFee: undefined,
+      initialSupplyItems: undefined,
+    },
+  },
+};
+
 export default function CostBudgetGroupEditPage({
   isOpen,
   onClose,
@@ -413,77 +482,35 @@ export default function CostBudgetGroupEditPage({
     }
   };
 
+  function cleanData<T>(data: T, defaults: T): Partial<T> {
+    if (typeof data !== "object" || data === null) return data;
+    if (typeof defaults !== "object" || defaults === null) return data;
+
+    const result: any = Array.isArray(data) ? [] : {};
+
+    for (const key in data) {
+      const value = (data as any)[key];
+      const defaultValue = (defaults as any)[key];
+
+      if (typeof value === "object" && value !== null) {
+        const cleaned = cleanData(value, defaultValue);
+        if (Object.keys(cleaned).length > 0) {
+          result[key] = cleaned;
+        }
+      } else {
+        if (value !== defaultValue) {
+          result[key] = value;
+        }
+      }
+    }
+
+    return result;
+  }
+
   // Initialize form
   const form = useForm<CostFormData>({
     resolver: zodResolver(costFormSchema),
-    defaultValues: {
-      costSatisfactionScore: undefined,
-      cityCost: {
-        totalCost: {
-          startDate: undefined,
-          endDate: undefined,
-          totalCost: undefined,
-        },
-        monthlyRent: {
-          monthlyRent: undefined,
-          month: 1,
-          numberOfPeople: 1,
-          walkable: false,
-          accommodationTypeId: undefined,
-          accommodationTypeFreeText: undefined,
-          roomCountId: undefined,
-          roomCountFreeText: undefined,
-          accommodationFeatures: undefined,
-          recommendedAccommodations: undefined,
-        },
-        foodCost: {
-          avgMonthlyCost: undefined,
-          eatingStyles: undefined,
-          foodItemPrices: undefined,
-        },
-        communicationCost: {
-          communicationMethod: {
-            id: undefined,
-            name: undefined,
-          },
-          telecomAgency: {
-            id: undefined,
-            name: undefined,
-            freeText: undefined,
-          },
-          communicationPlan: {
-            id: undefined,
-            name: undefined,
-            freeText: undefined,
-          },
-          simPurchaseCost: undefined,
-          avgMonthlyCost: undefined,
-        },
-        transportationExpenses: {
-          transportationExpenses:undefined,
-        },
-        utilityBills: {
-          electricityBill: undefined,
-          waterBill: undefined,
-          gasBill: undefined,
-          etc: undefined,
-        },
-        leisureActivityCost: {
-          avgMonthlyCost: undefined,
-          leisureActivityDetails: undefined,
-        },
-        localPrice: {
-          price: undefined,
-          localItem: undefined,
-          localItemFreeText: undefined,
-        },
-        initialSettlement: {
-          securityFee: undefined,
-          brokerageFee: undefined,
-          initialSupplyItems: undefined,
-        },
-      },
-    },
+    defaultValues: initValue,
   });
 
   // Mutation hook for API call
@@ -524,7 +551,7 @@ export default function CostBudgetGroupEditPage({
     contributeCityMutation.mutate(
       {
         cityId: Number(cityId),
-        data: payload,
+        data: cleanData(payload, initValue) as CityContributionPayload,
       },
       {
         onSuccess: () => {
@@ -626,7 +653,6 @@ export default function CostBudgetGroupEditPage({
     []
   );
 
-  // Helper functions cho thực phẩm
   const handleMenuNameChange = (type: string, name: string) => {
     setNewMenuItems((prev) => ({
       ...prev,
